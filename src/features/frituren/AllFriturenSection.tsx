@@ -99,6 +99,7 @@ const AllFriturenSection = ({
                   isLiked={isFrituurLiked(businessName)}
                   onSave={handleSaveFrituur}
                   onLike={handleLikeFrituur}
+                  team={team}
                 />
               );
             })}

@@ -1,8 +1,9 @@
 
 import { motion } from "framer-motion";
-import { Check, Heart, Bookmark } from "lucide-react";
+import { Check, Heart, Bookmark, Info } from "lucide-react";
 import { Frituur } from "@/types";
-import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 interface FriturenItemProps {
   frituur: Frituur;
@@ -15,6 +16,7 @@ interface FriturenItemProps {
   isLiked: boolean;
   onSave: (businessName: string) => void;
   onLike: (businessName: string) => void;
+  team: string;
 }
 
 const FriturenItem = ({ 
@@ -27,7 +29,8 @@ const FriturenItem = ({
   isSaved,
   isLiked,
   onSave,
-  onLike
+  onLike,
+  team
 }: FriturenItemProps) => {
   const businessName = frituur["Business Name"];
   
@@ -94,7 +97,17 @@ const FriturenItem = ({
             </button>
           )}
           
-          {frituur.Website && (
+          <Link to={`/frituur/${team}/${encodeURIComponent(businessName)}`}>
+            <Button variant="outline" size="sm">
+              <Info className="h-4 w-4 mr-1" />
+              Details
+            </Button>
+          </Link>
+        </div>
+
+        {/* Website link */}
+        {frituur.Website && (
+          <div className="mt-2 mb-2">
             <a
               href={frituur.Website.startsWith('http') ? frituur.Website : `https://${frituur.Website}`}
               target="_blank"
@@ -103,8 +116,8 @@ const FriturenItem = ({
             >
               Visit Website
             </a>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Save and Like buttons */}
         <div className="flex items-center space-x-2 mt-2">

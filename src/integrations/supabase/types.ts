@@ -131,6 +131,39 @@ export type Database = {
         }
         Relationships: []
       }
+      frituur_attachments: {
+        Row: {
+          attachment_name: string | null
+          attachment_type: string | null
+          attachment_url: string | null
+          business_name: string
+          created_at: string
+          id: string
+          note: string | null
+          team: string
+        }
+        Insert: {
+          attachment_name?: string | null
+          attachment_type?: string | null
+          attachment_url?: string | null
+          business_name: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          team: string
+        }
+        Update: {
+          attachment_name?: string | null
+          attachment_type?: string | null
+          attachment_url?: string | null
+          business_name?: string
+          created_at?: string
+          id?: string
+          note?: string | null
+          team?: string
+        }
+        Relationships: []
+      }
       team_selections: {
         Row: {
           business_name: string
