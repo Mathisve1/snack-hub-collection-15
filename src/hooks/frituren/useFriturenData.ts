@@ -35,6 +35,7 @@ export const useFriturenData = (team: string) => {
   // Filtering hook
   const {
     filteredFrituren,
+    paginatedFrituren,
     searchTerm,
     setSearchTerm,
     selectedRating,
@@ -44,7 +45,11 @@ export const useFriturenData = (team: string) => {
     provinces,
     filterOpen,
     toggleFilter,
-    resetFilters
+    resetFilters,
+    // Pagination
+    currentPage,
+    setCurrentPage,
+    totalPages
   } = useFriturenFilters(frituren);
 
   // Selections hook
@@ -70,6 +75,7 @@ export const useFriturenData = (team: string) => {
     loading,
     frituren,
     filteredFrituren,
+    paginatedFrituren,
     searchTerm,
     setSearchTerm,
     selections,
@@ -89,6 +95,10 @@ export const useFriturenData = (team: string) => {
     handleLikeFrituur,
     isFrituurSaved,
     isFrituurLiked,
-    usingSampleData
+    usingSampleData,
+    // Pagination
+    currentPage,
+    setCurrentPage,
+    totalPages
   };
 };

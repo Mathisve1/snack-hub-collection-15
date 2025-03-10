@@ -9,6 +9,12 @@ export const useFriturenFilters = (frituren: Frituur[]) => {
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
   const [provinces, setProvinces] = useState<string[]>([]);
   const [filterOpen, setFilterOpen] = useState(false);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(48);
+  const [totalPages, setTotalPages] = useState(1);
+  const [paginatedFrituren, setPaginatedFrituren] = useState<Frituur[]>([]);
 
   // Initialize provinces list from frituren data
   useEffect(() => {
@@ -48,7 +54,16 @@ export const useFriturenFilters = (frituren: Frituur[]) => {
     }
     
     setFilteredFrituren(filtered);
-  }, [frituren, searchTerm, selectedRating, selectedProvince]);
+    setCurrentPage(1); // Reset to first page when filters change
+    setTotalPages(Math.ceil(filtered.length / itemsPerPage));
+  }, [frituren, searchTerm, selectedRating, selectedProvince, itemsPerPage]);
+
+  // Apply pagination to filtered results
+  useEffect(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    setPaginatedFrituren(filteredFrituren.slice(startIndex, endIndex));
+  }, [filteredFrituren, currentPage, itemsPerPage]);
 
   const toggleFilter = () => {
     setFilterOpen(!filterOpen);
@@ -62,6 +77,7 @@ export const useFriturenFilters = (frituren: Frituur[]) => {
 
   return {
     filteredFrituren,
+    paginatedFrituren,
     searchTerm,
     setSearchTerm,
     selectedRating,
@@ -71,6 +87,12 @@ export const useFriturenFilters = (frituren: Frituur[]) => {
     provinces,
     filterOpen,
     toggleFilter,
-    resetFilters
+    resetFilters,
+    // Pagination
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    itemsPerPage,
+    setItemsPerPage
   };
 };

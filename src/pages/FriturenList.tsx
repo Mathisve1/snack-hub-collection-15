@@ -8,6 +8,7 @@ import NoResults from "@/features/frituren/NoResults";
 import IntroSection from "@/features/frituren/IntroSection";
 import FriturenFooter from "@/features/frituren/FriturenFooter";
 import FriturenFolders from "@/features/frituren/FriturenFolders";
+import FriturenPagination from "@/features/frituren/FriturenPagination";
 import { AlertTriangle } from "lucide-react";
 import { useState } from "react";
 
@@ -20,6 +21,7 @@ const FriturenList = () => {
     loading,
     frituren,
     filteredFrituren,
+    paginatedFrituren,
     searchTerm,
     setSearchTerm,
     selectedRating,
@@ -37,7 +39,10 @@ const FriturenList = () => {
     handleLikeFrituur,
     isFrituurSaved,
     isFrituurLiked,
-    usingSampleData
+    usingSampleData,
+    currentPage,
+    setCurrentPage,
+    totalPages
   } = useFriturenData(team);
 
   if (!isValidTeam || loading) {
@@ -52,7 +57,7 @@ const FriturenList = () => {
     );
   }
   
-  // Filter frituren to only show those selected by the current team for the team section
+  // Filter frituren to only show those selected by the current team
   const teamFrituren = filteredFrituren.filter(frituur => {
     const selectedByTeam = getSelectedBy(frituur["Business Name"]);
     return selectedByTeam === team;
@@ -82,7 +87,7 @@ const FriturenList = () => {
             </div>
           )}
           
-          {/* Your Selections section */}
+          {/* Folder management section */}
           <div className="mb-8">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold text-gray-800">Your {team} Selections</h2>
@@ -104,87 +109,100 @@ const FriturenList = () => {
             )}
           </div>
           
-          <FriturenFilters
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            selectedRating={selectedRating}
-            setSelectedRating={setSelectedRating}
-            selectedProvince={selectedProvince}
-            setSelectedProvince={setSelectedProvince}
-            provinces={provinces}
-            resetFilters={resetFilters}
-            filterOpen={filterOpen}
-            toggleFilter={toggleFilter}
-          />
-          
-          {/* Team selections section */}
-          <div className="mb-8">
-            <div className="mb-4 text-gray-600 flex justify-between items-center">
-              <span>Showing {teamFrituren.length} of {getTeamSelectedCount()} selected frituren</span>
-              <span className="text-sm">Your selections: {getTeamSelectedCount()}</span>
+          {/* All frituren section with filters and pagination */}
+          <div className="mb-12">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">All Available Frituren</h2>
+            
+            <FriturenFilters
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              selectedRating={selectedRating}
+              setSelectedRating={setSelectedRating}
+              selectedProvince={selectedProvince}
+              setSelectedProvince={setSelectedProvince}
+              provinces={provinces}
+              resetFilters={resetFilters}
+              filterOpen={filterOpen}
+              toggleFilter={toggleFilter}
+            />
+            
+            <div className="mb-4 text-gray-600 flex justify-between items-center mt-4">
+              <span>Showing {paginatedFrituren.length} of {filteredFrituren.length} frituren</span>
+              <span className="text-sm">Page {currentPage} of {totalPages}</span>
             </div>
             
-            {/* Team selected frituren list */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {teamFrituren.map((frituur, index) => {
-                const businessName = frituur["Business Name"];
-                const selectedByTeam = getSelectedBy(businessName);
-                const isSelectedByCurrentTeam = selectedByTeam === team;
-                const isSelectedByOtherTeam = selectedByTeam && selectedByTeam !== team;
+            {paginatedFrituren.length > 0 ? (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {paginatedFrituren.map((frituur, index) => {
+                    const businessName = frituur["Business Name"];
+                    const selectedByTeam = getSelectedBy(businessName);
+                    const isSelectedByCurrentTeam = selectedByTeam === team;
+                    const isSelectedByOtherTeam = selectedByTeam && selectedByTeam !== team;
+                    
+                    return (
+                      <FriturenItem
+                        key={`all-${businessName}`}
+                        frituur={frituur}
+                        index={index}
+                        isSelectedByCurrentTeam={isSelectedByCurrentTeam}
+                        isSelectedByOtherTeam={isSelectedByOtherTeam}
+                        selectedByTeam={selectedByTeam}
+                        handleSelect={handleSelect}
+                        isSaved={isFrituurSaved(businessName)}
+                        isLiked={isFrituurLiked(businessName)}
+                        onSave={handleSaveFrituur}
+                        onLike={handleLikeFrituur}
+                      />
+                    );
+                  })}
+                </div>
                 
-                return (
-                  <FriturenItem
-                    key={`team-${index}`}
-                    frituur={frituur}
-                    index={index}
-                    isSelectedByCurrentTeam={isSelectedByCurrentTeam}
-                    isSelectedByOtherTeam={isSelectedByOtherTeam}
-                    selectedByTeam={selectedByTeam}
-                    handleSelect={handleSelect}
-                    isSaved={isFrituurSaved(businessName)}
-                    isLiked={isFrituurLiked(businessName)}
-                    onSave={handleSaveFrituur}
-                    onLike={handleLikeFrituur}
-                  />
-                );
-              })}
-            </div>
-            
-            {teamFrituren.length === 0 && (
+                <FriturenPagination 
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              </>
+            ) : (
               <NoResults resetFilters={resetFilters} />
             )}
           </div>
           
-          {/* All frituren section */}
+          {/* Team selections section at the bottom */}
           <div className="mt-12 pt-8 border-t border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-800 mb-6">All Available Frituren</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredFrituren.map((frituur, index) => {
-                const businessName = frituur["Business Name"];
-                const selectedByTeam = getSelectedBy(businessName);
-                const isSelectedByCurrentTeam = selectedByTeam === team;
-                const isSelectedByOtherTeam = selectedByTeam && selectedByTeam !== team;
-                
-                return (
-                  <FriturenItem
-                    key={`all-${index}`}
-                    frituur={frituur}
-                    index={index}
-                    isSelectedByCurrentTeam={isSelectedByCurrentTeam}
-                    isSelectedByOtherTeam={isSelectedByOtherTeam}
-                    selectedByTeam={selectedByTeam}
-                    handleSelect={handleSelect}
-                    isSaved={isFrituurSaved(businessName)}
-                    isLiked={isFrituurLiked(businessName)}
-                    onSave={handleSaveFrituur}
-                    onLike={handleLikeFrituur}
-                  />
-                );
-              })}
-            </div>
+            <h2 className="text-xl font-semibold text-gray-800 mb-6">Your Selected Frituren</h2>
             
-            {filteredFrituren.length === 0 && (
-              <NoResults resetFilters={resetFilters} />
+            {teamFrituren.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {teamFrituren.map((frituur, index) => {
+                  const businessName = frituur["Business Name"];
+                  const selectedByTeam = getSelectedBy(businessName);
+                  const isSelectedByCurrentTeam = selectedByTeam === team;
+                  const isSelectedByOtherTeam = selectedByTeam && selectedByTeam !== team;
+                  
+                  return (
+                    <FriturenItem
+                      key={`team-${businessName}`}
+                      frituur={frituur}
+                      index={index}
+                      isSelectedByCurrentTeam={isSelectedByCurrentTeam}
+                      isSelectedByOtherTeam={isSelectedByOtherTeam}
+                      selectedByTeam={selectedByTeam}
+                      handleSelect={handleSelect}
+                      isSaved={isFrituurSaved(businessName)}
+                      isLiked={isFrituurLiked(businessName)}
+                      onSave={handleSaveFrituur}
+                      onLike={handleLikeFrituur}
+                    />
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-12 bg-white rounded-lg shadow-sm">
+                <p className="text-gray-600">You haven't selected any frituren yet.</p>
+                <p className="text-gray-500 mt-2">Browse the list above and start selecting!</p>
+              </div>
             )}
           </div>
         </div>
