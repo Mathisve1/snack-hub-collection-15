@@ -88,7 +88,7 @@ const AllFriturenSection = ({
               
               return (
                 <FriturenItem
-                  key={`all-${businessName}`}
+                  key={`all-${businessName}-${index}`}
                   frituur={frituur}
                   index={index}
                   isSelectedByCurrentTeam={isSelectedByCurrentTeam}

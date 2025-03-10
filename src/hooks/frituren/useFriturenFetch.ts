@@ -68,9 +68,10 @@ export const useFriturenFetch = (isValidTeam: boolean) => {
         // Add a small delay to ensure the database has time to process
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        const { data: friturenData, error: friturenError } = await supabase
+        // Fetch all frituren with no limit to ensure we get all records
+        const { data: friturenData, error: friturenError, count } = await supabase
           .from('frituren')
-          .select('*');
+          .select('*', { count: 'exact' });
           
         if (friturenError) {
           console.error('Error fetching frituren:', friturenError);
@@ -86,7 +87,7 @@ export const useFriturenFetch = (isValidTeam: boolean) => {
           throw selectionsError;
         }
         
-        console.log(`Loaded ${friturenData?.length || 0} frituren from database`);
+        console.log(`Loaded ${friturenData?.length || 0} frituren from database. Total count: ${count}`);
         
         if (!friturenData || friturenData.length === 0) {
           if (retryCount < 3) {
@@ -106,6 +107,13 @@ export const useFriturenFetch = (isValidTeam: boolean) => {
           const mappedFrituren = friturenData as Frituur[];
           setFrituren(mappedFrituren);
           setSelections(selectionsData as TeamSelection[]);
+          
+          if (mappedFrituren.length < 100) {
+            // If we received fewer records than expected, warn the user
+            toast.warning(`Only loaded ${mappedFrituren.length} frituren. There may be more data available.`);
+          } else {
+            toast.success(`Successfully loaded ${mappedFrituren.length} frituren.`);
+          }
         }
       } catch (error) {
         console.error('Error fetching data:', error);
