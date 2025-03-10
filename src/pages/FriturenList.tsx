@@ -7,10 +7,14 @@ import FriturenItem from "@/features/frituren/FriturenItem";
 import NoResults from "@/features/frituren/NoResults";
 import IntroSection from "@/features/frituren/IntroSection";
 import FriturenFooter from "@/features/frituren/FriturenFooter";
+import FriturenFolders from "@/features/frituren/FriturenFolders";
 import { AlertTriangle } from "lucide-react";
+import { useState } from "react";
 
 const FriturenList = () => {
   const { team = "" } = useParams<{ team: string }>();
+  const [showFolders, setShowFolders] = useState(false);
+  
   const {
     isValidTeam,
     loading,
@@ -71,6 +75,28 @@ const FriturenList = () => {
               </div>
             </div>
           )}
+          
+          {/* Your Selections section */}
+          <div className="mb-8">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-gray-800">Your {team} Selections</h2>
+              <button
+                onClick={() => setShowFolders(!showFolders)}
+                className="text-primary hover:text-primary/80 text-sm font-medium"
+              >
+                {showFolders ? "Hide Folders" : "Manage Folders"}
+              </button>
+            </div>
+            
+            {showFolders && (
+              <div className="mb-8">
+                <FriturenFolders 
+                  team={team}
+                  frituren={frituren}
+                />
+              </div>
+            )}
+          </div>
           
           <FriturenFilters
             searchTerm={searchTerm}

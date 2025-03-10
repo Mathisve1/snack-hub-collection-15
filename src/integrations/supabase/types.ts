@@ -78,6 +78,59 @@ export type Database = {
         }
         Relationships: []
       }
+      frituren_folder_items: {
+        Row: {
+          added_at: string
+          business_name: string
+          folder_id: string
+          id: string
+          team: string
+        }
+        Insert: {
+          added_at?: string
+          business_name: string
+          folder_id: string
+          id?: string
+          team: string
+        }
+        Update: {
+          added_at?: string
+          business_name?: string
+          folder_id?: string
+          id?: string
+          team?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "frituren_folder_items_folder_id_fkey"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "frituren_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      frituren_folders: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          team: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          team: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          team?: string
+        }
+        Relationships: []
+      }
       team_selections: {
         Row: {
           business_name: string
