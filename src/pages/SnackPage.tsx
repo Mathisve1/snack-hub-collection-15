@@ -28,7 +28,7 @@ const SnackPage = () => {
     <div className="min-h-screen flex flex-col">
       <motion.header
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: A1, y: 0 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="bg-white/70 backdrop-blur-lg border-b border-gray-200 sticky top-0 z-10"
       >

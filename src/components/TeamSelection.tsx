@@ -62,7 +62,7 @@ const TeamSelection = () => {
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-12">
       <motion.div
-        initial={{ opacity: A0 }}
+        initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
       >
