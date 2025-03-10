@@ -57,8 +57,9 @@ const FriturenList = () => {
     );
   }
   
-  // Filter frituren to only show those selected by the current team
-  const teamFrituren = filteredFrituren.filter(frituur => {
+  // Get team-selected frituren separately from all frituren
+  // Important: Use the original frituren array, not the filtered one
+  const teamFrituren = frituren.filter(frituur => {
     const selectedByTeam = getSelectedBy(frituur["Business Name"]);
     return selectedByTeam === team;
   });
