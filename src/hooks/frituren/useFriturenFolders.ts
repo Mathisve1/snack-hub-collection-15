@@ -27,6 +27,7 @@ export const useFriturenFolders = (team: string) => {
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
   const [isRenamingFolder, setIsRenamingFolder] = useState<string | null>(null);
   const [newFolderName, setNewFolderName] = useState("");
+  const [teamSelections, setTeamSelections] = useState<string[]>([]);
 
   // Fetch folders and their items
   const fetchFolders = async () => {
@@ -67,11 +68,32 @@ export const useFriturenFolders = (team: string) => {
         setSelectedFolder(foldersWithItems[0].id);
       }
       
+      // Fetch team selections
+      await fetchTeamSelections();
+      
     } catch (error) {
       console.error("Error fetching folders:", error);
       toast.error("Failed to load folders. Please try again.");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Fetch team selections
+  const fetchTeamSelections = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("team_selections")
+        .select("business_name")
+        .eq("team", team);
+        
+      if (error) {
+        throw error;
+      }
+      
+      setTeamSelections(data.map(item => item.business_name));
+    } catch (error) {
+      console.error("Error fetching team selections:", error);
     }
   };
 
@@ -317,6 +339,13 @@ export const useFriturenFolders = (team: string) => {
     }
   };
 
+  // Check if a frituur is in any folder
+  const isFrituurInAnyFolder = (businessName: string) => {
+    return folders.some(folder => 
+      folder.items?.some(item => item.business_name === businessName)
+    );
+  };
+
   useEffect(() => {
     if (team) {
       fetchFolders();
@@ -340,6 +369,8 @@ export const useFriturenFolders = (team: string) => {
     setIsRenamingFolder,
     newFolderName,
     setNewFolderName,
-    refreshFolders: fetchFolders
+    refreshFolders: fetchFolders,
+    teamSelections,
+    isFrituurInAnyFolder
   };
 };

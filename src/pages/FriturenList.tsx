@@ -82,7 +82,7 @@ const FriturenList = () => {
               <h2 className="text-xl font-semibold text-gray-800">Your {team} Selections</h2>
               <button
                 onClick={() => setShowFolders(!showFolders)}
-                className="text-primary hover:text-primary/80 text-sm font-medium"
+                className="text-primary hover:text-primary/80 text-sm font-medium flex items-center"
               >
                 {showFolders ? "Hide Folders" : "Manage Folders"}
               </button>
