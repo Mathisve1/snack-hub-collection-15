@@ -1,6 +1,6 @@
 
 import { useParams } from "react-router-dom";
-import { useFriturenData } from "@/hooks/useFriturenData";
+import { useFriturenData } from "@/hooks/frituren";
 import FriturenHeader from "@/features/frituren/FriturenHeader";
 import FriturenFilters from "@/features/frituren/FriturenFilters";
 import FriturenItem from "@/features/frituren/FriturenItem";
