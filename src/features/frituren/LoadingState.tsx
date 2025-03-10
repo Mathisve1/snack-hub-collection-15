@@ -16,7 +16,7 @@ const LoadingState = ({ loading, message }: { loading: boolean, message?: string
           </p>
         )}
         <p className="text-xs text-gray-400 mt-4">
-          This may take longer for the initial load as we're retrieving over 4000 items.
+          This may take longer for the initial load as we're retrieving over 4000 items in multiple batches.
         </p>
       </div>
     </div>

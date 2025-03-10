@@ -68,16 +68,57 @@ export const useFriturenFetch = (isValidTeam: boolean) => {
         // Add a small delay to ensure the database has time to process
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        // Fetch all frituren with no limit to ensure we get all records
-        const { data: friturenData, error: friturenError, count } = await supabase
+        // Get total count first
+        const { count: totalCount, error: countError } = await supabase
           .from('frituren')
-          .select('*', { count: 'exact' });
+          .select('*', { count: 'exact', head: true });
           
-        if (friturenError) {
-          console.error('Error fetching frituren:', friturenError);
-          throw friturenError;
+        if (countError) {
+          console.error('Error fetching count:', countError);
+          throw countError;
         }
         
+        console.log(`Total count of frituren: ${totalCount}`);
+        
+        if (!totalCount) {
+          throw new Error('Could not determine total count of records');
+        }
+        
+        // Fetch all records by paginating through them
+        let allFrituren: Frituur[] = [];
+        const pageSize = 1000; // Supabase maximum
+        const totalPages = Math.ceil(totalCount / pageSize);
+        
+        toast.info(`Fetching ${totalCount} frituren in ${totalPages} batches...`);
+        
+        for (let page = 0; page < totalPages; page++) {
+          const from = page * pageSize;
+          const to = from + pageSize - 1;
+          
+          console.log(`Fetching batch ${page + 1}/${totalPages} (range ${from}-${to})`);
+          
+          const { data: friturenBatch, error: batchError } = await supabase
+            .from('frituren')
+            .select('*')
+            .range(from, to);
+            
+          if (batchError) {
+            console.error(`Error fetching batch ${page + 1}:`, batchError);
+            throw batchError;
+          }
+          
+          if (friturenBatch && friturenBatch.length > 0) {
+            allFrituren = [...allFrituren, ...friturenBatch];
+            console.log(`Added ${friturenBatch.length} records from batch ${page + 1}. Total so far: ${allFrituren.length}`);
+          }
+          
+          // Show progress to user
+          if (totalPages > 1) {
+            toast.info(`Loading data: ${Math.round((page + 1) / totalPages * 100)}% complete (${allFrituren.length}/${totalCount})`);
+          }
+        }
+          
+        // Fetch team selections
         const { data: selectionsData, error: selectionsError } = await supabase
           .from('team_selections')
           .select('*');
@@ -87,9 +128,9 @@ export const useFriturenFetch = (isValidTeam: boolean) => {
           throw selectionsError;
         }
         
-        console.log(`Loaded ${friturenData?.length || 0} frituren from database. Total count: ${count}`);
+        console.log(`Loaded ${allFrituren.length} frituren from database from a total of ${totalCount}`);
         
-        if (!friturenData || friturenData.length === 0) {
+        if (allFrituren.length === 0) {
           if (retryCount < 3) {
             console.log(`No data returned from Supabase, retry attempt ${retryCount + 1}`);
             setRetryCount(prev => prev + 1);
@@ -104,15 +145,13 @@ export const useFriturenFetch = (isValidTeam: boolean) => {
           toast.info('Using sample data as the database returned no results.');
         } else {
           setUsingSampleData(false);
-          const mappedFrituren = friturenData as Frituur[];
-          setFrituren(mappedFrituren);
+          setFrituren(allFrituren);
           setSelections(selectionsData as TeamSelection[]);
           
-          if (mappedFrituren.length < 100) {
-            // If we received fewer records than expected, warn the user
-            toast.warning(`Only loaded ${mappedFrituren.length} frituren. There may be more data available.`);
+          if (allFrituren.length < totalCount) {
+            toast.warning(`Loaded ${allFrituren.length} of ${totalCount} frituren. Some data may be missing.`);
           } else {
-            toast.success(`Successfully loaded ${mappedFrituren.length} frituren.`);
+            toast.success(`Successfully loaded all ${allFrituren.length} frituren.`);
           }
         }
       } catch (error) {
