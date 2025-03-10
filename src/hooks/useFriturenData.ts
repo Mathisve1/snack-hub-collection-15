@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Team, Frituur, TeamSelection } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
@@ -67,6 +68,7 @@ export const useFriturenData = (team: string) => {
   const [savedFrituren, setSavedFrituren] = useState<string[]>([]);
   const [likedFrituren, setLikedFrituren] = useState<string[]>([]);
   const [usingSampleData, setUsingSampleData] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     const validTeams: Team[] = ["OV-3", "OV-14", "OV-38", "OV-40"];
@@ -97,22 +99,38 @@ export const useFriturenData = (team: string) => {
       try {
         setLoading(true);
         
+        // Add a small delay to ensure the database has time to process
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
         const { data: friturenData, error: friturenError } = await supabase
           .from('frituren')
           .select('*');
           
-        if (friturenError) throw friturenError;
+        if (friturenError) {
+          console.error('Error fetching frituren:', friturenError);
+          throw friturenError;
+        }
         
         const { data: selectionsData, error: selectionsError } = await supabase
           .from('team_selections')
           .select('*');
           
-        if (selectionsError) throw selectionsError;
+        if (selectionsError) {
+          console.error('Error fetching selections:', selectionsError);
+          throw selectionsError;
+        }
         
         console.log(`Loaded ${friturenData?.length || 0} frituren from database`);
         
         if (!friturenData || friturenData.length === 0) {
-          console.log('No data returned from Supabase, using sample data');
+          if (retryCount < 3) {
+            console.log(`No data returned from Supabase, retry attempt ${retryCount + 1}`);
+            setRetryCount(prev => prev + 1);
+            setLoading(false);
+            return; // Will trigger the effect again due to retryCount change
+          }
+          
+          console.log('No data returned from Supabase after retries, using sample data');
           setUsingSampleData(true);
           setFrituren(sampleFrituren);
           setFilteredFrituren(sampleFrituren);
@@ -126,8 +144,9 @@ export const useFriturenData = (team: string) => {
           ).sort();
           setProvinces(uniqueProvinces);
           
-          toast.info('Using sample data as the database is empty');
+          toast.info('Using sample data as the database returned no results.');
         } else {
+          setUsingSampleData(false);
           const mappedFrituren = friturenData as Frituur[];
           setFrituren(mappedFrituren);
           setFilteredFrituren(mappedFrituren);
@@ -166,7 +185,7 @@ export const useFriturenData = (team: string) => {
     if (isValidTeam) {
       fetchFrituren();
     }
-  }, [isValidTeam]);
+  }, [isValidTeam, retryCount]);
 
   useEffect(() => {
     let filtered = [...frituren];
@@ -206,6 +225,27 @@ export const useFriturenData = (team: string) => {
     
     if (usingSampleData) {
       toast.info('This is sample data. Selection won\'t be saved to the database.');
+      
+      // For better UX, we can simulate the selection in the UI even with sample data
+      const isSelectedByCurrentTeam = selections.some(
+        s => s.business_name === businessName && s.team === team
+      );
+      
+      if (isSelectedByCurrentTeam) {
+        setSelections(prev => prev.filter(
+          s => !(s.business_name === businessName && s.team === team)
+        ));
+        toast.success(`Removed ${businessName} from your selections (simulated)`);
+      } else {
+        const newSelection: TeamSelection = {
+          id: `sample-${Date.now()}`,
+          team,
+          business_name: businessName,
+          selected_at: new Date().toISOString()
+        };
+        setSelections(prev => [...prev, newSelection]);
+        toast.success(`Selected ${businessName} for team ${team} (simulated)`);
+      }
       return;
     }
     
