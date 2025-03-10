@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Team, Frituur, TeamSelection } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
@@ -52,7 +51,7 @@ export const useFriturenData = (team: string) => {
       try {
         setLoading(true);
         
-        // Fetch frituren data
+        // Fetch all frituren data without any limit
         const { data: friturenData, error: friturenError } = await supabase
           .from('frituren')
           .select('*');
@@ -65,6 +64,8 @@ export const useFriturenData = (team: string) => {
           .select('*');
           
         if (selectionsError) throw selectionsError;
+        
+        console.log(`Loaded ${friturenData.length} frituren from database`);
         
         // Map the data to our Frituur interface
         const mappedFrituren = friturenData as Frituur[];
