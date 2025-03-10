@@ -7,6 +7,7 @@ import FriturenItem from "@/features/frituren/FriturenItem";
 import NoResults from "@/features/frituren/NoResults";
 import IntroSection from "@/features/frituren/IntroSection";
 import FriturenFooter from "@/features/frituren/FriturenFooter";
+import { AlertTriangle } from "lucide-react";
 
 const FriturenList = () => {
   const { team = "" } = useParams<{ team: string }>();
@@ -31,7 +32,8 @@ const FriturenList = () => {
     handleSaveFrituur,
     handleLikeFrituur,
     isFrituurSaved,
-    isFrituurLiked
+    isFrituurLiked,
+    usingSampleData
   } = useFriturenData(team);
 
   if (!isValidTeam || loading) {
@@ -56,6 +58,19 @@ const FriturenList = () => {
       <main className="flex-grow bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <IntroSection team={team} />
+          
+          {usingSampleData && (
+            <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-3">
+              <AlertTriangle className="text-amber-500 mt-0.5 flex-shrink-0" size={20} />
+              <div>
+                <h3 className="font-medium text-amber-800">Using Sample Data</h3>
+                <p className="text-amber-700 text-sm">
+                  The application is currently using sample data because the Supabase database returned no results.
+                  This could be because the database is empty or there's a connection issue.
+                </p>
+              </div>
+            </div>
+          )}
           
           <FriturenFilters
             searchTerm={searchTerm}

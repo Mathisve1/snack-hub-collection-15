@@ -4,6 +4,54 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
+const sampleFrituren: Frituur[] = [
+  {
+    "Business Name": "Frituur De Bosrand",
+    "Rating": 4.5,
+    "Provincie": "Antwerpen",
+    "Gemeente": "Kapellen",
+    "Straat": "Kalmthoutsesteenweg 193",
+    "Postcode": 2950,
+    "Website": "https://www.frituur-de-bosrand.be"
+  },
+  {
+    "Business Name": "Frituur Het Pleintje",
+    "Rating": 4.2,
+    "Provincie": "Oost-Vlaanderen",
+    "Gemeente": "Gent",
+    "Straat": "Vrijdagmarkt 10",
+    "Postcode": 9000,
+    "Website": "https://www.hetpleintje.be"
+  },
+  {
+    "Business Name": "Frituur 't Hoekske",
+    "Rating": 4.8,
+    "Provincie": "West-Vlaanderen",
+    "Gemeente": "Brugge",
+    "Straat": "Markt 25",
+    "Postcode": 8000,
+    "Website": "https://www.frituurhoekske.be"
+  },
+  {
+    "Business Name": "Bintje & Zoute",
+    "Rating": 4.3,
+    "Provincie": "Limburg",
+    "Gemeente": "Hasselt",
+    "Straat": "Grote Markt 12",
+    "Postcode": 3500,
+    "Website": "https://www.bintjeenzoute.be"
+  },
+  {
+    "Business Name": "Frituur De Pallieter",
+    "Rating": 4.0,
+    "Provincie": "Vlaams-Brabant",
+    "Gemeente": "Leuven",
+    "Straat": "Oude Markt 45",
+    "Postcode": 3000,
+    "Website": "https://www.frituurdepallieter.be"
+  }
+];
+
 export const useFriturenData = (team: string) => {
   const navigate = useNavigate();
   const [isValidTeam, setIsValidTeam] = useState(false);
@@ -18,8 +66,8 @@ export const useFriturenData = (team: string) => {
   const [filterOpen, setFilterOpen] = useState(false);
   const [savedFrituren, setSavedFrituren] = useState<string[]>([]);
   const [likedFrituren, setLikedFrituren] = useState<string[]>([]);
+  const [usingSampleData, setUsingSampleData] = useState(false);
 
-  // Validate team param
   useEffect(() => {
     const validTeams: Team[] = ["OV-3", "OV-14", "OV-38", "OV-40"];
     if (!validTeams.includes(team as Team)) {
@@ -30,7 +78,6 @@ export const useFriturenData = (team: string) => {
     setIsValidTeam(true);
   }, [team, navigate]);
 
-  // Load saved and liked frituren from localStorage
   useEffect(() => {
     if (isValidTeam) {
       const savedItems = localStorage.getItem(`${team}-saved-frituren`);
@@ -45,46 +92,72 @@ export const useFriturenData = (team: string) => {
     }
   }, [isValidTeam, team]);
 
-  // Fetch frituren data
   useEffect(() => {
     const fetchFrituren = async () => {
       try {
         setLoading(true);
         
-        // Fetch all frituren data without any limit
         const { data: friturenData, error: friturenError } = await supabase
           .from('frituren')
           .select('*');
           
         if (friturenError) throw friturenError;
         
-        // Fetch team selections to know which frituren are already selected
         const { data: selectionsData, error: selectionsError } = await supabase
           .from('team_selections')
           .select('*');
           
         if (selectionsError) throw selectionsError;
         
-        console.log(`Loaded ${friturenData.length} frituren from database`);
+        console.log(`Loaded ${friturenData?.length || 0} frituren from database`);
         
-        // Map the data to our Frituur interface
-        const mappedFrituren = friturenData as Frituur[];
-        setFrituren(mappedFrituren);
-        setFilteredFrituren(mappedFrituren);
-        setSelections(selectionsData as TeamSelection[]);
+        if (!friturenData || friturenData.length === 0) {
+          console.log('No data returned from Supabase, using sample data');
+          setUsingSampleData(true);
+          setFrituren(sampleFrituren);
+          setFilteredFrituren(sampleFrituren);
+          
+          const uniqueProvinces = Array.from(
+            new Set(
+              sampleFrituren
+                .map(f => f.Provincie)
+                .filter(Boolean) as string[]
+            )
+          ).sort();
+          setProvinces(uniqueProvinces);
+          
+          toast.info('Using sample data as the database is empty');
+        } else {
+          const mappedFrituren = friturenData as Frituur[];
+          setFrituren(mappedFrituren);
+          setFilteredFrituren(mappedFrituren);
+          setSelections(selectionsData as TeamSelection[]);
+          
+          const uniqueProvinces = Array.from(
+            new Set(
+              mappedFrituren
+                .map(f => f.Provincie)
+                .filter(Boolean) as string[]
+            )
+          ).sort();
+          setProvinces(uniqueProvinces);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        toast.error('Failed to fetch data. Falling back to sample data.');
         
-        // Extract unique provinces for filtering
+        setUsingSampleData(true);
+        setFrituren(sampleFrituren);
+        setFilteredFrituren(sampleFrituren);
+        
         const uniqueProvinces = Array.from(
           new Set(
-            mappedFrituren
+            sampleFrituren
               .map(f => f.Provincie)
               .filter(Boolean) as string[]
           )
         ).sort();
         setProvinces(uniqueProvinces);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        toast.error('Failed to fetch data. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -95,11 +168,9 @@ export const useFriturenData = (team: string) => {
     }
   }, [isValidTeam]);
 
-  // Apply filters
   useEffect(() => {
     let filtered = [...frituren];
     
-    // Apply search filter
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       filtered = filtered.filter(
@@ -110,12 +181,10 @@ export const useFriturenData = (team: string) => {
       );
     }
     
-    // Apply rating filter
     if (selectedRating !== null) {
       filtered = filtered.filter(f => f.Rating && f.Rating >= selectedRating);
     }
     
-    // Apply province filter
     if (selectedProvince) {
       filtered = filtered.filter(f => f.Provincie === selectedProvince);
     }
@@ -135,20 +204,22 @@ export const useFriturenData = (team: string) => {
   const handleSelect = async (frituur: Frituur) => {
     const businessName = frituur["Business Name"];
     
-    // Check if this frituur is already selected by another team
+    if (usingSampleData) {
+      toast.info('This is sample data. Selection won\'t be saved to the database.');
+      return;
+    }
+    
     if (isSelected(businessName) && getSelectedBy(businessName) !== team) {
       toast.error(`This frituur is already selected by team ${getSelectedBy(businessName)}`);
       return;
     }
     
-    // Check if it's selected by the current team (if so, we'll remove it)
     const isSelectedByCurrentTeam = selections.some(
       s => s.business_name === businessName && s.team === team
     );
     
     try {
       if (isSelectedByCurrentTeam) {
-        // Delete the selection
         const { error } = await supabase
           .from('team_selections')
           .delete()
@@ -157,14 +228,12 @@ export const useFriturenData = (team: string) => {
           
         if (error) throw error;
         
-        // Update local state by removing the selection
         setSelections(prev => prev.filter(
           s => !(s.business_name === businessName && s.team === team)
         ));
         
         toast.success(`Removed ${businessName} from your selections`);
       } else {
-        // Insert new selection
         const { data, error } = await supabase
           .from('team_selections')
           .insert({
@@ -176,7 +245,6 @@ export const useFriturenData = (team: string) => {
           
         if (error) throw error;
         
-        // Update local state by adding the new selection
         setSelections(prev => [...prev, data as TeamSelection]);
         
         toast.success(`Selected ${businessName} for team ${team}`);
@@ -191,16 +259,13 @@ export const useFriturenData = (team: string) => {
     let newSavedList: string[];
     
     if (savedFrituren.includes(businessName)) {
-      // Remove from saved list
       newSavedList = savedFrituren.filter(name => name !== businessName);
       toast.success(`Removed ${businessName} from saved list`);
     } else {
-      // Add to saved list
       newSavedList = [...savedFrituren, businessName];
       toast.success(`Saved ${businessName} to your list`);
     }
     
-    // Update state and localStorage
     setSavedFrituren(newSavedList);
     localStorage.setItem(`${team}-saved-frituren`, JSON.stringify(newSavedList));
   };
@@ -209,16 +274,13 @@ export const useFriturenData = (team: string) => {
     let newLikedList: string[];
     
     if (likedFrituren.includes(businessName)) {
-      // Remove from liked list
       newLikedList = likedFrituren.filter(name => name !== businessName);
       toast.success(`Removed ${businessName} from liked list`);
     } else {
-      // Add to liked list
       newLikedList = [...likedFrituren, businessName];
       toast.success(`Added ${businessName} to your liked list`);
     }
     
-    // Update state and localStorage
     setLikedFrituren(newLikedList);
     localStorage.setItem(`${team}-liked-frituren`, JSON.stringify(newLikedList));
   };
@@ -268,6 +330,7 @@ export const useFriturenData = (team: string) => {
     handleSaveFrituur,
     handleLikeFrituur,
     isFrituurSaved,
-    isFrituurLiked
+    isFrituurLiked,
+    usingSampleData
   };
 };
