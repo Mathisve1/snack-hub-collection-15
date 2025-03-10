@@ -27,7 +27,11 @@ const FriturenList = () => {
     resetFilters,
     getSelectedBy,
     handleSelect,
-    getTeamSelectedCount
+    getTeamSelectedCount,
+    handleSaveFrituur,
+    handleLikeFrituur,
+    isFrituurSaved,
+    isFrituurLiked
   } = useFriturenData(team);
 
   if (!isValidTeam || loading) {
@@ -88,6 +92,10 @@ const FriturenList = () => {
                   isSelectedByOtherTeam={isSelectedByOtherTeam}
                   selectedByTeam={selectedByTeam}
                   handleSelect={handleSelect}
+                  isSaved={isFrituurSaved(businessName)}
+                  isLiked={isFrituurLiked(businessName)}
+                  onSave={handleSaveFrituur}
+                  onLike={handleLikeFrituur}
                 />
               );
             })}

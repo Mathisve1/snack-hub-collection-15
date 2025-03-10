@@ -17,6 +17,8 @@ export const useFriturenData = (team: string) => {
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
   const [provinces, setProvinces] = useState<string[]>([]);
   const [filterOpen, setFilterOpen] = useState(false);
+  const [savedFrituren, setSavedFrituren] = useState<string[]>([]);
+  const [likedFrituren, setLikedFrituren] = useState<string[]>([]);
 
   // Validate team param
   useEffect(() => {
@@ -28,6 +30,21 @@ export const useFriturenData = (team: string) => {
     
     setIsValidTeam(true);
   }, [team, navigate]);
+
+  // Load saved and liked frituren from localStorage
+  useEffect(() => {
+    if (isValidTeam) {
+      const savedItems = localStorage.getItem(`${team}-saved-frituren`);
+      if (savedItems) {
+        setSavedFrituren(JSON.parse(savedItems));
+      }
+      
+      const likedItems = localStorage.getItem(`${team}-liked-frituren`);
+      if (likedItems) {
+        setLikedFrituren(JSON.parse(likedItems));
+      }
+    }
+  }, [isValidTeam, team]);
 
   // Fetch frituren data
   useEffect(() => {
@@ -169,6 +186,50 @@ export const useFriturenData = (team: string) => {
     }
   };
 
+  const handleSaveFrituur = (businessName: string) => {
+    let newSavedList: string[];
+    
+    if (savedFrituren.includes(businessName)) {
+      // Remove from saved list
+      newSavedList = savedFrituren.filter(name => name !== businessName);
+      toast.success(`Removed ${businessName} from saved list`);
+    } else {
+      // Add to saved list
+      newSavedList = [...savedFrituren, businessName];
+      toast.success(`Saved ${businessName} to your list`);
+    }
+    
+    // Update state and localStorage
+    setSavedFrituren(newSavedList);
+    localStorage.setItem(`${team}-saved-frituren`, JSON.stringify(newSavedList));
+  };
+
+  const handleLikeFrituur = (businessName: string) => {
+    let newLikedList: string[];
+    
+    if (likedFrituren.includes(businessName)) {
+      // Remove from liked list
+      newLikedList = likedFrituren.filter(name => name !== businessName);
+      toast.success(`Removed ${businessName} from liked list`);
+    } else {
+      // Add to liked list
+      newLikedList = [...likedFrituren, businessName];
+      toast.success(`Added ${businessName} to your liked list`);
+    }
+    
+    // Update state and localStorage
+    setLikedFrituren(newLikedList);
+    localStorage.setItem(`${team}-liked-frituren`, JSON.stringify(newLikedList));
+  };
+
+  const isFrituurSaved = (businessName: string) => {
+    return savedFrituren.includes(businessName);
+  };
+
+  const isFrituurLiked = (businessName: string) => {
+    return likedFrituren.includes(businessName);
+  };
+
   const toggleFilter = () => {
     setFilterOpen(!filterOpen);
   };
@@ -202,6 +263,10 @@ export const useFriturenData = (team: string) => {
     isSelected,
     getSelectedBy,
     handleSelect,
-    getTeamSelectedCount
+    getTeamSelectedCount,
+    handleSaveFrituur,
+    handleLikeFrituur,
+    isFrituurSaved,
+    isFrituurLiked
   };
 };

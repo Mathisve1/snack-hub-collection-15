@@ -1,7 +1,8 @@
 
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { Check, Heart, Bookmark } from "lucide-react";
 import { Frituur } from "@/types";
+import { useState } from "react";
 
 interface FriturenItemProps {
   frituur: Frituur;
@@ -10,6 +11,10 @@ interface FriturenItemProps {
   isSelectedByOtherTeam: boolean;
   selectedByTeam: string | null;
   handleSelect: (frituur: Frituur) => void;
+  isSaved: boolean;
+  isLiked: boolean;
+  onSave: (businessName: string) => void;
+  onLike: (businessName: string) => void;
 }
 
 const FriturenItem = ({ 
@@ -18,7 +23,11 @@ const FriturenItem = ({
   isSelectedByCurrentTeam, 
   isSelectedByOtherTeam, 
   selectedByTeam,
-  handleSelect 
+  handleSelect,
+  isSaved,
+  isLiked,
+  onSave,
+  onLike
 }: FriturenItemProps) => {
   const businessName = frituur["Business Name"];
   
@@ -60,7 +69,7 @@ const FriturenItem = ({
           )}
         </div>
         
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-2">
           {isSelectedByOtherTeam ? (
             <span className="text-sm text-gray-500">
               Selected by {selectedByTeam}
@@ -95,6 +104,33 @@ const FriturenItem = ({
               Visit Website
             </a>
           )}
+        </div>
+
+        {/* Save and Like buttons */}
+        <div className="flex items-center space-x-2 mt-2">
+          <button
+            onClick={() => onSave(businessName)}
+            className={`flex items-center space-x-1 px-3 py-1 rounded-md text-xs ${
+              isSaved 
+                ? 'bg-blue-100 text-blue-600' 
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            <Bookmark size={14} className={isSaved ? "fill-blue-600" : ""} />
+            <span>{isSaved ? 'Saved' : 'Save'}</span>
+          </button>
+          
+          <button
+            onClick={() => onLike(businessName)}
+            className={`flex items-center space-x-1 px-3 py-1 rounded-md text-xs ${
+              isLiked 
+                ? 'bg-red-100 text-red-600' 
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}
+          >
+            <Heart size={14} className={isLiked ? "fill-red-500" : ""} />
+            <span>{isLiked ? 'Liked' : 'Like'}</span>
+          </button>
         </div>
       </div>
     </motion.div>
