@@ -1,5 +1,5 @@
 
-import { FolderIcon, FolderOpenIcon, PencilIcon, TrashIcon } from "lucide-react";
+import { Check as CheckIcon, X as XIcon, FolderIcon, FolderOpenIcon, PencilIcon, TrashIcon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Folder } from "@/types/folders";
 

@@ -1,5 +1,4 @@
-
-import { CheckIcon, XIcon } from "lucide-react";
+import { Check as CheckIcon, X as XIcon } from "lucide-react";
 
 interface CreateFolderFormProps {
   newFolderName: string;
