@@ -178,6 +178,8 @@ const FriturenFolders = ({ team, frituren }: FriturenFoldersProps) => {
               removeFrituurFromFolder={removeFrituurFromFolder}
               setMovingItem={setMovingItem}
               movingItem={movingItem}
+              team={team}
+              teamSelections={teamSelections}
             />
           ) : (
             <EmptyFolderState 

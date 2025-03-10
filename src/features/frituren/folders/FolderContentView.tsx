@@ -1,7 +1,7 @@
 
 import { motion } from "framer-motion";
 import { Frituur } from "@/types";
-import { Plus, X, Move, Trash, FolderIcon } from "lucide-react";
+import { Plus, X, Move, Trash, FolderIcon, Check } from "lucide-react";
 import { Folder, FolderItem } from "@/types/folders";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
@@ -18,6 +18,8 @@ interface FolderContentViewProps {
   removeFrituurFromFolder: (folderId: string, businessName: string) => Promise<boolean>;
   setMovingItem: (item: { businessName: string; sourceFolderId: string } | null) => void;
   movingItem: { businessName: string; sourceFolderId: string } | null;
+  team: string;
+  teamSelections: string[];
 }
 
 const FolderContentView = ({
@@ -32,15 +34,25 @@ const FolderContentView = ({
   handleAddFrituurToFolder,
   removeFrituurFromFolder,
   setMovingItem,
-  movingItem
+  movingItem,
+  team,
+  teamSelections
 }: FolderContentViewProps) => {
   const getCurrentFolderItems = () => {
     if (!selectedFolder) return [];
     const folder = folders.find(f => f.id === selectedFolder);
-    return folder?.items || [];
+    // Filter to only show folder items that are also in team selections
+    return (folder?.items || []).filter(item => 
+      teamSelections.includes(item.business_name)
+    );
   };
 
   const currentFolder = folders.find(f => f.id === selectedFolder);
+  
+  // Filter the frituren dropdown to only show team selections
+  const teamFrituren = frituren.filter(frituur => 
+    teamSelections.includes(frituur["Business Name"])
+  );
   
   return (
     <>
@@ -80,7 +92,7 @@ const FolderContentView = ({
               onChange={e => setSelectedFrituurForFolder(e.target.value)}
             >
               <option value="">-- Select a frituur --</option>
-              {frituren.map(frituur => (
+              {teamFrituren.map(frituur => (
                 <option 
                   key={frituur["Business Name"]} 
                   value={frituur["Business Name"]}
