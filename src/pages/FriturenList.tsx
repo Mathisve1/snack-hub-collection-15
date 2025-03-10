@@ -19,6 +19,7 @@ const FriturenList = () => {
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
   const [provinces, setProvinces] = useState<string[]>([]);
+  const [filterOpen, setFilterOpen] = useState(false);
   
   // Validate team param
   useEffect(() => {
@@ -64,7 +65,7 @@ const FriturenList = () => {
               .map(f => f.Provincie)
               .filter(Boolean) as string[]
           )
-        );
+        ).sort();
         setProvinces(uniqueProvinces);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -175,10 +176,18 @@ const FriturenList = () => {
     }
   };
 
+  const toggleFilter = () => {
+    setFilterOpen(!filterOpen);
+  };
+
   const resetFilters = () => {
     setSearchTerm("");
     setSelectedRating(null);
     setSelectedProvince(null);
+  };
+
+  const getTeamSelectedCount = () => {
+    return selections.filter(s => s.team === team).length;
   };
 
   if (!isValidTeam || loading) {
@@ -207,13 +216,18 @@ const FriturenList = () => {
                 Frituren Selector
               </span>
             </div>
-            <button
-              onClick={goHome}
-              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              <ChevronLeft size={20} className="mr-1" />
-              Change Team
-            </button>
+            <div className="flex items-center space-x-4">
+              <span className="text-sm font-medium bg-primary/10 text-primary px-3 py-1 rounded-full">
+                Team {team}: {getTeamSelectedCount()} selected
+              </span>
+              <button
+                onClick={goHome}
+                className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                <ChevronLeft size={20} className="mr-1" />
+                Change Team
+              </button>
+            </div>
           </div>
         </div>
       </motion.header>
@@ -236,8 +250,19 @@ const FriturenList = () => {
             </p>
           </motion.div>
           
+          {/* Mobile Filter Toggle */}
+          <div className="md:hidden mb-4">
+            <button
+              onClick={toggleFilter}
+              className="w-full flex items-center justify-center space-x-2 bg-white p-3 rounded-lg shadow-sm border border-gray-200"
+            >
+              <Filter size={18} />
+              <span>Filters {filterOpen ? '(Hide)' : '(Show)'}</span>
+            </button>
+          </div>
+          
           {/* Filters */}
-          <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
+          <div className={`bg-white p-4 rounded-lg shadow-sm mb-6 ${filterOpen ? 'block' : 'hidden md:block'}`}>
             <div className="flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 items-end">
               <div className="flex-1">
                 <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
@@ -260,7 +285,7 @@ const FriturenList = () => {
                 <select
                   id="rating"
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-                  value={selectedRating || ""}
+                  value={selectedRating !== null ? selectedRating : ""}
                   onChange={(e) => setSelectedRating(e.target.value ? Number(e.target.value) : null)}
                 >
                   <option value="">Any Rating</option>
@@ -302,8 +327,9 @@ const FriturenList = () => {
           </div>
           
           {/* Results count */}
-          <div className="mb-4 text-gray-600">
-            Showing {filteredFrituren.length} of {frituren.length} frituren
+          <div className="mb-4 text-gray-600 flex justify-between items-center">
+            <span>Showing {filteredFrituren.length} of {frituren.length} frituren</span>
+            <span className="text-sm">Your selections: {getTeamSelectedCount()}</span>
           </div>
           
           {/* Frituren list */}
