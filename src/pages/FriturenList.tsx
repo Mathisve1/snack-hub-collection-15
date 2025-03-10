@@ -52,7 +52,7 @@ const FriturenList = () => {
     );
   }
   
-  // Filter frituren to only show those selected by the current team
+  // Filter frituren to only show those selected by the current team for the team section
   const teamFrituren = filteredFrituren.filter(frituur => {
     const selectedByTeam = getSelectedBy(frituur["Business Name"]);
     return selectedByTeam === team;
@@ -117,41 +117,76 @@ const FriturenList = () => {
             toggleFilter={toggleFilter}
           />
           
-          {/* Results count */}
-          <div className="mb-4 text-gray-600 flex justify-between items-center">
-            <span>Showing {teamFrituren.length} of {getTeamSelectedCount()} selected frituren</span>
-            <span className="text-sm">Your selections: {getTeamSelectedCount()}</span>
+          {/* Team selections section */}
+          <div className="mb-8">
+            <div className="mb-4 text-gray-600 flex justify-between items-center">
+              <span>Showing {teamFrituren.length} of {getTeamSelectedCount()} selected frituren</span>
+              <span className="text-sm">Your selections: {getTeamSelectedCount()}</span>
+            </div>
+            
+            {/* Team selected frituren list */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {teamFrituren.map((frituur, index) => {
+                const businessName = frituur["Business Name"];
+                const selectedByTeam = getSelectedBy(businessName);
+                const isSelectedByCurrentTeam = selectedByTeam === team;
+                const isSelectedByOtherTeam = selectedByTeam && selectedByTeam !== team;
+                
+                return (
+                  <FriturenItem
+                    key={`team-${index}`}
+                    frituur={frituur}
+                    index={index}
+                    isSelectedByCurrentTeam={isSelectedByCurrentTeam}
+                    isSelectedByOtherTeam={isSelectedByOtherTeam}
+                    selectedByTeam={selectedByTeam}
+                    handleSelect={handleSelect}
+                    isSaved={isFrituurSaved(businessName)}
+                    isLiked={isFrituurLiked(businessName)}
+                    onSave={handleSaveFrituur}
+                    onLike={handleLikeFrituur}
+                  />
+                );
+              })}
+            </div>
+            
+            {teamFrituren.length === 0 && (
+              <NoResults resetFilters={resetFilters} />
+            )}
           </div>
           
-          {/* Frituren list */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {teamFrituren.map((frituur, index) => {
-              const businessName = frituur["Business Name"];
-              const selectedByTeam = getSelectedBy(businessName);
-              const isSelectedByCurrentTeam = selectedByTeam === team;
-              const isSelectedByOtherTeam = selectedByTeam && selectedByTeam !== team;
-              
-              return (
-                <FriturenItem
-                  key={index}
-                  frituur={frituur}
-                  index={index}
-                  isSelectedByCurrentTeam={isSelectedByCurrentTeam}
-                  isSelectedByOtherTeam={isSelectedByOtherTeam}
-                  selectedByTeam={selectedByTeam}
-                  handleSelect={handleSelect}
-                  isSaved={isFrituurSaved(businessName)}
-                  isLiked={isFrituurLiked(businessName)}
-                  onSave={handleSaveFrituur}
-                  onLike={handleLikeFrituur}
-                />
-              );
-            })}
+          {/* All frituren section */}
+          <div className="mt-12 pt-8 border-t border-gray-200">
+            <h2 className="text-xl font-semibold text-gray-800 mb-6">All Available Frituren</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredFrituren.map((frituur, index) => {
+                const businessName = frituur["Business Name"];
+                const selectedByTeam = getSelectedBy(businessName);
+                const isSelectedByCurrentTeam = selectedByTeam === team;
+                const isSelectedByOtherTeam = selectedByTeam && selectedByTeam !== team;
+                
+                return (
+                  <FriturenItem
+                    key={`all-${index}`}
+                    frituur={frituur}
+                    index={index}
+                    isSelectedByCurrentTeam={isSelectedByCurrentTeam}
+                    isSelectedByOtherTeam={isSelectedByOtherTeam}
+                    selectedByTeam={selectedByTeam}
+                    handleSelect={handleSelect}
+                    isSaved={isFrituurSaved(businessName)}
+                    isLiked={isFrituurLiked(businessName)}
+                    onSave={handleSaveFrituur}
+                    onLike={handleLikeFrituur}
+                  />
+                );
+              })}
+            </div>
+            
+            {filteredFrituren.length === 0 && (
+              <NoResults resetFilters={resetFilters} />
+            )}
           </div>
-          
-          {teamFrituren.length === 0 && (
-            <NoResults resetFilters={resetFilters} />
-          )}
         </div>
       </main>
 

@@ -1,7 +1,7 @@
 
 import { motion } from "framer-motion";
 import { Frituur } from "@/types";
-import { Plus, X, Move, Trash, FolderIcon, Check } from "lucide-react";
+import { Plus, X, Move, Trash, FolderIcon } from "lucide-react";
 import { Folder, FolderItem } from "@/types/folders";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
