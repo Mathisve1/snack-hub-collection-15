@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Frituur } from "@/types";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ArrowLeft, Clock, Map, Phone, Globe, Instagram, Facebook, Linkedin, Mic, Camera, File, Plus, X, Save } from "lucide-react";
+import { ArrowLeft, Clock, Map, Phone, Mail, Globe, Instagram, Facebook, Linkedin, Mic, Camera, File, Plus, X, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
@@ -157,6 +157,38 @@ const FrituurDetails = () => {
                       {frituur.Postcode && ` - ${frituur.Postcode}`}
                     </p>
                     <p className="text-sm text-gray-500">{frituur.Provincie}</p>
+                  </div>
+                </div>
+              )}
+              
+              {/* Phone number */}
+              {frituur.Number && (
+                <div className="flex items-start">
+                  <Phone className="h-5 w-5 text-gray-500 mt-0.5 mr-3 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium">Phone</p>
+                    <a 
+                      href={`tel:${frituur.Number}`}
+                      className="text-primary hover:underline"
+                    >
+                      {frituur.Number}
+                    </a>
+                  </div>
+                </div>
+              )}
+              
+              {/* Email */}
+              {frituur.Email && (
+                <div className="flex items-start">
+                  <Mail className="h-5 w-5 text-gray-500 mt-0.5 mr-3 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium">Email</p>
+                    <a 
+                      href={`mailto:${frituur.Email}`}
+                      className="text-primary hover:underline break-all"
+                    >
+                      {frituur.Email}
+                    </a>
                   </div>
                 </div>
               )}
@@ -372,19 +404,6 @@ const FrituurDetails = () => {
                       <div>
                         <h3 className="font-medium text-gray-700 mb-1">Reviews</h3>
                         <p className="text-gray-600">{frituur.Review}</p>
-                      </div>
-                    )}
-                    
-                    {/* Additional info */}
-                    {frituur.Email && (
-                      <div>
-                        <h3 className="font-medium text-gray-700 mb-1">Email</h3>
-                        <a 
-                          href={`mailto:${frituur.Email}`}
-                          className="text-primary hover:underline"
-                        >
-                          {frituur.Email}
-                        </a>
                       </div>
                     )}
                   </div>
