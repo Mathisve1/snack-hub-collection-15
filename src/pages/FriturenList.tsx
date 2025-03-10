@@ -51,6 +51,12 @@ const FriturenList = () => {
       </div>
     );
   }
+  
+  // Filter frituren to only show those selected by the current team
+  const teamFrituren = filteredFrituren.filter(frituur => {
+    const selectedByTeam = getSelectedBy(frituur["Business Name"]);
+    return selectedByTeam === team;
+  });
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -113,13 +119,13 @@ const FriturenList = () => {
           
           {/* Results count */}
           <div className="mb-4 text-gray-600 flex justify-between items-center">
-            <span>Showing {filteredFrituren.length} of {frituren.length} frituren</span>
+            <span>Showing {teamFrituren.length} of {getTeamSelectedCount()} selected frituren</span>
             <span className="text-sm">Your selections: {getTeamSelectedCount()}</span>
           </div>
           
           {/* Frituren list */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredFrituren.map((frituur, index) => {
+            {teamFrituren.map((frituur, index) => {
               const businessName = frituur["Business Name"];
               const selectedByTeam = getSelectedBy(businessName);
               const isSelectedByCurrentTeam = selectedByTeam === team;
@@ -143,7 +149,7 @@ const FriturenList = () => {
             })}
           </div>
           
-          {filteredFrituren.length === 0 && (
+          {teamFrituren.length === 0 && (
             <NoResults resetFilters={resetFilters} />
           )}
         </div>
