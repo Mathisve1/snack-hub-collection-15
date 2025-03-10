@@ -28,3 +28,33 @@ export interface NutritionInfo {
   fats: number;
   fiber: number;
 }
+
+export interface Frituur {
+  "Business Name": string;
+  Postcode?: number;
+  Rating?: number;
+  Latitued?: number;
+  Provincie?: string;
+  Category?: string;
+  "Address/ Zip code/ City/ Country"?: string;
+  Website?: string;
+  Email?: string;
+  "Unnamed: 8"?: string;
+  "Open & Close Time"?: string;
+  Longitued?: string;
+  "Instagram link"?: string;
+  "Facebook Link"?: string;
+  "Linkedin Link"?: string;
+  Straat?: string;
+  Gemeente?: string;
+  Land?: string;
+  Number?: string;
+  Review?: string;
+}
+
+export interface TeamSelection {
+  id: string;
+  team: string;
+  business_name: string;
+  selected_at: string;
+}

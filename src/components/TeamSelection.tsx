@@ -38,7 +38,7 @@ const TeamCard = ({ team, onClick, isSelected }: TeamCardProps) => {
       <div className="flex flex-col items-center justify-center space-y-4">
         <div className={`text-2xl font-bold ${teamTextColors[team]}`}>{team}</div>
         <p className="text-gray-600 text-center">
-          Healthy protein snacks tailored for your team
+          Select frituren for your team
         </p>
       </div>
     </motion.div>
@@ -55,7 +55,7 @@ const TeamSelection = () => {
     
     // Add a small delay for better UX
     setTimeout(() => {
-      navigate(`/catalog/${team}`);
+      navigate(`/frituren/${team}`);
     }, 300);
   };
 
@@ -68,13 +68,13 @@ const TeamSelection = () => {
       >
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold tracking-tight mb-6">
-            <span className="inline-block">Healthy</span>{" "}
-            <span className="inline-block">Protein-Rich</span>{" "}
-            <span className="inline-block text-primary">Snacks</span>
+            <span className="inline-block">Frituren</span>{" "}
+            <span className="inline-block">Selection</span>{" "}
+            <span className="inline-block text-primary">Tool</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Discover delicious, nutritious fried snacks tailored specifically for your team.
-            Select your team below to get started.
+            Select your team to view and choose frituren for your area.
+            Once a frituur is selected by a team, it cannot be selected by another team.
           </p>
         </div>
       </motion.div>

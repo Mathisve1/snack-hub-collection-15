@@ -11,16 +11,91 @@ export type Database = {
     Tables: {
       frituren: {
         Row: {
-          created_at: string
-          id: number
+          "Address/ Zip code/ City/ Country": string | null
+          "Business Name": string
+          Category: string | null
+          Email: string | null
+          "Facebook Link": string | null
+          Gemeente: string | null
+          "Instagram link": string | null
+          Land: string | null
+          Latitued: number | null
+          "Linkedin Link": string | null
+          Longitued: string | null
+          Number: string | null
+          "Open & Close Time": string | null
+          Postcode: number | null
+          Provincie: string | null
+          Rating: number | null
+          Review: string | null
+          Straat: string | null
+          "Unnamed: 8": string | null
+          Website: string | null
         }
         Insert: {
-          created_at?: string
-          id?: number
+          "Address/ Zip code/ City/ Country"?: string | null
+          "Business Name": string
+          Category?: string | null
+          Email?: string | null
+          "Facebook Link"?: string | null
+          Gemeente?: string | null
+          "Instagram link"?: string | null
+          Land?: string | null
+          Latitued?: number | null
+          "Linkedin Link"?: string | null
+          Longitued?: string | null
+          Number?: string | null
+          "Open & Close Time"?: string | null
+          Postcode?: number | null
+          Provincie?: string | null
+          Rating?: number | null
+          Review?: string | null
+          Straat?: string | null
+          "Unnamed: 8"?: string | null
+          Website?: string | null
         }
         Update: {
-          created_at?: string
-          id?: number
+          "Address/ Zip code/ City/ Country"?: string | null
+          "Business Name"?: string
+          Category?: string | null
+          Email?: string | null
+          "Facebook Link"?: string | null
+          Gemeente?: string | null
+          "Instagram link"?: string | null
+          Land?: string | null
+          Latitued?: number | null
+          "Linkedin Link"?: string | null
+          Longitued?: string | null
+          Number?: string | null
+          "Open & Close Time"?: string | null
+          Postcode?: number | null
+          Provincie?: string | null
+          Rating?: number | null
+          Review?: string | null
+          Straat?: string | null
+          "Unnamed: 8"?: string | null
+          Website?: string | null
+        }
+        Relationships: []
+      }
+      team_selections: {
+        Row: {
+          business_name: string
+          id: string
+          selected_at: string | null
+          team: string
+        }
+        Insert: {
+          business_name: string
+          id?: string
+          selected_at?: string | null
+          team: string
+        }
+        Update: {
+          business_name?: string
+          id?: string
+          selected_at?: string | null
+          team?: string
         }
         Relationships: []
       }
