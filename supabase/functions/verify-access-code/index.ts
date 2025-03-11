@@ -17,7 +17,7 @@ Deno.serve(async (req) => {
 
     if (!team || !accessCode) {
       return new Response(
-        JSON.stringify({ error: "Team and access code are required" }),
+        JSON.stringify({ valid: false, error: "Team and access code are required" }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           status: 400 
@@ -40,7 +40,7 @@ Deno.serve(async (req) => {
     if (error) {
       console.error("Error fetching access code:", error);
       return new Response(
-        JSON.stringify({ error: "Failed to verify access code" }),
+        JSON.stringify({ valid: false, error: "Failed to verify access code" }),
         { 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           status: 500 
@@ -64,7 +64,7 @@ Deno.serve(async (req) => {
     console.error("Error in verify-access-code function:", error);
     
     return new Response(
-      JSON.stringify({ error: "An unexpected error occurred" }),
+      JSON.stringify({ valid: false, error: "An unexpected error occurred" }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 500 

@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AccessCodeModalProps {
   team: string;
@@ -30,16 +31,13 @@ const AccessCodeModal = ({ team, isOpen, onClose, onSuccess }: AccessCodeModalPr
     setError(null);
 
     try {
-      const { data, error } = await fetch("/api/verify-access-code", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ team, accessCode }),
-      }).then(res => res.json());
+      // Call the Supabase Edge Function directly
+      const { data, error } = await supabase.functions.invoke('verify-access-code', {
+        body: { team, accessCode }
+      });
 
       if (error) {
-        throw new Error(error);
+        throw new Error(error.message);
       }
 
       if (data?.valid) {
