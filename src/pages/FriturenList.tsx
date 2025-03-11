@@ -9,6 +9,7 @@ import SampleDataAlert from "@/features/frituren/SampleDataAlert";
 import FolderManagementSection from "@/features/frituren/FolderManagementSection";
 import AllFriturenSection from "@/features/frituren/AllFriturenSection";
 import TeamSelectionsSection from "@/features/frituren/TeamSelectionsSection";
+import VoiceAnalysisSection from "@/features/voice-analysis/VoiceAnalysisSection";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import AccessCodeModal from "@/components/AccessCodeModal";
@@ -96,6 +97,9 @@ const FriturenList = () => {
             <IntroSection team={team} />
             
             {usingSampleData && <SampleDataAlert />}
+            
+            {/* Voice Analysis Section - Added above frituren selection */}
+            <VoiceAnalysisSection team={team} />
             
             {/* Folder management section */}
             <FolderManagementSection
