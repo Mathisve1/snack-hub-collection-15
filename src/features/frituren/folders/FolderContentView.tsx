@@ -83,6 +83,7 @@ const FolderContentView = ({
                 selectedFolder={selectedFolder as string}
                 setMovingItem={setMovingItem}
                 removeFrituurFromFolder={removeFrituurFromFolder}
+                team={team}
               />
             );
           })
