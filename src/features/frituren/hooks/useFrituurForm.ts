@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -52,9 +53,10 @@ export const useFrituurForm = (team: string) => {
     try {
       setIsSubmitting(true);
       
+      // Check if business name already exists
       const { data: existingFrituurName } = await supabase
         .from('frituren')
-        .select()
+        .select('Business Name')
         .eq('Business Name', values["Business Name"])
         .maybeSingle();
         
@@ -64,27 +66,10 @@ export const useFrituurForm = (team: string) => {
         return;
       }
       
-      if (values.PhoneNumber && values.PhoneNumber.trim() !== "") {
-        const { data: existingPhoneNumber, error: phoneQueryError } = await supabase
-          .from('frituren')
-          .select()
-          .eq('PhoneNumber', values.PhoneNumber)
-          .maybeSingle();
-          
-        if (phoneQueryError) {
-          console.error("Error checking phone number:", phoneQueryError);
-        }
-          
-        if (existingPhoneNumber) {
-          toast.error(`A frituur with this phone number already exists.`);
-          setIsSubmitting(false);
-          return;
-        }
-      }
-      
+      // Check if address already exists
       const { data: existingFrituurAddress } = await supabase
         .from('frituren')
-        .select()
+        .select('Business Name')
         .eq('Straat', values.Straat)
         .eq('Number', values.Number || "")
         .eq('Gemeente', values.Gemeente)
@@ -97,8 +82,11 @@ export const useFrituurForm = (team: string) => {
         return;
       }
 
+      // Remove PhoneNumber from the values to insert as it doesn't exist in the database
+      const { PhoneNumber, ...dataToInsert } = values;
+      
       const processedValues = {
-        ...values,
+        ...dataToInsert,
         "Business Name": values["Business Name"],
         Postcode: values.Postcode ? Number(values.Postcode) : null,
         Land: "België",
