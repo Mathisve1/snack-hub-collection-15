@@ -1,6 +1,6 @@
 
 import { motion } from "framer-motion";
-import { Check, Heart, Bookmark, Info } from "lucide-react";
+import { Check, Info } from "lucide-react";
 import { Frituur } from "@/types";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -26,10 +26,6 @@ const FriturenItem = ({
   isSelectedByOtherTeam, 
   selectedByTeam,
   handleSelect,
-  isSaved,
-  isLiked,
-  onSave,
-  onLike,
   team
 }: FriturenItemProps) => {
   const businessName = frituur["Business Name"];
@@ -107,7 +103,7 @@ const FriturenItem = ({
 
         {/* Website link */}
         {frituur.Website && (
-          <div className="mt-2 mb-2">
+          <div className="mt-2">
             <a
               href={frituur.Website.startsWith('http') ? frituur.Website : `https://${frituur.Website}`}
               target="_blank"
@@ -118,33 +114,6 @@ const FriturenItem = ({
             </a>
           </div>
         )}
-
-        {/* Save and Like buttons */}
-        <div className="flex items-center space-x-2 mt-2">
-          <button
-            onClick={() => onSave(businessName)}
-            className={`flex items-center space-x-1 px-3 py-1 rounded-md text-xs ${
-              isSaved 
-                ? 'bg-blue-100 text-blue-600' 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            <Bookmark size={14} className={isSaved ? "fill-blue-600" : ""} />
-            <span>{isSaved ? 'Saved' : 'Save'}</span>
-          </button>
-          
-          <button
-            onClick={() => onLike(businessName)}
-            className={`flex items-center space-x-1 px-3 py-1 rounded-md text-xs ${
-              isLiked 
-                ? 'bg-red-100 text-red-600' 
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            <Heart size={14} className={isLiked ? "fill-red-500" : ""} />
-            <span>{isLiked ? 'Liked' : 'Like'}</span>
-          </button>
-        </div>
       </div>
     </motion.div>
   );
