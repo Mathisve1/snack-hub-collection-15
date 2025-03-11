@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -47,7 +46,6 @@ const provinces = [
   "Namen",
 ];
 
-// Define the form schema with validation
 const frituurFormSchema = z.object({
   "Business Name": z.string().min(2, {
     message: "Business name must be at least 2 characters.",
@@ -68,7 +66,9 @@ const frituurFormSchema = z.object({
       message: "Postal code must be a number.",
     }),
   PhoneNumber: z.string()
-    .min(9, { message: "Phone number must be at least 9 digits." })
+    .min(11, { message: "Phone number must be at least 11 digits including the '32' prefix." })
+    .max(11, { message: "Phone number cannot be longer than 11 digits including the '32' prefix." })
+    .regex(/^32\d{9}$/, { message: "Phone number must start with '32' followed by 9 digits" })
     .optional()
     .or(z.literal("")),
   Website: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal("")),
@@ -118,6 +118,26 @@ const AddFrituurForm = ({ team }: AddFrituurFormProps) => {
       Review: "",
     },
   });
+
+  const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>, field: any) => {
+    let value = e.target.value.replace(/\D/g, ''); // Remove all non-digits
+    
+    // If empty, set to empty string
+    if (!value) {
+      field.onChange('');
+      return;
+    }
+    
+    // If the value doesn't start with 32, add it
+    if (!value.startsWith('32')) {
+      value = '32' + value;
+    }
+    
+    // Limit to 11 digits (32 + 9 digits)
+    value = value.slice(0, 11);
+    
+    field.onChange(value);
+  };
 
   const onSubmit = async (values: FrituurFormValues) => {
     try {
@@ -349,7 +369,7 @@ const AddFrituurForm = ({ team }: AddFrituurFormProps) => {
                 )}
               />
               
-              {/* Phone Number - New field */}
+              {/* Phone Number */}
               <FormField
                 control={form.control}
                 name="PhoneNumber"
@@ -357,7 +377,13 @@ const AddFrituurForm = ({ team }: AddFrituurFormProps) => {
                   <FormItem>
                     <FormLabel>Phone Number</FormLabel>
                     <FormControl>
-                      <Input placeholder="+32 123 456 789" {...field} />
+                      <Input 
+                        placeholder="32XXXXXXXXX" 
+                        {...field}
+                        onChange={(e) => handlePhoneNumberChange(e, field)}
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
