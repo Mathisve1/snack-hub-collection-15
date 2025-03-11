@@ -8,6 +8,10 @@ import { toast } from "sonner";
 import { frituurFormSchema, type FrituurFormValues } from "../utils/formConstants";
 import { Frituur } from "@/types";
 
+// Define simple types for our database results
+type FrituurName = { "Business Name": string };
+type FrituurNameAndNumber = { "Business Name": string, Number: string | null };
+
 export const useFrituurForm = (team: string) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -59,7 +63,7 @@ export const useFrituurForm = (team: string) => {
         .from('frituren')
         .select('"Business Name"')
         .eq('"Business Name"', values["Business Name"])
-        .maybeSingle();
+        .maybeSingle<FrituurName>();
 
       if (nameCheckError) {
         console.error("Error checking for duplicate business name:", nameCheckError);
@@ -77,7 +81,7 @@ export const useFrituurForm = (team: string) => {
           .from('frituren')
           .select('"Business Name", Number')
           .eq('Number', values.PhoneNumber)
-          .maybeSingle();
+          .maybeSingle<FrituurNameAndNumber>();
           
         if (phoneCheckError) {
           console.error("Error checking for duplicate phone number:", phoneCheckError);
@@ -96,7 +100,7 @@ export const useFrituurForm = (team: string) => {
           .from('frituren')
           .select('"Business Name", Number')
           .eq('Number', values.Number)
-          .maybeSingle();
+          .maybeSingle<FrituurNameAndNumber>();
           
         if (numberCheckError) {
           console.error("Error checking for duplicate number:", numberCheckError);
@@ -117,7 +121,7 @@ export const useFrituurForm = (team: string) => {
         .eq('Number', values.Number || "")
         .eq('Gemeente', values.Gemeente)
         .eq('Postcode', values.Postcode ? Number(values.Postcode) : null)
-        .maybeSingle();
+        .maybeSingle<FrituurName>();
         
       if (addressCheckError) {
         console.error("Error checking for duplicate address:", addressCheckError);
