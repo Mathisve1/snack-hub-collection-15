@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -65,17 +66,35 @@ export const useFrituurForm = (team: string) => {
         return;
       }
       
-      // Check if phone number already exists 
-      // Using the Number field to check for existing phone numbers
+      // Check if phone number already exists - phone numbers are stored in the Number field in Supabase
       if (values.PhoneNumber && values.PhoneNumber.trim() !== "") {
-        const { data: existingPhoneNumber } = await supabase
+        const { data: existingPhoneNumber, error: phoneCheckError } = await supabase
           .from('frituren')
           .select('Business Name')
           .eq('Number', values.PhoneNumber)
           .maybeSingle();
           
+        if (phoneCheckError) {
+          console.error("Error checking for duplicate phone number:", phoneCheckError);
+        }
+          
         if (existingPhoneNumber) {
-          toast.error(`A frituur with this phone number already exists.`);
+          toast.error(`A frituur with this phone number already exists (${existingPhoneNumber["Business Name"]}).`);
+          setIsSubmitting(false);
+          return;
+        }
+      }
+      
+      // Also check if the Number field has a value and it's not being used yet (for backward compatibility)
+      if (values.Number && values.Number.trim() !== "" && values.Number !== values.PhoneNumber) {
+        const { data: existingNumber } = await supabase
+          .from('frituren')
+          .select('Business Name')
+          .eq('Number', values.Number)
+          .maybeSingle();
+          
+        if (existingNumber) {
+          toast.error(`A frituur with this number already exists.`);
           setIsSubmitting(false);
           return;
         }
@@ -98,16 +117,15 @@ export const useFrituurForm = (team: string) => {
       }
 
       // Prepare data for insertion
-      // If we have a phone number, use it as the Number field
-      // Otherwise, use the original Number field value
+      // Use PhoneNumber as the Number field in Supabase if it exists
       const processedValues = {
         ...values,
         "Business Name": values["Business Name"],
         Postcode: values.Postcode ? Number(values.Postcode) : null,
         Land: "België",
         Rating: values.Rating ? Number(values.Rating) : null,
-        Number: values.PhoneNumber || values.Number || "",  // Set PhoneNumber as the Number field
-        Review: values.Review || ""  // Keep Review field for actual reviews
+        Number: values.PhoneNumber || values.Number || "",  // PhoneNumber takes priority for the Number field
+        Review: values.Review || ""
       };
       
       // Remove PhoneNumber from the values to insert as it doesn't exist in the database
