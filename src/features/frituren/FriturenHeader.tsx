@@ -1,7 +1,8 @@
 
 import { motion } from "framer-motion";
-import { ChevronLeft, FolderIcon } from "lucide-react";
+import { ChevronLeft, FolderIcon, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 interface FriturenHeaderProps {
   team: string;
@@ -27,6 +28,10 @@ const FriturenHeader = ({
       setShowFolders(!showFolders);
     }
   };
+  
+  const goToAddFrituur = () => {
+    navigate(`/frituren/${team}/add`);
+  };
 
   return (
     <motion.header
@@ -43,6 +48,15 @@ const FriturenHeader = ({
             </span>
           </div>
           <div className="flex items-center space-x-4">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="flex items-center gap-1"
+              onClick={goToAddFrituur}
+            >
+              <Plus size={16} />
+              Add Frituur
+            </Button>
             <span 
               className="text-sm font-medium bg-primary/10 text-primary px-3 py-1 rounded-full flex items-center gap-1.5 cursor-pointer hover:bg-primary/20 transition-colors"
               onClick={handleFolderToggle}
