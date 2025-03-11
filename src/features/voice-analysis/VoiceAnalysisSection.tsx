@@ -22,7 +22,7 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
     setRefreshInterviews(prev => prev + 1);
   };
 
-  const bannerMessage = "Momenteel wordt er heel gewerkt aan een ai voice analyzing tool waar jullie al jullie interviews van op straat en in de frituur kunnen uploaden en deze zullen verwerkt worden voor jullie. xxx Mathis";
+  const bannerMessage = "Momenteel wordt er heel gewerkt aan een ai voice analyzing tool waar jullie al jullie interviews van op straat en in de frituur kunnen uploaden en deze zullen verwerkt worden voor jullie, maar wees niet getreurd jullie kunnen alvast jullie geliefde frituren kiezen en interviews gaan afnemen. xxx Mathis";
   const bannerImageUrl = "/lovable-uploads/b6d1ba15-5aa9-42a6-90c2-ba5e00400ce7.png";
 
   return (
