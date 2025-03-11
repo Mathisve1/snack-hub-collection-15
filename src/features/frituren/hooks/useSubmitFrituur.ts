@@ -51,11 +51,15 @@ export const useSubmitFrituur = (team: string) => {
         Review: values.Review || ""
       };
 
+      // Remove PhoneNumber from processedValues as it's not in the table
       const { PhoneNumber, ...dataToInsert } = processedValues;
 
       const { error: insertError } = await supabase
         .from('frituren')
-        .insert(dataToInsert);
+        .insert({
+          ...dataToInsert,
+          "Business Name": values["Business Name"] // Ensure Business Name is included and required
+        });
 
       if (insertError) {
         console.error("Error adding frituur:", insertError);

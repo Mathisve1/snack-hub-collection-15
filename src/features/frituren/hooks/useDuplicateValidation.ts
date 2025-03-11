@@ -54,7 +54,7 @@ export const useDuplicateValidation = () => {
       .eq('Straat', straat)
       .eq('Number', number || "")
       .eq('Gemeente', gemeente)
-      .eq('Postcode', postcode);
+      .eq('Postcode', postcode === null ? null : Number(postcode));
 
     if (error) {
       console.error("Error checking for duplicate address:", error);
