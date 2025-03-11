@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -66,12 +65,13 @@ export const useFrituurForm = (team: string) => {
         return;
       }
       
-      // Check if phone number already exists (using Review field as temporary storage)
+      // Check if phone number already exists 
+      // Using the Number field to check for existing phone numbers
       if (values.PhoneNumber && values.PhoneNumber.trim() !== "") {
         const { data: existingPhoneNumber } = await supabase
           .from('frituren')
           .select('Business Name')
-          .eq('Review', values.PhoneNumber)
+          .eq('Number', values.PhoneNumber)
           .maybeSingle();
           
         if (existingPhoneNumber) {
@@ -97,21 +97,24 @@ export const useFrituurForm = (team: string) => {
         return;
       }
 
-      // Store the phone number in the Number field since there's no dedicated PhoneNumber column
+      // Prepare data for insertion
+      // If we have a phone number, use it as the Number field
+      // Otherwise, use the original Number field value
       const processedValues = {
         ...values,
         "Business Name": values["Business Name"],
         Postcode: values.Postcode ? Number(values.Postcode) : null,
         Land: "België",
         Rating: values.Rating ? Number(values.Rating) : null,
-        Number: values.PhoneNumber || values.Number || "",  // Use PhoneNumber as Number if available
-        Review: values.Review || ""  // Keep Review separate
+        Number: values.PhoneNumber || values.Number || "",  // Set PhoneNumber as the Number field
+        Review: values.Review || ""  // Keep Review field for actual reviews
       };
       
       // Remove PhoneNumber from the values to insert as it doesn't exist in the database
       const { PhoneNumber, ...dataToInsert } = processedValues;
       
-      // Enable service role to bypass RLS for now
+      console.log("Inserting frituur data:", dataToInsert);
+      
       const { error } = await supabase
         .from('frituren')
         .insert(dataToInsert);
