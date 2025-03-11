@@ -9,8 +9,14 @@ import { frituurFormSchema, type FrituurFormValues } from "../utils/formConstant
 import { Frituur } from "@/types";
 
 // Define simple types for our database results
-type FrituurName = { "Business Name": string };
-type FrituurNameAndNumber = { "Business Name": string, Number: string | null };
+interface FrituurName {
+  "Business Name": string;
+}
+
+interface FrituurNameAndNumber {
+  "Business Name": string;
+  Number: string | null;
+}
 
 export const useFrituurForm = (team: string) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,10 +69,13 @@ export const useFrituurForm = (team: string) => {
         .from('frituren')
         .select('"Business Name"')
         .eq('"Business Name"', values["Business Name"])
-        .maybeSingle<FrituurName>();
+        .maybeSingle();
 
       if (nameCheckError) {
         console.error("Error checking for duplicate business name:", nameCheckError);
+        toast.error("Failed to check for duplicate business name. Please try again.");
+        setIsSubmitting(false);
+        return;
       }
         
       if (existingFrituurName) {
@@ -81,10 +90,14 @@ export const useFrituurForm = (team: string) => {
           .from('frituren')
           .select('"Business Name", Number')
           .eq('Number', values.PhoneNumber)
-          .maybeSingle<FrituurNameAndNumber>();
+          .single();
           
-        if (phoneCheckError) {
+        if (phoneCheckError && phoneCheckError.code !== 'PGRST116') {
+          // PGRST116 is the error code for no rows returned
           console.error("Error checking for duplicate phone number:", phoneCheckError);
+          toast.error("Failed to check for duplicate phone number. Please try again.");
+          setIsSubmitting(false);
+          return;
         }
           
         if (existingPhoneNumber) {
@@ -100,10 +113,13 @@ export const useFrituurForm = (team: string) => {
           .from('frituren')
           .select('"Business Name", Number')
           .eq('Number', values.Number)
-          .maybeSingle<FrituurNameAndNumber>();
+          .single();
           
-        if (numberCheckError) {
+        if (numberCheckError && numberCheckError.code !== 'PGRST116') {
           console.error("Error checking for duplicate number:", numberCheckError);
+          toast.error("Failed to check for duplicate number. Please try again.");
+          setIsSubmitting(false);
+          return;
         }
           
         if (existingNumber) {
@@ -121,10 +137,13 @@ export const useFrituurForm = (team: string) => {
         .eq('Number', values.Number || "")
         .eq('Gemeente', values.Gemeente)
         .eq('Postcode', values.Postcode ? Number(values.Postcode) : null)
-        .maybeSingle<FrituurName>();
+        .single();
         
-      if (addressCheckError) {
+      if (addressCheckError && addressCheckError.code !== 'PGRST116') {
         console.error("Error checking for duplicate address:", addressCheckError);
+        toast.error("Failed to check for duplicate address. Please try again.");
+        setIsSubmitting(false);
+        return;
       }
         
       if (existingFrituurAddress) {
