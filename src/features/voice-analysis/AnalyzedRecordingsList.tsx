@@ -20,21 +20,24 @@ interface VoiceAnalysis {
 
 interface AnalyzedRecordingsListProps {
   team: string;
+  type: 'frituren' | 'interviews';
 }
 
-const AnalyzedRecordingsList = ({ team }: AnalyzedRecordingsListProps) => {
+const AnalyzedRecordingsList = ({ team, type }: AnalyzedRecordingsListProps) => {
   const [recordings, setRecordings] = useState<VoiceAnalysis[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchRecordings();
-  }, [team]);
+  }, [team, type]);
 
   const fetchRecordings = async () => {
     try {
       setLoading(true);
+      const tableName = type === 'frituren' ? 'voice_analysis' : 'street_interviews';
+      
       const { data, error } = await supabase
-        .from('voice_analysis')
+        .from(tableName)
         .select('*')
         .eq('team', team)
         .order('created_at', { ascending: false });

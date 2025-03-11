@@ -4,13 +4,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "sonner";
 
-export const useVoiceUploader = (team: string, onUploadComplete: () => void) => {
+export const useVoiceUploader = (
+  team: string, 
+  type: 'frituren' | 'interviews', 
+  onUploadComplete: () => void
+) => {
   const [isUploading, setIsUploading] = useState(false);
 
   const uploadRecording = async (recordingBlob: Blob, recordingDuration: number) => {
     setIsUploading(true);
     try {
-      const fileName = `${uuidv4()}-voice-recording.webm`;
+      const fileName = `${uuidv4()}-${type}-recording.webm`;
       
       const { data: fileData, error: uploadError } = await supabase
         .storage
@@ -26,8 +30,10 @@ export const useVoiceUploader = (team: string, onUploadComplete: () => void) => 
       
       const publicUrl = publicUrlData.publicUrl;
       
+      const tableName = type === 'frituren' ? 'voice_analysis' : 'street_interviews';
+      
       const { error: insertError } = await supabase
-        .from('voice_analysis')
+        .from(tableName)
         .insert({
           team,
           recording_url: publicUrl,

@@ -1,4 +1,3 @@
-
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Upload, Loader2 } from "lucide-react";
@@ -10,9 +9,10 @@ import { RecordingInterface } from "./components/RecordingInterface";
 interface VoiceRecordingUploaderProps {
   team: string;
   onUploadComplete: () => void;
+  type: 'frituren' | 'interviews';
 }
 
-const VoiceRecordingUploader = ({ team, onUploadComplete }: VoiceRecordingUploaderProps) => {
+const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecordingUploaderProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const {
     isRecording,
@@ -23,7 +23,7 @@ const VoiceRecordingUploader = ({ team, onUploadComplete }: VoiceRecordingUpload
     setRecordingBlob
   } = useVoiceRecorder();
   
-  const { isUploading, uploadRecording } = useVoiceUploader(team, onUploadComplete);
+  const { isUploading, uploadRecording } = useVoiceUploader(team, type, onUploadComplete);
   
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -73,7 +73,12 @@ const VoiceRecordingUploader = ({ team, onUploadComplete }: VoiceRecordingUpload
           {!isRecording ? (
             <>
               <div className="mb-2 text-center">
-                <p className="text-gray-500 mb-4">Record voice or upload audio file for analysis</p>
+                <p className="text-gray-500 mb-4">
+                  {type === 'frituren' 
+                    ? 'Record voice or upload audio file about your frituur visit'
+                    : 'Record voice or upload audio file of street interviews'
+                  }
+                </p>
                 <div className="flex flex-wrap gap-4 justify-center">
                   <RecordingInterface
                     isRecording={isRecording}
@@ -132,7 +137,12 @@ const VoiceRecordingUploader = ({ team, onUploadComplete }: VoiceRecordingUpload
       )}
       
       <div className="text-sm text-gray-500 mt-2">
-        <p>Voice recordings will be automatically analyzed for key points about frituren.</p>
+        <p>
+          {type === 'frituren' 
+            ? 'Voice recordings will be automatically analyzed for key points about frituren.'
+            : 'Voice recordings will be automatically analyzed for street interview insights.'
+          }
+        </p>
       </div>
     </div>
   );
