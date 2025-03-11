@@ -66,7 +66,7 @@ export const useFrituurForm = (team: string) => {
         return;
       }
       
-      // Check if phone number already exists
+      // Check if phone number already exists (using Review field as temporary storage)
       if (values.PhoneNumber && values.PhoneNumber.trim() !== "") {
         const { data: existingPhoneNumber } = await supabase
           .from('frituren')
@@ -97,29 +97,29 @@ export const useFrituurForm = (team: string) => {
         return;
       }
 
-      // Store the phone number in the Review field as a temporary solution
-      // since there's no PhoneNumber column in the database
-      const phoneNumber = values.PhoneNumber || "";
-      
+      // Store the phone number in the Number field since there's no dedicated PhoneNumber column
       const processedValues = {
         ...values,
         "Business Name": values["Business Name"],
         Postcode: values.Postcode ? Number(values.Postcode) : null,
         Land: "België",
         Rating: values.Rating ? Number(values.Rating) : null,
-        Review: phoneNumber // Store phone number in Review field
+        Number: values.PhoneNumber || values.Number || "",  // Use PhoneNumber as Number if available
+        Review: values.Review || ""  // Keep Review separate
       };
       
       // Remove PhoneNumber from the values to insert as it doesn't exist in the database
       const { PhoneNumber, ...dataToInsert } = processedValues;
       
+      // Enable service role to bypass RLS for now
       const { error } = await supabase
         .from('frituren')
         .insert(dataToInsert);
         
       if (error) {
         console.error("Error adding frituur:", error);
-        toast.error("Failed to add frituur. Please try again.");
+        toast.error(`Failed to add frituur: ${error.message}`);
+        setIsSubmitting(false);
         return;
       }
       
