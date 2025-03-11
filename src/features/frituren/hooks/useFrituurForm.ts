@@ -61,7 +61,7 @@ export const useFrituurForm = (team: string) => {
         .maybeSingle();
         
       if (existingFrituurName) {
-        toast.error(`A frituur with the name "${values["Business Name"]}" already exists.`);
+        toast.error(`A frituur with the name "${values["Business Name"]}" is already in our list. Please use a different name.`);
         setIsSubmitting(false);
         return;
       }
@@ -79,7 +79,7 @@ export const useFrituurForm = (team: string) => {
         }
           
         if (existingPhoneNumber) {
-          toast.error(`A frituur with this phone number already exists (${existingPhoneNumber["Business Name"]}).`);
+          toast.error(`This phone number is already used by "${existingPhoneNumber["Business Name"]}". You cannot add a frituur with the same phone number.`);
           setIsSubmitting(false);
           return;
         }
@@ -94,7 +94,7 @@ export const useFrituurForm = (team: string) => {
           .maybeSingle();
           
         if (existingNumber) {
-          toast.error(`A frituur with this number already exists.`);
+          toast.error(`This number is already used by "${existingNumber["Business Name"]}". You cannot add a frituur with the same number.`);
           setIsSubmitting(false);
           return;
         }
@@ -111,7 +111,7 @@ export const useFrituurForm = (team: string) => {
         .maybeSingle();
         
       if (existingFrituurAddress) {
-        toast.error(`A frituur at this address already exists.`);
+        toast.error(`A frituur at this address already exists: "${existingFrituurAddress["Business Name"]}". You cannot add two frituren at the same location.`);
         setIsSubmitting(false);
         return;
       }
