@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -34,7 +33,6 @@ export const useFrituurForm = (team: string) => {
   });
 
   const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>, field: any) => {
-    // Only allow numeric input and automatically add "32" prefix
     let value = e.target.value.replace(/\D/g, '');
     
     if (!value) {
@@ -42,12 +40,10 @@ export const useFrituurForm = (team: string) => {
       return;
     }
     
-    // Ensure it starts with "32"
     if (!value.startsWith('32')) {
       value = '32' + value;
     }
     
-    // Limit to 10 digits (32 + 8 digits)
     value = value.slice(0, 10);
     field.onChange(value);
   };
@@ -56,10 +52,9 @@ export const useFrituurForm = (team: string) => {
     try {
       setIsSubmitting(true);
       
-      // Check if business name already exists
       const { data: existingFrituurName } = await supabase
         .from('frituren')
-        .select('*')
+        .select()
         .eq('Business Name', values["Business Name"])
         .maybeSingle();
         
@@ -69,11 +64,10 @@ export const useFrituurForm = (team: string) => {
         return;
       }
       
-      // Only check phone number if one is provided
       if (values.PhoneNumber && values.PhoneNumber.trim() !== "") {
         const { data: existingPhoneNumber, error: phoneQueryError } = await supabase
           .from('frituren')
-          .select('*')
+          .select()
           .eq('PhoneNumber', values.PhoneNumber)
           .maybeSingle();
           
@@ -88,14 +82,13 @@ export const useFrituurForm = (team: string) => {
         }
       }
       
-      // Check if address already exists
       const { data: existingFrituurAddress } = await supabase
         .from('frituren')
-        .select('*')
+        .select()
         .eq('Straat', values.Straat)
         .eq('Number', values.Number || "")
         .eq('Gemeente', values.Gemeente)
-        .eq('Postcode', values.Postcode || null)
+        .eq('Postcode', values.Postcode ? Number(values.Postcode) : null)
         .maybeSingle();
         
       if (existingFrituurAddress) {
@@ -104,7 +97,6 @@ export const useFrituurForm = (team: string) => {
         return;
       }
 
-      // Process values for insertion
       const processedValues = {
         ...values,
         "Business Name": values["Business Name"],
@@ -113,7 +105,6 @@ export const useFrituurForm = (team: string) => {
         Rating: values.Rating ? Number(values.Rating) : null
       };
       
-      // Insert into frituren table
       const { error } = await supabase
         .from('frituren')
         .insert(processedValues);
@@ -124,7 +115,6 @@ export const useFrituurForm = (team: string) => {
         return;
       }
       
-      // Insert into team_selections table
       const { error: selectionError } = await supabase
         .from('team_selections')
         .insert({
@@ -138,7 +128,6 @@ export const useFrituurForm = (team: string) => {
       
       toast.success("Frituur added successfully!");
       
-      // Navigate to the frituur details page after successful submission
       setTimeout(() => {
         navigate(`/frituur/${team}/${encodeURIComponent(values["Business Name"])}`);
       }, 1500);
