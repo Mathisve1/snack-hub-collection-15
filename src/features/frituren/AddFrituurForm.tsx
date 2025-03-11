@@ -147,18 +147,18 @@ const AddFrituurForm = ({ team }: AddFrituurFormProps) => {
         return;
       }
 
-      // Convert Rating to number if provided
+      // Process values for database insertion
       const processedValues = {
         ...values,
+        // Convert Postcode to number if provided
         Postcode: values.Postcode ? parseInt(values.Postcode) : null,
-        Rating: values.Rating,
         Land: "België" // Default value for Land
       };
       
       // Add the new frituur to the database
       const { data, error } = await supabase
         .from('frituren')
-        .insert([processedValues]);
+        .insert(processedValues);
         
       if (error) {
         console.error("Error adding frituur:", error);
