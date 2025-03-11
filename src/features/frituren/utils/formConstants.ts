@@ -1,4 +1,6 @@
 
+import * as z from "zod";
+
 export const provinces = [
   "Antwerpen",
   "Oost-Vlaanderen",
@@ -12,8 +14,6 @@ export const provinces = [
   "Luxemburg",
   "Namen",
 ];
-
-import * as z from "zod";
 
 export const frituurFormSchema = z.object({
   "Business Name": z.string().min(2, {
@@ -35,9 +35,9 @@ export const frituurFormSchema = z.object({
       message: "Postal code must be a number.",
     }),
   PhoneNumber: z.string()
-    .min(11, { message: "Phone number must be at least 11 digits including the '32' prefix." })
-    .max(11, { message: "Phone number cannot be longer than 11 digits including the '32' prefix." })
-    .regex(/^32\d{9}$/, { message: "Phone number must start with '32' followed by 9 digits" })
+    .refine(val => val === "" || (val.startsWith("32") && val.length === 11), {
+      message: "Phone number must start with '32' followed by 9 digits (total 11 digits)"
+    })
     .optional()
     .or(z.literal("")),
   Website: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal("")),
@@ -51,7 +51,8 @@ export const frituurFormSchema = z.object({
       message: "Rating must be a number between 0 and 5.",
     })
     .optional()
-    .transform(val => val === "" ? null : Number(val)),
+    .or(z.literal(""))
+    .transform(val => val === "" ? null : val),
   Category: z.string().optional(),
   Review: z.string().optional(),
 });
