@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -150,8 +149,11 @@ const AddFrituurForm = ({ team }: AddFrituurFormProps) => {
       // Process values for database insertion
       const processedValues = {
         ...values,
+        // Ensure Business Name is never optional (required by the database)
+        "Business Name": values["Business Name"],
         // Convert Postcode to number if provided
         Postcode: values.Postcode ? parseInt(values.Postcode) : null,
+        // Rating is already transformed to number by zod
         Land: "België" // Default value for Land
       };
       
@@ -170,12 +172,10 @@ const AddFrituurForm = ({ team }: AddFrituurFormProps) => {
       // Also add it to team selections
       const { error: selectionError } = await supabase
         .from('team_selections')
-        .insert([
-          { 
-            business_name: values["Business Name"],
-            team: team
-          }
-        ]);
+        .insert({
+          business_name: values["Business Name"],
+          team: team
+        });
         
       if (selectionError) {
         console.error("Error adding to team selections:", selectionError);
