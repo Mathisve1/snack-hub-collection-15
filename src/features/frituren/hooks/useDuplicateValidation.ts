@@ -2,13 +2,23 @@
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+// Define simple interface for the query results to avoid deep type instantiation
+interface BusinessNameResult {
+  "Business Name": string;
+}
+
+interface PhoneNumberResult {
+  "Business Name": string;
+  Number: string;
+}
+
 export const useDuplicateValidation = () => {
   const checkBusinessNameExists = async (businessName: string) => {
-    // Use explicit typing to avoid deep type instantiation
+    // Use explicit type annotation to avoid deep type instantiation
     const { data, error } = await supabase
       .from('frituren')
       .select('"Business Name"')
-      .eq('"Business Name"', businessName);
+      .eq('"Business Name"', businessName) as { data: BusinessNameResult[] | null, error: any };
 
     if (error) {
       console.error("Error checking for duplicate business name:", error);
@@ -29,11 +39,11 @@ export const useDuplicateValidation = () => {
       return false;
     }
 
-    // Use explicit typing to avoid deep type instantiation
+    // Use explicit type annotation to avoid deep type instantiation
     const { data, error } = await supabase
       .from('frituren')
       .select('"Business Name", Number')
-      .eq('Number', phoneNumber);
+      .eq('Number', phoneNumber) as { data: PhoneNumberResult[] | null, error: any };
 
     if (error) {
       console.error("Error checking for duplicate phone number:", error);
@@ -55,14 +65,14 @@ export const useDuplicateValidation = () => {
     gemeente: string, 
     postcode: string | number | null
   ) => {
-    // Use explicit typing to avoid deep type instantiation
+    // Use explicit type annotation to avoid deep type instantiation
     const { data, error } = await supabase
       .from('frituren')
       .select('"Business Name"')
       .eq('Straat', straat)
       .eq('Number', number || "")
       .eq('Gemeente', gemeente)
-      .eq('Postcode', postcode === null ? null : Number(postcode));
+      .eq('Postcode', postcode === null ? null : Number(postcode)) as { data: BusinessNameResult[] | null, error: any };
 
     if (error) {
       console.error("Error checking for duplicate address:", error);
