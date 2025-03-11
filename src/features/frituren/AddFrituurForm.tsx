@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -122,7 +123,7 @@ const AddFrituurForm = ({ team }: AddFrituurFormProps) => {
         .from('frituren')
         .select('*')
         .eq('Business Name', values["Business Name"])
-        .single();
+        .maybeSingle();
         
       if (existingFrituurName) {
         toast.error(`A frituur with the name "${values["Business Name"]}" already exists.`);
@@ -138,7 +139,7 @@ const AddFrituurForm = ({ team }: AddFrituurFormProps) => {
         .eq('Number', values.Number || "")
         .eq('Gemeente', values.Gemeente)
         .eq('Postcode', values.Postcode)
-        .single();
+        .maybeSingle();
         
       if (existingFrituurAddress) {
         toast.error(`A frituur at this address already exists.`);
@@ -152,7 +153,7 @@ const AddFrituurForm = ({ team }: AddFrituurFormProps) => {
         // Ensure Business Name is never optional (required by the database)
         "Business Name": values["Business Name"],
         // Convert Postcode to number if provided
-        Postcode: values.Postcode ? parseInt(values.Postcode) : null,
+        Postcode: values.Postcode ? Number(values.Postcode) : null,
         // Rating is already transformed to number by zod
         Land: "België" // Default value for Land
       };
