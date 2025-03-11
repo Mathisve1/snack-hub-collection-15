@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -6,7 +5,7 @@ import { Mic, Camera, File, Plus, X, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import FileUploader from "./FileUploader";
-import FrituurAttachments from "./FrituurAttachments";
+import FrituurAttachmentsList from "./attachments/FrituurAttachmentsList";
 
 interface NotesTabContentProps {
   team: string;
@@ -60,7 +59,6 @@ const NotesTabContent = ({ team, businessName }: NotesTabContentProps) => {
 
   return (
     <div className="space-y-6">
-      {/* Add note button */}
       {!showNoteEditor && (
         <Button
           onClick={() => setShowNoteEditor(true)}
@@ -71,7 +69,6 @@ const NotesTabContent = ({ team, businessName }: NotesTabContentProps) => {
         </Button>
       )}
       
-      {/* Note editor */}
       {showNoteEditor && (
         <div className="bg-gray-50 p-4 rounded-md mb-6">
           <div className="flex justify-between items-center mb-2">
@@ -114,7 +111,6 @@ const NotesTabContent = ({ team, businessName }: NotesTabContentProps) => {
         </div>
       )}
       
-      {/* File upload buttons */}
       <div className="flex flex-wrap gap-2 mb-6">
         <FileUploader
           team={team}
@@ -153,8 +149,7 @@ const NotesTabContent = ({ team, businessName }: NotesTabContentProps) => {
         </FileUploader>
       </div>
       
-      {/* List of notes and attachments */}
-      <FrituurAttachments 
+      <FrituurAttachmentsList 
         key={refreshAttachments}
         team={team} 
         businessName={businessName} 
