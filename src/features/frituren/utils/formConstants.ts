@@ -35,8 +35,8 @@ export const frituurFormSchema = z.object({
       message: "Postal code must be a number.",
     }),
   PhoneNumber: z.string()
-    .refine(val => val === "" || (val.startsWith("32") && val.length === 11), {
-      message: "Phone number must start with '32' followed by 9 digits (total 11 digits)"
+    .refine(val => val === "" || (val.startsWith("32") && val.length === 10), {
+      message: "Phone number must start with '32' followed by 8 digits (total 10 digits)"
     })
     .optional()
     .or(z.literal("")),

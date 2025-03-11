@@ -72,15 +72,15 @@ export const BasicInfoFields = ({ form, handlePhoneNumberChange }: BasicInfoFiel
         name="PhoneNumber"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Phone Number (32 + 9 digits)</FormLabel>
+            <FormLabel>Phone Number (32 + 8 digits)</FormLabel>
             <FormControl>
               <Input 
-                placeholder="32XXXXXXXXX" 
+                placeholder="32XXXXXXXX" 
                 {...field}
                 onChange={(e) => handlePhoneNumberChange(e, field)}
                 inputMode="numeric"
                 pattern="[0-9]*"
-                maxLength={11}
+                maxLength={10}
               />
             </FormControl>
             <FormMessage />

@@ -47,8 +47,8 @@ export const useFrituurForm = (team: string) => {
       value = '32' + value;
     }
     
-    // Limit to 11 digits (32 + 9 digits)
-    value = value.slice(0, 11);
+    // Limit to 10 digits (32 + 8 digits)
+    value = value.slice(0, 10);
     field.onChange(value);
   };
 
@@ -71,11 +71,15 @@ export const useFrituurForm = (team: string) => {
       
       // Only check phone number if one is provided
       if (values.PhoneNumber && values.PhoneNumber.trim() !== "") {
-        const { data: existingPhoneNumber } = await supabase
+        const { data: existingPhoneNumber, error: phoneQueryError } = await supabase
           .from('frituren')
           .select('*')
           .eq('PhoneNumber', values.PhoneNumber)
           .maybeSingle();
+          
+        if (phoneQueryError) {
+          console.error("Error checking phone number:", phoneQueryError);
+        }
           
         if (existingPhoneNumber) {
           toast.error(`A frituur with this phone number already exists.`);
@@ -91,7 +95,7 @@ export const useFrituurForm = (team: string) => {
         .eq('Straat', values.Straat)
         .eq('Number', values.Number || "")
         .eq('Gemeente', values.Gemeente)
-        .eq('Postcode', values.Postcode ? values.Postcode : null)
+        .eq('Postcode', values.Postcode || null)
         .maybeSingle();
         
       if (existingFrituurAddress) {
