@@ -1,18 +1,31 @@
 
 import { motion } from "framer-motion";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, FolderIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface FriturenHeaderProps {
   team: string;
   selectedCount: number;
+  showFolders?: boolean;
+  setShowFolders?: (show: boolean) => void;
 }
 
-const FriturenHeader = ({ team, selectedCount }: FriturenHeaderProps) => {
+const FriturenHeader = ({ 
+  team, 
+  selectedCount, 
+  showFolders = false, 
+  setShowFolders 
+}: FriturenHeaderProps) => {
   const navigate = useNavigate();
 
   const goHome = () => {
     navigate("/");
+  };
+
+  const handleFolderToggle = () => {
+    if (setShowFolders) {
+      setShowFolders(!showFolders);
+    }
   };
 
   return (
@@ -30,7 +43,11 @@ const FriturenHeader = ({ team, selectedCount }: FriturenHeaderProps) => {
             </span>
           </div>
           <div className="flex items-center space-x-4">
-            <span className="text-sm font-medium bg-primary/10 text-primary px-3 py-1 rounded-full">
+            <span 
+              className="text-sm font-medium bg-primary/10 text-primary px-3 py-1 rounded-full flex items-center gap-1.5 cursor-pointer hover:bg-primary/20 transition-colors"
+              onClick={handleFolderToggle}
+            >
+              <FolderIcon size={14} className="text-primary" />
               Team {team}: {selectedCount} selected
             </span>
             <button

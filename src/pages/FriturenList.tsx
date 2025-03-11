@@ -86,7 +86,9 @@ const FriturenList = () => {
       <div className="min-h-screen flex flex-col">
         <FriturenHeader 
           team={team} 
-          selectedCount={getTeamSelectedCount()} 
+          selectedCount={getTeamSelectedCount()}
+          showFolders={showFolders}
+          setShowFolders={setShowFolders}
         />
 
         <main className="flex-grow bg-gray-50">
