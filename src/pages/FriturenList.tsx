@@ -1,5 +1,5 @@
 
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useFriturenData } from "@/hooks/frituren";
 import FriturenHeader from "@/features/frituren/FriturenHeader";
 import IntroSection from "@/features/frituren/IntroSection";
@@ -9,11 +9,16 @@ import SampleDataAlert from "@/features/frituren/SampleDataAlert";
 import FolderManagementSection from "@/features/frituren/FolderManagementSection";
 import AllFriturenSection from "@/features/frituren/AllFriturenSection";
 import TeamSelectionsSection from "@/features/frituren/TeamSelectionsSection";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
+import AccessCodeModal from "@/components/AccessCodeModal";
 
 const FriturenList = () => {
   const { team = "" } = useParams<{ team: string }>();
+  const navigate = useNavigate();
   const [showFolders, setShowFolders] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(true);
+  const [showAccessModal, setShowAccessModal] = useState(false);
   
   const {
     isValidTeam,
@@ -44,8 +49,29 @@ const FriturenList = () => {
     totalPages
   } = useFriturenData(team);
 
-  if (!isValidTeam || loading) {
-    return <LoadingState loading={loading} />;
+  // Verify team access on page load
+  useEffect(() => {
+    if (!isValidTeam) return;
+    
+    const checkTeamAccess = () => {
+      const isVerified = sessionStorage.getItem(`team_access_${team}`);
+      if (isVerified === "verified") {
+        setIsVerifying(false);
+      } else {
+        setShowAccessModal(true);
+        setIsVerifying(false);
+      }
+    };
+    
+    checkTeamAccess();
+  }, [team, isValidTeam]);
+
+  const handleVerificationSuccess = () => {
+    setShowAccessModal(false);
+  };
+
+  if (!isValidTeam || loading || isVerifying) {
+    return <LoadingState loading={loading || isVerifying} />;
   }
   
   // Get team-selected frituren separately from all frituren
@@ -56,68 +82,81 @@ const FriturenList = () => {
   });
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <FriturenHeader 
-        team={team} 
-        selectedCount={getTeamSelectedCount()} 
+    <>
+      <div className="min-h-screen flex flex-col">
+        <FriturenHeader 
+          team={team} 
+          selectedCount={getTeamSelectedCount()} 
+        />
+
+        <main className="flex-grow bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 py-8">
+            <IntroSection team={team} />
+            
+            {usingSampleData && <SampleDataAlert />}
+            
+            {/* Folder management section */}
+            <FolderManagementSection
+              showFolders={showFolders}
+              setShowFolders={setShowFolders}
+              team={team}
+              frituren={frituren}
+            />
+            
+            {/* All frituren section with filters and pagination */}
+            <AllFriturenSection
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              selectedRating={selectedRating}
+              setSelectedRating={setSelectedRating}
+              selectedProvince={selectedProvince}
+              setSelectedProvince={setSelectedProvince}
+              provinces={provinces}
+              resetFilters={resetFilters}
+              filterOpen={filterOpen}
+              toggleFilter={toggleFilter}
+              filteredFrituren={filteredFrituren}
+              paginatedFrituren={paginatedFrituren}
+              team={team}
+              getSelectedBy={getSelectedBy}
+              handleSelect={handleSelect}
+              isFrituurSaved={isFrituurSaved}
+              isFrituurLiked={isFrituurLiked}
+              handleSaveFrituur={handleSaveFrituur}
+              handleLikeFrituur={handleLikeFrituur}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              totalPages={totalPages}
+            />
+            
+            {/* Team selections section at the bottom */}
+            <TeamSelectionsSection
+              teamFrituren={teamFrituren}
+              team={team}
+              getSelectedBy={getSelectedBy}
+              handleSelect={handleSelect}
+              isFrituurSaved={isFrituurSaved}
+              isFrituurLiked={isFrituurLiked}
+              handleSaveFrituur={handleSaveFrituur}
+              handleLikeFrituur={handleLikeFrituur}
+            />
+          </div>
+        </main>
+
+        <FriturenFooter />
+      </div>
+      
+      {/* Access Code Verification Modal */}
+      <AccessCodeModal
+        team={team}
+        isOpen={showAccessModal}
+        onClose={() => {
+          setShowAccessModal(false);
+          navigate("/");
+        }}
+        onSuccess={handleVerificationSuccess}
       />
-
-      <main className="flex-grow bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <IntroSection team={team} />
-          
-          {usingSampleData && <SampleDataAlert />}
-          
-          {/* Folder management section */}
-          <FolderManagementSection
-            showFolders={showFolders}
-            setShowFolders={setShowFolders}
-            team={team}
-            frituren={frituren}
-          />
-          
-          {/* All frituren section with filters and pagination */}
-          <AllFriturenSection
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            selectedRating={selectedRating}
-            setSelectedRating={setSelectedRating}
-            selectedProvince={selectedProvince}
-            setSelectedProvince={setSelectedProvince}
-            provinces={provinces}
-            resetFilters={resetFilters}
-            filterOpen={filterOpen}
-            toggleFilter={toggleFilter}
-            filteredFrituren={filteredFrituren}
-            paginatedFrituren={paginatedFrituren}
-            team={team}
-            getSelectedBy={getSelectedBy}
-            handleSelect={handleSelect}
-            isFrituurSaved={isFrituurSaved}
-            isFrituurLiked={isFrituurLiked}
-            handleSaveFrituur={handleSaveFrituur}
-            handleLikeFrituur={handleLikeFrituur}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            totalPages={totalPages}
-          />
-          
-          {/* Team selections section at the bottom */}
-          <TeamSelectionsSection
-            teamFrituren={teamFrituren}
-            team={team}
-            getSelectedBy={getSelectedBy}
-            handleSelect={handleSelect}
-            isFrituurSaved={isFrituurSaved}
-            isFrituurLiked={isFrituurLiked}
-            handleSaveFrituur={handleSaveFrituur}
-            handleLikeFrituur={handleLikeFrituur}
-          />
-        </div>
-      </main>
-
-      <FriturenFooter />
-    </div>
+    </>
   );
 };
 

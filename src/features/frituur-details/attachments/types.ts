@@ -9,3 +9,8 @@ export interface FrituurAttachment {
   attachment_name: string | null;
   created_at: string;
 }
+
+export interface TeamAccessCode {
+  team: string;
+  access_code: string;
+}

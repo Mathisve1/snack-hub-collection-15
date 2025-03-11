@@ -1,8 +1,18 @@
 
 import { motion } from "framer-motion";
 import TeamSelection from "@/components/TeamSelection";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 const Index = () => {
+  // Clear all team access verifications when landing on the home page
+  useEffect(() => {
+    const teams = ["OV-3", "OV-14", "OV-38", "OV-40"];
+    teams.forEach(team => {
+      sessionStorage.removeItem(`team_access_${team}`);
+    });
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
       <motion.header

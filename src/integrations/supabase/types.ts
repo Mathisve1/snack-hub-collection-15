@@ -164,6 +164,30 @@ export type Database = {
         }
         Relationships: []
       }
+      team_access_codes: {
+        Row: {
+          access_code: string
+          created_at: string
+          id: string
+          team: string
+          updated_at: string
+        }
+        Insert: {
+          access_code: string
+          created_at?: string
+          id?: string
+          team: string
+          updated_at?: string
+        }
+        Update: {
+          access_code?: string
+          created_at?: string
+          id?: string
+          team?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       team_selections: {
         Row: {
           business_name: string

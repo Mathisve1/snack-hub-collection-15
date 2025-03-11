@@ -1,8 +1,11 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Team } from "@/types";
 import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import AccessCodeModal from "./AccessCodeModal";
 
 interface TeamCardProps {
   team: Team;
@@ -48,15 +51,39 @@ const TeamCard = ({ team, onClick, isSelected }: TeamCardProps) => {
 const TeamSelection = () => {
   const navigate = useNavigate();
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
+  const [showAccessModal, setShowAccessModal] = useState(false);
+  const [accessTeam, setAccessTeam] = useState<Team | null>(null);
   const teams: Team[] = ["OV-3", "OV-14", "OV-38", "OV-40"];
+
+  const checkTeamAccess = (team: Team) => {
+    const isVerified = sessionStorage.getItem(`team_access_${team}`);
+    return isVerified === "verified";
+  };
 
   const handleTeamSelect = (team: Team) => {
     setSelectedTeam(team);
     
+    // Check if team access is already verified
+    if (checkTeamAccess(team)) {
+      navigateToTeam(team);
+    } else {
+      setAccessTeam(team);
+      setShowAccessModal(true);
+    }
+  };
+  
+  const navigateToTeam = (team: Team) => {
     // Add a small delay for better UX
     setTimeout(() => {
       navigate(`/frituren/${team}`);
     }, 300);
+  };
+
+  const handleVerificationSuccess = () => {
+    setShowAccessModal(false);
+    if (accessTeam) {
+      navigateToTeam(accessTeam);
+    }
   };
 
   return (
@@ -94,6 +121,19 @@ const TeamSelection = () => {
           />
         ))}
       </motion.div>
+      
+      {/* Access Code Verification Modal */}
+      {showAccessModal && accessTeam && (
+        <AccessCodeModal
+          team={accessTeam}
+          isOpen={showAccessModal}
+          onClose={() => {
+            setShowAccessModal(false);
+            setSelectedTeam(null);
+          }}
+          onSuccess={handleVerificationSuccess}
+        />
+      )}
     </div>
   );
 };
