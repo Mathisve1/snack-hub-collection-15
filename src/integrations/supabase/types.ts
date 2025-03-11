@@ -209,6 +209,42 @@ export type Database = {
         }
         Relationships: []
       }
+      voice_analysis: {
+        Row: {
+          analysis: string | null
+          created_at: string | null
+          duration_seconds: number | null
+          file_name: string | null
+          id: string
+          recording_url: string
+          status: string
+          team: string
+          transcript: string | null
+        }
+        Insert: {
+          analysis?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          file_name?: string | null
+          id?: string
+          recording_url: string
+          status?: string
+          team: string
+          transcript?: string | null
+        }
+        Update: {
+          analysis?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          file_name?: string | null
+          id?: string
+          recording_url?: string
+          status?: string
+          team?: string
+          transcript?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
