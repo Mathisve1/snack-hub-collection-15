@@ -54,11 +54,15 @@ export const useFrituurForm = (team: string) => {
       setIsSubmitting(true);
       
       // Check if business name already exists
-      const { data: existingFrituurName } = await supabase
+      const { data: existingFrituurName, error: nameCheckError } = await supabase
         .from('frituren')
-        .select('Business Name')
-        .eq('Business Name', values["Business Name"])
+        .select('"Business Name"')
+        .eq('"Business Name"', values["Business Name"])
         .maybeSingle();
+
+      if (nameCheckError) {
+        console.error("Error checking for duplicate business name:", nameCheckError);
+      }
         
       if (existingFrituurName) {
         toast.error(`A frituur with the name "${values["Business Name"]}" is already in our list. Please use a different name.`);
@@ -66,11 +70,11 @@ export const useFrituurForm = (team: string) => {
         return;
       }
       
-      // Check if phone number already exists - phone numbers are stored in the Number field in Supabase
+      // Check if phone number already exists
       if (values.PhoneNumber && values.PhoneNumber.trim() !== "") {
         const { data: existingPhoneNumber, error: phoneCheckError } = await supabase
           .from('frituren')
-          .select('Business Name')
+          .select('"Business Name", Number')
           .eq('Number', values.PhoneNumber)
           .maybeSingle();
           
@@ -87,11 +91,15 @@ export const useFrituurForm = (team: string) => {
       
       // Also check if the Number field has a value and it's not being used yet (for backward compatibility)
       if (values.Number && values.Number.trim() !== "" && values.Number !== values.PhoneNumber) {
-        const { data: existingNumber } = await supabase
+        const { data: existingNumber, error: numberCheckError } = await supabase
           .from('frituren')
-          .select('Business Name')
+          .select('"Business Name", Number')
           .eq('Number', values.Number)
           .maybeSingle();
+          
+        if (numberCheckError) {
+          console.error("Error checking for duplicate number:", numberCheckError);
+        }
           
         if (existingNumber) {
           toast.error(`This number is already used by "${existingNumber["Business Name"]}". You cannot add a frituur with the same number.`);
@@ -101,14 +109,18 @@ export const useFrituurForm = (team: string) => {
       }
       
       // Check if address already exists
-      const { data: existingFrituurAddress } = await supabase
+      const { data: existingFrituurAddress, error: addressCheckError } = await supabase
         .from('frituren')
-        .select('Business Name')
+        .select('"Business Name"')
         .eq('Straat', values.Straat)
         .eq('Number', values.Number || "")
         .eq('Gemeente', values.Gemeente)
         .eq('Postcode', values.Postcode ? Number(values.Postcode) : null)
         .maybeSingle();
+        
+      if (addressCheckError) {
+        console.error("Error checking for duplicate address:", addressCheckError);
+      }
         
       if (existingFrituurAddress) {
         toast.error(`A frituur at this address already exists: "${existingFrituurAddress["Business Name"]}". You cannot add two frituren at the same location.`);
@@ -133,13 +145,13 @@ export const useFrituurForm = (team: string) => {
       
       console.log("Inserting frituur data:", dataToInsert);
       
-      const { error } = await supabase
+      const { error: insertError } = await supabase
         .from('frituren')
         .insert(dataToInsert);
         
-      if (error) {
-        console.error("Error adding frituur:", error);
-        toast.error(`Failed to add frituur: ${error.message}`);
+      if (insertError) {
+        console.error("Error adding frituur:", insertError);
+        toast.error(`Failed to add frituur: ${insertError.message}`);
         setIsSubmitting(false);
         return;
       }
