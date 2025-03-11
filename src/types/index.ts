@@ -50,6 +50,7 @@ export interface Frituur {
   Land?: string;
   Number?: string;
   Review?: string;
+  PhoneNumber?: string;
 }
 
 export interface TeamSelection {

@@ -67,6 +67,10 @@ const frituurFormSchema = z.object({
     .refine((val) => !isNaN(Number(val)), {
       message: "Postal code must be a number.",
     }),
+  PhoneNumber: z.string()
+    .min(9, { message: "Phone number must be at least 9 digits." })
+    .optional()
+    .or(z.literal("")),
   Website: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal("")),
   Email: z.string().email({ message: "Please enter a valid email address." }).optional().or(z.literal("")),
   "Facebook Link": z.string().url({ message: "Please enter a valid Facebook URL." }).optional().or(z.literal("")),
@@ -102,6 +106,7 @@ const AddFrituurForm = ({ team }: AddFrituurFormProps) => {
       Straat: "",
       Number: "",
       Postcode: "",
+      PhoneNumber: "",
       Website: "",
       Email: "",
       "Facebook Link": "",
@@ -131,6 +136,21 @@ const AddFrituurForm = ({ team }: AddFrituurFormProps) => {
         return;
       }
       
+      // Check if a frituur with the same phone number exists (if provided)
+      if (values.PhoneNumber) {
+        const { data: existingPhoneNumber, error: phoneError } = await supabase
+          .from('frituren')
+          .select('*')
+          .eq('PhoneNumber', values.PhoneNumber)
+          .maybeSingle();
+          
+        if (existingPhoneNumber) {
+          toast.error(`A frituur with this phone number already exists.`);
+          setIsSubmitting(false);
+          return;
+        }
+      }
+      
       // Check if a frituur at the same address exists
       const { data: existingFrituurAddress, error: addressError } = await supabase
         .from('frituren')
@@ -138,7 +158,7 @@ const AddFrituurForm = ({ team }: AddFrituurFormProps) => {
         .eq('Straat', values.Straat)
         .eq('Number', values.Number || "")
         .eq('Gemeente', values.Gemeente)
-        .eq('Postcode', values.Postcode)
+        .eq('Postcode', values.Postcode ? Number(values.Postcode) : null)
         .maybeSingle();
         
       if (existingFrituurAddress) {
@@ -323,6 +343,21 @@ const AddFrituurForm = ({ team }: AddFrituurFormProps) => {
                     <FormLabel>Postal Code*</FormLabel>
                     <FormControl>
                       <Input placeholder="9000" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              {/* Phone Number - New field */}
+              <FormField
+                control={form.control}
+                name="PhoneNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <Input placeholder="+32 123 456 789" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
