@@ -42,6 +42,7 @@ export const useSubmitFrituur = (team: string) => {
         return;
       }
 
+      // Prepare data for insertion ensuring required fields
       const processedValues = {
         ...values,
         Postcode: values.Postcode ? Number(values.Postcode) : null,
@@ -54,11 +55,12 @@ export const useSubmitFrituur = (team: string) => {
       // Remove PhoneNumber from processedValues as it's not in the table
       const { PhoneNumber, ...dataToInsert } = processedValues;
 
+      // Explicitly ensure Business Name is included
       const { error: insertError } = await supabase
         .from('frituren')
         .insert({
           ...dataToInsert,
-          "Business Name": values["Business Name"] // Ensure Business Name is included and required
+          "Business Name": values["Business Name"] // Explicitly include the business name as required
         });
 
       if (insertError) {

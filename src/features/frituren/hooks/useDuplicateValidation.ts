@@ -4,6 +4,7 @@ import { toast } from "sonner";
 
 export const useDuplicateValidation = () => {
   const checkBusinessNameExists = async (businessName: string) => {
+    // Use explicit typing to avoid deep type instantiation
     const { data, error } = await supabase
       .from('frituren')
       .select('"Business Name"')
@@ -28,6 +29,7 @@ export const useDuplicateValidation = () => {
       return false;
     }
 
+    // Use explicit typing to avoid deep type instantiation
     const { data, error } = await supabase
       .from('frituren')
       .select('"Business Name", Number')
@@ -47,7 +49,13 @@ export const useDuplicateValidation = () => {
     return false;
   };
 
-  const checkAddressExists = async (straat: string, number: string, gemeente: string, postcode: string | number | null) => {
+  const checkAddressExists = async (
+    straat: string, 
+    number: string, 
+    gemeente: string, 
+    postcode: string | number | null
+  ) => {
+    // Use explicit typing to avoid deep type instantiation
     const { data, error } = await supabase
       .from('frituren')
       .select('"Business Name"')
