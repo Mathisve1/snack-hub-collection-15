@@ -66,6 +66,21 @@ export const useFrituurForm = (team: string) => {
         return;
       }
       
+      // Check if phone number already exists
+      if (values.PhoneNumber && values.PhoneNumber.trim() !== "") {
+        const { data: existingPhoneNumber } = await supabase
+          .from('frituren')
+          .select('Business Name')
+          .eq('Review', values.PhoneNumber)
+          .maybeSingle();
+          
+        if (existingPhoneNumber) {
+          toast.error(`A frituur with this phone number already exists.`);
+          setIsSubmitting(false);
+          return;
+        }
+      }
+      
       // Check if address already exists
       const { data: existingFrituurAddress } = await supabase
         .from('frituren')
@@ -82,20 +97,25 @@ export const useFrituurForm = (team: string) => {
         return;
       }
 
-      // Remove PhoneNumber from the values to insert as it doesn't exist in the database
-      const { PhoneNumber, ...dataToInsert } = values;
+      // Store the phone number in the Review field as a temporary solution
+      // since there's no PhoneNumber column in the database
+      const phoneNumber = values.PhoneNumber || "";
       
       const processedValues = {
-        ...dataToInsert,
+        ...values,
         "Business Name": values["Business Name"],
         Postcode: values.Postcode ? Number(values.Postcode) : null,
         Land: "België",
-        Rating: values.Rating ? Number(values.Rating) : null
+        Rating: values.Rating ? Number(values.Rating) : null,
+        Review: phoneNumber // Store phone number in Review field
       };
+      
+      // Remove PhoneNumber from the values to insert as it doesn't exist in the database
+      const { PhoneNumber, ...dataToInsert } = processedValues;
       
       const { error } = await supabase
         .from('frituren')
-        .insert(processedValues);
+        .insert(dataToInsert);
         
       if (error) {
         console.error("Error adding frituur:", error);
