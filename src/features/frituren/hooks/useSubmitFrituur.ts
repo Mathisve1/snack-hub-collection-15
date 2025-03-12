@@ -9,11 +9,7 @@ import { useDuplicateValidation } from "./useDuplicateValidation";
 export const useSubmitFrituur = (team: string) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-  const { 
-    checkBusinessNameExists, 
-    checkPhoneNumberExists, 
-    checkAddressExists 
-  } = useDuplicateValidation();
+  const { checkBusinessNameExists } = useDuplicateValidation();
 
   const submitFrituur = async (values: FrituurFormValues) => {
     try {
@@ -21,23 +17,6 @@ export const useSubmitFrituur = (team: string) => {
 
       const hasNameDuplicate = await checkBusinessNameExists(values["Business Name"]);
       if (hasNameDuplicate) {
-        setIsSubmitting(false);
-        return;
-      }
-
-      const hasPhoneDuplicate = await checkPhoneNumberExists(values.PhoneNumber || "");
-      if (hasPhoneDuplicate) {
-        setIsSubmitting(false);
-        return;
-      }
-
-      const hasAddressDuplicate = await checkAddressExists(
-        values.Straat,
-        values.Number || "",
-        values.Gemeente,
-        values.Postcode ? Number(values.Postcode) : null
-      );
-      if (hasAddressDuplicate) {
         setIsSubmitting(false);
         return;
       }
