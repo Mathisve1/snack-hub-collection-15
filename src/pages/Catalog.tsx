@@ -14,7 +14,7 @@ const Catalog = () => {
   
   useEffect(() => {
     // Validate team param
-    const validTeams: Team[] = ["OV-3", "OV-14", "OV-38", "OV-40"];
+    const validTeams: Team[] = ["OV-3", "OV-14", "OV-38", "OV-13"];
     if (!validTeams.includes(team as Team)) {
       navigate("/");
       return;

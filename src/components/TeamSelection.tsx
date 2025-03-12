@@ -18,14 +18,14 @@ const TeamCard = ({ team, onClick, isSelected }: TeamCardProps) => {
     "OV-3": "bg-team-ov-3/10 border-team-ov-3/30 hover:bg-team-ov-3/20",
     "OV-14": "bg-team-ov-14/10 border-team-ov-14/30 hover:bg-team-ov-14/20",
     "OV-38": "bg-team-ov-38/10 border-team-ov-38/30 hover:bg-team-ov-38/20",
-    "OV-40": "bg-team-ov-40/10 border-team-ov-40/30 hover:bg-team-ov-40/20",
+    "OV-13": "bg-team-ov-40/10 border-team-ov-40/30 hover:bg-team-ov-40/20",
   };
 
   const teamTextColors: Record<Team, string> = {
     "OV-3": "text-team-ov-3",
     "OV-14": "text-team-ov-14",
     "OV-38": "text-team-ov-38",
-    "OV-40": "text-team-ov-40",
+    "OV-13": "text-team-ov-40",
   };
 
   return (
@@ -53,7 +53,7 @@ const TeamSelection = () => {
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [showAccessModal, setShowAccessModal] = useState(false);
   const [accessTeam, setAccessTeam] = useState<Team | null>(null);
-  const teams: Team[] = ["OV-3", "OV-14", "OV-38", "OV-40"];
+  const teams: Team[] = ["OV-3", "OV-14", "OV-38", "OV-13"];
 
   const checkTeamAccess = (team: Team) => {
     const isVerified = sessionStorage.getItem(`team_access_${team}`);

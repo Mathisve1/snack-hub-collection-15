@@ -7,7 +7,7 @@ import { toast } from "sonner";
 const Index = () => {
   // Clear all team access verifications when landing on the home page
   useEffect(() => {
-    const teams = ["OV-3", "OV-14", "OV-38", "OV-40"];
+    const teams = ["OV-3", "OV-14", "OV-38", "OV-13"];
     teams.forEach(team => {
       sessionStorage.removeItem(`team_access_${team}`);
     });
