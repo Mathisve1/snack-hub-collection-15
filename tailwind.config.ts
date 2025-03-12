@@ -72,9 +72,9 @@ export default {
 				},
 				team: {
 					'ov-3': '#0EA5E9',
+					'ov-13': '#10B981', // Changed to a nice green color
 					'ov-14': '#8B5CF6',
-					'ov-38': '#F97316',
-					'ov-40': '#10B981'
+					'ov-38': '#F97316'
 				}
 			},
 			borderRadius: {
