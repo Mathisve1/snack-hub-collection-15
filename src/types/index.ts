@@ -1,4 +1,5 @@
-export type Team = 'OV-3' | 'OV-14' | 'OV-38' | 'OV-13';
+
+export type Team = 'OV-3' | 'OV-13' | 'OV-14' | 'OV-38';
 
 export interface Snack {
   id: string;

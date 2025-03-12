@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Team } from "@/types";
@@ -16,16 +15,16 @@ interface TeamCardProps {
 const TeamCard = ({ team, onClick, isSelected }: TeamCardProps) => {
   const teamColors: Record<Team, string> = {
     "OV-3": "bg-team-ov-3/10 border-team-ov-3/30 hover:bg-team-ov-3/20",
+    "OV-13": "bg-team-ov-13/10 border-team-ov-13/30 hover:bg-team-ov-13/20",
     "OV-14": "bg-team-ov-14/10 border-team-ov-14/30 hover:bg-team-ov-14/20",
     "OV-38": "bg-team-ov-38/10 border-team-ov-38/30 hover:bg-team-ov-38/20",
-    "OV-13": "bg-team-ov-40/10 border-team-ov-40/30 hover:bg-team-ov-40/20",
   };
 
   const teamTextColors: Record<Team, string> = {
     "OV-3": "text-team-ov-3",
+    "OV-13": "text-team-ov-13",
     "OV-14": "text-team-ov-14",
     "OV-38": "text-team-ov-38",
-    "OV-13": "text-team-ov-40",
   };
 
   return (
@@ -53,7 +52,7 @@ const TeamSelection = () => {
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [showAccessModal, setShowAccessModal] = useState(false);
   const [accessTeam, setAccessTeam] = useState<Team | null>(null);
-  const teams: Team[] = ["OV-3", "OV-14", "OV-38", "OV-13"];
+  const teams: Team[] = ["OV-3", "OV-13", "OV-14", "OV-38"];
 
   const checkTeamAccess = (team: Team) => {
     const isVerified = sessionStorage.getItem(`team_access_${team}`);
@@ -63,7 +62,6 @@ const TeamSelection = () => {
   const handleTeamSelect = (team: Team) => {
     setSelectedTeam(team);
     
-    // Check if team access is already verified
     if (checkTeamAccess(team)) {
       navigateToTeam(team);
     } else {
@@ -73,7 +71,6 @@ const TeamSelection = () => {
   };
   
   const navigateToTeam = (team: Team) => {
-    // Add a small delay for better UX
     setTimeout(() => {
       navigate(`/frituren/${team}`);
     }, 300);
@@ -122,7 +119,6 @@ const TeamSelection = () => {
         ))}
       </motion.div>
       
-      {/* Access Code Verification Modal */}
       {showAccessModal && accessTeam && (
         <AccessCodeModal
           team={accessTeam}

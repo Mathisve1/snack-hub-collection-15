@@ -14,7 +14,7 @@ export const useFriturenData = (team: string) => {
   
   // Validate team and redirect if invalid
   useEffect(() => {
-    const validTeams: Team[] = ["OV-3", "OV-14", "OV-38", "OV-13"];
+    const validTeams: Team[] = ["OV-3", "OV-13", "OV-14", "OV-38"];
     if (!validTeams.includes(team as Team)) {
       navigate("/");
       return;
