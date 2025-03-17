@@ -37,26 +37,6 @@ const FileDownloader = ({ fileName, bucketId }: FileDownloaderProps) => {
         throw new Error(`Bucket ${bucketId} not found in available buckets. Please contact support.`);
       }
       
-      // Check if we can access bucket contents
-      const { data: files, error: listError } = await supabase
-        .storage
-        .from(bucketId)
-        .list();
-        
-      if (listError) {
-        console.error(`Error listing files in bucket ${bucketId}:`, listError);
-        console.log("This may indicate a permissions issue with the bucket");
-        throw new Error(`Cannot access files in bucket ${bucketId}: ${listError.message}`);
-      }
-      
-      console.log(`Files in bucket ${bucketId}:`, files?.map(f => f.name));
-      
-      // Check if the file exists in the bucket
-      const fileExists = files?.some(f => f.name === fileName);
-      if (!fileExists) {
-        throw new Error(`File ${fileName} not found in bucket ${bucketId}`);
-      }
-      
       // Get the file directly from storage using the bucket ID
       const { data, error } = await supabase
         .storage

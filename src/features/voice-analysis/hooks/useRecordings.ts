@@ -21,8 +21,6 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
     // Pad with leading zero if needed
     if (teamNumber.length === 1) {
       teamFormatted = `0${teamNumber}`;
-    } else if (teamNumber.length === 2) {
-      teamFormatted = teamNumber;
     }
     
     // Generate the bucket ID using the new naming convention
@@ -102,19 +100,6 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
               console.error(`Bucket ${recording.bucket_id} not found for recording ${recording.id}`);
               continue;
             }
-            
-            // Check bucket access by listing files
-            const { data: files, error: listError } = await supabase
-              .storage
-              .from(recording.bucket_id)
-              .list();
-              
-            if (listError) {
-              console.error(`Error listing files in bucket ${recording.bucket_id}:`, listError);
-              continue;
-            }
-            
-            console.log(`Files in bucket ${recording.bucket_id}:`, files?.map(f => f.name));
             
             const { data: signedUrlData, error: signedUrlError } = await supabase
               .storage

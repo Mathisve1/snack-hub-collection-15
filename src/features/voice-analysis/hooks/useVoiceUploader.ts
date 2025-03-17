@@ -25,8 +25,6 @@ export const useVoiceUploader = (
     // Pad with leading zero if needed for consistent formatting
     if (teamNumber.length === 1) {
       teamFormatted = `0${teamNumber}`;
-    } else if (teamNumber.length === 2) {
-      teamFormatted = teamNumber;
     }
     
     // Create the bucket ID string
@@ -66,20 +64,6 @@ export const useVoiceUploader = (
         toast.error(`Upload failed: Bucket ${bucketId} not found. Please contact support.`);
         return false;
       }
-      
-      // List existing files in bucket to check access
-      const { data: existingFiles, error: listError } = await supabase
-        .storage
-        .from(bucketId)
-        .list();
-        
-      if (listError) {
-        console.error(`Error listing files in bucket ${bucketId}:`, listError);
-        console.log("This may indicate a permissions issue with the bucket");
-        throw new Error(`Cannot access the bucket: ${listError.message}`);
-      }
-      
-      console.log(`Files in bucket ${bucketId}:`, existingFiles?.map(f => f.name));
       
       // Upload the actual file to Supabase Storage
       const { data: fileData, error: uploadError } = await supabase
