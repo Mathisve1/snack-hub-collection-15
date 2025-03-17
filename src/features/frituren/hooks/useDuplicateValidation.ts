@@ -24,14 +24,14 @@ export const useDuplicateValidation = (
     });
   }, [frituren, currentValues["Business Name"]]);
 
-  // Simplified check for business name without recursive queries
+  // Simplified check for business name without deep type instantiation
   const checkBusinessNameExists = async (businessName: string): Promise<boolean> => {
     try {
-      // Using select count with exact option to avoid deep type issues
+      // Use count instead of select to avoid type depth issues
       const { count, error } = await supabase
         .from('frituren')
         .select('*', { count: 'exact', head: true })
-        .eq('"Business Name"', businessName);
+        .eq('Business Name', businessName);
 
       if (error) {
         console.error("Error checking for duplicate business name:", error);

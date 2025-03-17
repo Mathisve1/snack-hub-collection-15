@@ -11,11 +11,9 @@ export const useVoiceUploader = (
 ) => {
   const [isUploading, setIsUploading] = useState(false);
 
-  const getBucketId = (team: string) => {
-    // Extract team number from format like 'OV-38'
-    const teamNumber = team.split('-')[1];
-    // Map to team bucket ID (defaulting to team1 if extraction fails)
-    return `team${teamNumber || '1'}-recordings`;
+  // Use a fixed bucket for storage to avoid bucket not found errors
+  const getBucketId = () => {
+    return 'frituur-attachments';
   };
 
   const uploadRecording = async (recordingBlob: Blob, recordingDuration: number) => {
@@ -24,8 +22,8 @@ export const useVoiceUploader = (
       // Create a unique file name for the recording
       const fileName = `${uuidv4()}-${type}-recording.webm`;
       
-      // Determine the appropriate bucket based on team
-      const bucketId = getBucketId(team);
+      // Use a fixed bucket ID that we know exists
+      const bucketId = getBucketId();
       
       // Upload the actual file to Supabase Storage
       const { data: fileData, error: uploadError } = await supabase
@@ -38,18 +36,25 @@ export const useVoiceUploader = (
       
       if (uploadError) throw uploadError;
       
+      // Get public URL for the uploaded file
+      const { data: publicUrlData } = supabase
+        .storage
+        .from(bucketId)
+        .getPublicUrl(fileName);
+        
+      const publicUrl = publicUrlData.publicUrl;
+      
       // Use the correct table name based on the type
       const tableName = type === 'frituren' ? 'frituren_interviews' : 'street_interviews';
       
       // Common record properties for both tables
       const recordData = {
         team,
-        file_name: fileName, // Keep file_name for compatibility
+        file_name: fileName,
+        recording_url: publicUrl, // Add this for backward compatibility
         status: 'pending',
         created_at: new Date().toISOString(),
-        duration_seconds: recordingDuration,
-        bucket_id: bucketId,
-        file_path: fileName
+        duration_seconds: recordingDuration
       };
       
       // Insert the record into the appropriate table
