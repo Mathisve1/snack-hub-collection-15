@@ -21,7 +21,10 @@ export const useVoiceUploader = (
       const { data: fileData, error: uploadError } = await supabase
         .storage
         .from('frituur-attachments')
-        .upload(fileName, recordingBlob);
+        .upload(fileName, recordingBlob, {
+          cacheControl: '3600',
+          upsert: false
+        });
       
       if (uploadError) throw uploadError;
       

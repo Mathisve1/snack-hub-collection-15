@@ -58,6 +58,7 @@ const AnalyzedRecordingsList = ({ team, type }: AnalyzedRecordingsListProps) => 
 
   const downloadOriginalFile = async (fileName: string) => {
     try {
+      // Get the file directly from storage
       const { data, error } = await supabase
         .storage
         .from('frituur-attachments')
@@ -65,7 +66,7 @@ const AnalyzedRecordingsList = ({ team, type }: AnalyzedRecordingsListProps) => 
       
       if (error) throw error;
       
-      // Create a download link
+      // Create a download link for the file
       const url = URL.createObjectURL(data);
       const a = document.createElement('a');
       a.href = url;
