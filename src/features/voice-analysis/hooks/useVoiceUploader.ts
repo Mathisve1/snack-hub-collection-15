@@ -16,10 +16,7 @@ export const useVoiceUploader = (
     // Extract just the team number without the "OV-" prefix
     const teamNumber = team.replace('OV-', '');
     
-    console.log(`Getting bucket ID for team ${teamNumber} and type ${type}`);
-    
-    // Format the bucket ID using the new naming convention
-    // team-XX-frituren or team-XX-interviews
+    // Format the team number for consistent naming
     let teamFormatted = teamNumber;
     
     // Pad with leading zero if needed for consistent formatting
@@ -43,27 +40,7 @@ export const useVoiceUploader = (
       // Get the correct bucket ID
       const bucketId = getBucketId();
       
-      console.log(`Attempting upload to bucket: ${bucketId}, file: ${fileName}`);
-      
-      // List available buckets for debugging
-      const { data: buckets, error: bucketsError } = await supabase
-        .storage
-        .listBuckets();
-        
-      if (bucketsError) {
-        console.error("Error listing buckets:", bucketsError);
-        throw new Error(`Failed to list buckets: ${bucketsError.message}`);
-      } 
-      
-      console.log("Available buckets:", buckets?.map(b => b.id));
-      
-      // Check if the bucket exists
-      const bucketExists = buckets?.some(b => b.id === bucketId);
-      if (!bucketExists) {
-        console.error(`Bucket ${bucketId} not found in available buckets`);
-        toast.error(`Upload failed: Bucket ${bucketId} not found. Please contact support.`);
-        return false;
-      }
+      console.log(`Uploading to bucket: ${bucketId}, file: ${fileName}`);
       
       // Upload the actual file to Supabase Storage
       const { data: fileData, error: uploadError } = await supabase

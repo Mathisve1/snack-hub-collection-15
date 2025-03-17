@@ -13,8 +13,6 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
     // Extract just the team number without the "OV-" prefix
     const teamNumber = teamName.replace('OV-', '');
     
-    console.log(`Getting bucket ID for team ${teamNumber} and type ${recordingType}`);
-    
     // Format the team number for consistent naming
     let teamFormatted = teamNumber;
     
@@ -51,17 +49,6 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         return;
       }
 
-      // List available buckets for debugging
-      const { data: buckets, error: bucketsError } = await supabase
-        .storage
-        .listBuckets();
-        
-      if (bucketsError) {
-        console.error("Error listing buckets:", bucketsError);
-      } else {
-        console.log("Available buckets for playback:", buckets?.map(b => b.id));
-      }
-
       // Map data with explicit type casting and default values
       const mappedData = data.map(item => {
         // Get the bucket ID from the record or generate it if missing
@@ -94,12 +81,6 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         if (recording.file_path && recording.bucket_id) {
           try {
             console.log(`Getting signed URL for file: ${recording.file_path} from bucket: ${recording.bucket_id}`);
-            
-            // Check bucket existence first
-            if (buckets && !buckets.some(b => b.id === recording.bucket_id)) {
-              console.error(`Bucket ${recording.bucket_id} not found for recording ${recording.id}`);
-              continue;
-            }
             
             const { data: signedUrlData, error: signedUrlError } = await supabase
               .storage

@@ -16,39 +16,18 @@ const FileDownloader = ({ fileName, bucketId }: FileDownloaderProps) => {
   const downloadOriginalFile = async () => {
     try {
       setIsDownloading(true);
-      console.log(`Attempting to download file: ${fileName} from bucket: ${bucketId}`);
+      console.log(`Downloading file: ${fileName} from bucket: ${bucketId}`);
       
-      // List available buckets for debugging
-      const { data: buckets, error: bucketsError } = await supabase
-        .storage
-        .listBuckets();
-        
-      if (bucketsError) {
-        console.error("Error listing buckets:", bucketsError);
-        throw new Error(`Failed to list buckets: ${bucketsError.message}`);
-      } 
-      
-      console.log("Available buckets:", buckets?.map(b => b.id));
-      console.log("Looking for bucket:", bucketId);
-        
-      // Check if the bucket exists
-      const bucketExists = buckets?.some(b => b.id === bucketId);
-      if (!bucketExists) {
-        throw new Error(`Bucket ${bucketId} not found in available buckets. Please contact support.`);
-      }
-      
-      // Get the file directly from storage using the bucket ID
+      // Get the file directly from storage
       const { data, error } = await supabase
         .storage
         .from(bucketId)
         .download(fileName);
       
       if (error) {
-        console.error("Download error details:", error);
+        console.error("Download error:", error);
         throw new Error(`Failed to download: ${error.message || 'Unknown error'}`);
       }
-      
-      console.log(`File download successful from bucket: ${bucketId}`);
       
       // Create a download link for the file
       const url = URL.createObjectURL(data);
