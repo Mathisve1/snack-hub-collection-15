@@ -20,16 +20,16 @@ export const useVoiceUploader = (
     let bucketName;
     
     if (teamNumber === "3" || teamNumber === "03") {
-      bucketName = "Interviews Bucket Team 03";
+      bucketName = "interviews-bucket-team-03"; // Using kebab-case without spaces
     } else if (teamNumber === "13") {
-      bucketName = "Interviews Bucket Team 13";
+      bucketName = "interviews-bucket-team-13"; // Using kebab-case without spaces
     } else if (teamNumber === "14") {
-      bucketName = "Interviews Bucket Team 14";
+      bucketName = "interviews-bucket-team-14"; // Using kebab-case without spaces
     } else if (teamNumber === "38") {
-      bucketName = "Interviews Bucket Team 38";
+      bucketName = "interviews-bucket-team-38"; // Using kebab-case without spaces
     } else {
       // Default to team 03 bucket if team not found
-      bucketName = "Interviews Bucket Team 03";
+      bucketName = "interviews-bucket-team-03"; // Using kebab-case without spaces
       console.warn(`Team ${teamNumber} doesn't have a designated bucket, using Team 03's bucket`);
     }
     

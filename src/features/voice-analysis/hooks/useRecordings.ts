@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -15,17 +14,17 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
     
     // Map team number to the correct bucket - only using existing buckets
     if (teamNumber === "3" || teamNumber === "03") {
-      return "Interviews Bucket Team 03";
+      return "interviews-bucket-team-03"; // Using kebab-case without spaces
     } else if (teamNumber === "13") {
-      return "Interviews Bucket Team 13";
+      return "interviews-bucket-team-13"; // Using kebab-case without spaces
     } else if (teamNumber === "14") {
-      return "Interviews Bucket Team 14";
+      return "interviews-bucket-team-14"; // Using kebab-case without spaces
     } else if (teamNumber === "38") {
-      return "Interviews Bucket Team 38";
+      return "interviews-bucket-team-38"; // Using kebab-case without spaces
     } else {
       // Default to team 03 bucket if team not found
       console.warn(`Team ${teamNumber} doesn't have a designated bucket, using Team 03's bucket`);
-      return "Interviews Bucket Team 03";
+      return "interviews-bucket-team-03"; // Using kebab-case without spaces
     }
   };
 
