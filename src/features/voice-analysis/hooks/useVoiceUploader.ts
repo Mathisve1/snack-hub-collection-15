@@ -16,21 +16,28 @@ export const useVoiceUploader = (
     // Extract just the team number without the "OV-" prefix
     const teamNumber = team.replace('OV-', '');
     
-    // Map team number to the correct bucket - using bucket names exactly as they exist in Supabase
+    console.log(`Getting bucket ID for team ${teamNumber} and type ${type}`);
+    
+    // Map team number to the correct bucket - using actual bucket names as they exist in Supabase
     let bucketId;
     
-    if (teamNumber === "3" || teamNumber === "03") {
-      bucketId = "Interviews Bucket Team 03";
-    } else if (teamNumber === "13") {
-      bucketId = "Interviews Bucket Team 13";
-    } else if (teamNumber === "14") {
-      bucketId = "Interviews Bucket Team 14";
-    } else if (teamNumber === "38") {
-      bucketId = "Interviews Bucket Team 38";
+    if (type === 'frituren') {
+      bucketId = "frituur-attachments"; // Default bucket for frituren recordings
     } else {
-      // Default to team 03 bucket if team not found
-      bucketId = "Interviews Bucket Team 03";
-      console.warn(`Team ${teamNumber} doesn't have a designated bucket, using Team 03's bucket`);
+      // For interviews, use team-specific buckets if they exist
+      if (teamNumber === "3" || teamNumber === "03") {
+        bucketId = "team-03-interviews";
+      } else if (teamNumber === "13") {
+        bucketId = "team-13-interviews";
+      } else if (teamNumber === "14") {
+        bucketId = "team-14-interviews";
+      } else if (teamNumber === "38") {
+        bucketId = "team-38-interviews";
+      } else {
+        // Default bucket if team not found
+        bucketId = "team-03-interviews";
+        console.warn(`Team ${teamNumber} doesn't have a designated bucket, using default bucket`);
+      }
     }
     
     console.log(`Using bucket ID for upload: ${bucketId}`);

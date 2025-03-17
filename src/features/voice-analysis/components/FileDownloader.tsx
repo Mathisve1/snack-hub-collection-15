@@ -21,7 +21,7 @@ const FileDownloader = ({ fileName, bucketId }: FileDownloaderProps) => {
         .download(fileName);
       
       if (error) {
-        console.error("Download error:", error.message);
+        console.error("Download error:", error);
         toast.error("Failed to download original recording");
         return;
       }

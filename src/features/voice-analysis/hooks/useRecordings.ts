@@ -13,19 +13,24 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
     // Extract just the team number without the "OV-" prefix
     const teamNumber = teamName.replace('OV-', '');
     
-    // Map team number to the correct bucket - using bucket names exactly as they exist in Supabase
-    if (teamNumber === "3" || teamNumber === "03") {
-      return "Interviews Bucket Team 03";
-    } else if (teamNumber === "13") {
-      return "Interviews Bucket Team 13";
-    } else if (teamNumber === "14") {
-      return "Interviews Bucket Team 14";
-    } else if (teamNumber === "38") {
-      return "Interviews Bucket Team 38";
+    console.log(`Getting bucket ID for team ${teamNumber} and type ${recordingType}`);
+    
+    // Use the same bucket ID logic as in useVoiceUploader
+    if (recordingType === 'frituren') {
+      return "frituur-attachments";
     } else {
-      // Default to team 03 bucket if team not found
-      console.warn(`Team ${teamNumber} doesn't have a designated bucket, using Team 03's bucket`);
-      return "Interviews Bucket Team 03";
+      if (teamNumber === "3" || teamNumber === "03") {
+        return "team-03-interviews";
+      } else if (teamNumber === "13") {
+        return "team-13-interviews";
+      } else if (teamNumber === "14") {
+        return "team-14-interviews";
+      } else if (teamNumber === "38") {
+        return "team-38-interviews";
+      } else {
+        console.warn(`Team ${teamNumber} doesn't have a designated bucket, using default bucket`);
+        return "team-03-interviews";
+      }
     }
   };
 
