@@ -27,6 +27,7 @@ export const useDuplicateValidation = (
   // Simplified check for business name without recursive queries
   const checkBusinessNameExists = async (businessName: string): Promise<boolean> => {
     try {
+      // Using select count with exact option to avoid deep type issues
       const { count, error } = await supabase
         .from('frituren')
         .select('*', { count: 'exact', head: true })

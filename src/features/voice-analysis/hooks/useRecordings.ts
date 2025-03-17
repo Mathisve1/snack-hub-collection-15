@@ -25,12 +25,13 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         throw error;
       }
 
-      // Map database records to VoiceAnalysis type
+      // Safely map database records to VoiceAnalysis type with proper type assertions
       const mappedData: VoiceAnalysis[] = data.map(item => ({
         id: item.id,
         team: item.team,
-        bucket_id: item.bucket_id || 'team1-recordings', // Default bucket if not set
-        file_path: item.file_path || item.file_name || '', // Use file_path or fallback to file_name
+        // Use type assertion to access possibly undefined properties
+        bucket_id: (item as any).bucket_id || 'team1-recordings', // Default bucket if not set
+        file_path: (item as any).file_path || item.file_name || '', // Use file_path or fallback to file_name
         transcript: item.transcript,
         analysis: item.analysis,
         status: item.status as 'pending' | 'analyzing' | 'completed' | 'failed',

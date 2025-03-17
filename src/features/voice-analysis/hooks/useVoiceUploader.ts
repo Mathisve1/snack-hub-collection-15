@@ -41,36 +41,23 @@ export const useVoiceUploader = (
       // Use the correct table name based on the type
       const tableName = type === 'frituren' ? 'frituren_interviews' : 'street_interviews';
       
-      // Insert a record in the database that references the file in storage
-      if (tableName === 'frituren_interviews') {
-        const { error: insertError } = await supabase
-          .from(tableName)
-          .insert({
-            team,
-            file_name: fileName, // Keep file_name for compatibility
-            status: 'pending',
-            created_at: new Date().toISOString(),
-            duration_seconds: recordingDuration,
-            bucket_id: bucketId,
-            file_path: fileName
-          });
-          
-        if (insertError) throw insertError;
-      } else {
-        const { error: insertError } = await supabase
-          .from(tableName)
-          .insert({
-            team,
-            file_name: fileName, // Keep file_name for compatibility
-            status: 'pending',
-            created_at: new Date().toISOString(),
-            duration_seconds: recordingDuration,
-            bucket_id: bucketId,
-            file_path: fileName
-          });
-          
-        if (insertError) throw insertError;
-      }
+      // Common record properties for both tables
+      const recordData = {
+        team,
+        file_name: fileName, // Keep file_name for compatibility
+        status: 'pending',
+        created_at: new Date().toISOString(),
+        duration_seconds: recordingDuration,
+        bucket_id: bucketId,
+        file_path: fileName
+      };
+      
+      // Insert the record into the appropriate table
+      const { error: insertError } = await supabase
+        .from(tableName)
+        .insert(recordData);
+        
+      if (insertError) throw insertError;
       
       toast.success("Recording uploaded for analysis");
       onUploadComplete();
