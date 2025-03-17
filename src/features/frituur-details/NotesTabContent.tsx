@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -6,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import FileUploader from "./FileUploader";
 import FrituurAttachmentsList from "./attachments/FrituurAttachmentsList";
+import FrituurFileUploader from "./FrituurFileUploader";
 
 interface NotesTabContentProps {
   team: string;
@@ -136,17 +138,11 @@ const NotesTabContent = ({ team, businessName }: NotesTabContentProps) => {
           </Button>
         </FileUploader>
         
-        <FileUploader
+        <FrituurFileUploader
           team={team}
           businessName={businessName}
-          fileType="document"
           onUploadComplete={handleFileUploadComplete}
-        >
-          <Button variant="outline">
-            <File className="h-4 w-4 mr-2" />
-            Upload Document
-          </Button>
-        </FileUploader>
+        />
       </div>
       
       <FrituurAttachmentsList 

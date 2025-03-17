@@ -18,28 +18,45 @@ const FileDownloader = ({ fileName, bucketId }: FileDownloaderProps) => {
       setIsDownloading(true);
       console.log(`Downloading file: ${fileName} from bucket: ${bucketId}`);
       
-      // Get the file directly from storage
-      const { data, error } = await supabase
+      // Get a signed URL for the file to ensure access
+      const { data: signedUrlData, error: signedUrlError } = await supabase
         .storage
         .from(bucketId)
-        .download(fileName);
-      
-      if (error) {
-        console.error("Download error:", error);
-        throw new Error(`Failed to download: ${error.message || 'Unknown error'}`);
+        .createSignedUrl(fileName, 3600); // 1 hour expiry
+        
+      if (signedUrlError || !signedUrlData?.signedUrl) {
+        console.error("Error getting signed URL:", signedUrlError);
+        
+        // Try direct download as fallback
+        const { data, error } = await supabase
+          .storage
+          .from(bucketId)
+          .download(fileName);
+        
+        if (error) {
+          throw new Error(`Failed to download: ${error.message || 'Unknown error'}`);
+        }
+        
+        // Create download link
+        const url = URL.createObjectURL(data);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        
+        // Clean up
+        URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      } else {
+        // Use the signed URL for download
+        const a = document.createElement('a');
+        a.href = signedUrlData.signedUrl;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
       }
-      
-      // Create a download link for the file
-      const url = URL.createObjectURL(data);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
-      
-      // Clean up
-      URL.revokeObjectURL(url);
-      document.body.removeChild(a);
       
       toast.success("File downloaded successfully");
       
