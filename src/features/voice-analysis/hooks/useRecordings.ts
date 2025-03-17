@@ -9,29 +9,27 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
   const [loading, setLoading] = useState(true);
   const [audioUrls, setAudioUrls] = useState<Record<string, string>>({});
 
-  const getBucketId = (recordingType: VoiceAnalysisType, teamName: string) => {
+  const getBucketId = (teamName: string, recordingType: VoiceAnalysisType) => {
     // Extract just the team number without the "OV-" prefix
     const teamNumber = teamName.replace('OV-', '');
     
     console.log(`Getting bucket ID for team ${teamNumber} and type ${recordingType}`);
     
-    // Use the same bucket ID logic as in useVoiceUploader
-    if (recordingType === 'frituren') {
-      return "frituur-attachments";
-    } else {
-      if (teamNumber === "3" || teamNumber === "03") {
-        return "team-03-interviews";
-      } else if (teamNumber === "13") {
-        return "team-13-interviews";
-      } else if (teamNumber === "14") {
-        return "team-14-interviews";
-      } else if (teamNumber === "38") {
-        return "team-38-interviews";
-      } else {
-        console.warn(`Team ${teamNumber} doesn't have a designated bucket, using default bucket`);
-        return "team-03-interviews";
-      }
+    // Format the team number for consistent naming
+    let teamFormatted = teamNumber;
+    
+    // Pad with leading zero if needed
+    if (teamNumber.length === 1) {
+      teamFormatted = `0${teamNumber}`;
+    } else if (teamNumber.length === 2) {
+      teamFormatted = teamNumber;
     }
+    
+    // Generate the bucket ID using the new naming convention
+    const bucketId = `team-${teamFormatted}-${recordingType}`;
+    
+    console.log(`Selected bucket ID: ${bucketId}`);
+    return bucketId;
   };
 
   const fetchRecordings = async () => {
@@ -69,7 +67,7 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
       // Map data with explicit type casting and default values
       const mappedData = data.map(item => {
         // Get the bucket ID from the record or generate it if missing
-        const bucketId = item.bucket_id || getBucketId(type, team);
+        const bucketId = item.bucket_id || getBucketId(team, type);
         // Use the file_name as the file_path since that's what we store in the DB
         const filePath = item.file_name || '';
         

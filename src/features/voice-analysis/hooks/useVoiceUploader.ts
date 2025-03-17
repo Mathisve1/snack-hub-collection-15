@@ -18,27 +18,19 @@ export const useVoiceUploader = (
     
     console.log(`Getting bucket ID for team ${teamNumber} and type ${type}`);
     
-    // Map team number to the correct bucket - using actual bucket names as they exist in Supabase
-    let bucketId;
+    // Format the bucket ID using the new naming convention
+    // team-XX-frituren or team-XX-interviews
+    let teamFormatted = teamNumber;
     
-    if (type === 'frituren') {
-      bucketId = "frituur-attachments"; // Default bucket for frituren recordings
-    } else {
-      // For interviews, use team-specific buckets if they exist
-      if (teamNumber === "3" || teamNumber === "03") {
-        bucketId = "team-03-interviews";
-      } else if (teamNumber === "13") {
-        bucketId = "team-13-interviews";
-      } else if (teamNumber === "14") {
-        bucketId = "team-14-interviews";
-      } else if (teamNumber === "38") {
-        bucketId = "team-38-interviews";
-      } else {
-        // Default bucket if team not found
-        bucketId = "team-03-interviews";
-        console.warn(`Team ${teamNumber} doesn't have a designated bucket, using default bucket`);
-      }
+    // Pad with leading zero if needed for consistent formatting
+    if (teamNumber.length === 1) {
+      teamFormatted = `0${teamNumber}`;
+    } else if (teamNumber.length === 2) {
+      teamFormatted = teamNumber;
     }
+    
+    // Create the bucket ID string
+    const bucketId = `team-${teamFormatted}-${type}`;
     
     console.log(`Selected bucket ID for upload: ${bucketId}`);
     return bucketId;
@@ -62,16 +54,17 @@ export const useVoiceUploader = (
         
       if (bucketsError) {
         console.error("Error listing buckets:", bucketsError);
-      } else {
-        console.log("Available buckets:", buckets?.map(b => b.id));
-        
-        // Check if the bucket exists
-        const bucketExists = buckets?.some(b => b.id === bucketId);
-        if (!bucketExists) {
-          console.error(`Bucket ${bucketId} not found in available buckets`);
-          toast.error(`Upload failed: Bucket ${bucketId} not found. Please contact support.`);
-          return false;
-        }
+        throw new Error(`Failed to list buckets: ${bucketsError.message}`);
+      } 
+      
+      console.log("Available buckets:", buckets?.map(b => b.id));
+      
+      // Check if the bucket exists
+      const bucketExists = buckets?.some(b => b.id === bucketId);
+      if (!bucketExists) {
+        console.error(`Bucket ${bucketId} not found in available buckets`);
+        toast.error(`Upload failed: Bucket ${bucketId} not found. Please contact support.`);
+        return false;
       }
       
       // List existing files in bucket to check access
@@ -83,9 +76,10 @@ export const useVoiceUploader = (
       if (listError) {
         console.error(`Error listing files in bucket ${bucketId}:`, listError);
         console.log("This may indicate a permissions issue with the bucket");
-      } else {
-        console.log(`Files in bucket ${bucketId}:`, existingFiles?.map(f => f.name));
+        throw new Error(`Cannot access the bucket: ${listError.message}`);
       }
+      
+      console.log(`Files in bucket ${bucketId}:`, existingFiles?.map(f => f.name));
       
       // Upload the actual file to Supabase Storage
       const { data: fileData, error: uploadError } = await supabase
