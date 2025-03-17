@@ -30,7 +30,7 @@ export const useDuplicateValidation = (
       const { data, error } = await supabase
         .from('frituren')
         .select('count')
-        .eq('"Business Name"', businessName)
+        .eq('Business Name', businessName)
         .single();
 
       if (error) {
