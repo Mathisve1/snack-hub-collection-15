@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import RecordingInterface from "./RecordingInterface";
+import { RecordingInterface } from "./RecordingInterface";
 import AnalyzedRecordingsList from "../AnalyzedRecordingsList";
 import { VoiceAnalysisType } from "../types";
 

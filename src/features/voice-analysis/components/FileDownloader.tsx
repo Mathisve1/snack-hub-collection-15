@@ -1,7 +1,8 @@
 
-import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { FileDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 interface FileDownloaderProps {
@@ -9,42 +10,51 @@ interface FileDownloaderProps {
 }
 
 const FileDownloader = ({ fileName }: FileDownloaderProps) => {
-  const downloadOriginalFile = async () => {
+  const [isDownloading, setIsDownloading] = useState(false);
+  
+  const handleDownload = async () => {
     try {
-      // Get the file directly from storage
+      setIsDownloading(true);
+      
+      // Create a signed URL with long expiry for download
       const { data, error } = await supabase
         .storage
         .from('frituur-attachments')
-        .download(fileName);
+        .createSignedUrl(fileName, 3600); // 1 hour expiry
       
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
       
-      // Create a download link for the file
-      const url = URL.createObjectURL(data);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.appendChild(a);
-      a.click();
+      if (!data.signedUrl) {
+        throw new Error("Failed to generate download URL");
+      }
       
-      // Clean up
-      URL.revokeObjectURL(url);
-      document.body.removeChild(a);
+      // Create an anchor element and trigger download
+      const link = document.createElement('a');
+      link.href = data.signedUrl;
+      link.download = fileName.split('/').pop() || 'recording.webm';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
       
     } catch (error) {
       console.error("Error downloading file:", error);
-      toast.error("Failed to download original recording");
+      toast.error("Failed to download recording");
+    } finally {
+      setIsDownloading(false);
     }
   };
-
+  
   return (
     <Button 
       variant="outline" 
       size="sm" 
-      onClick={downloadOriginalFile}
-      className="flex items-center text-xs"
+      onClick={handleDownload}
+      disabled={isDownloading}
     >
-      <Download className="h-3 w-3 mr-1" /> Download Original Recording
+      <FileDown className="h-4 w-4 mr-1" />
+      {isDownloading ? "Downloading..." : "Download Recording"}
     </Button>
   );
 };
