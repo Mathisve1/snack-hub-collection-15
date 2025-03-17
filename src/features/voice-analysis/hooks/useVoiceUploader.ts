@@ -16,11 +16,26 @@ export const useVoiceUploader = (
     // Extract just the team number without the "OV-" prefix
     const teamNumber = team.replace('OV-', '');
     
-    // Create the correct bucket ID format
-    if (type === 'frituren') {
-      return `${teamNumber}-frituren`;
+    // Map team numbers to their correct bucket IDs
+    if (type === 'interviews') {
+      // Only handle specific team numbers with known bucket names
+      switch (teamNumber) {
+        case '3':
+          return 'Interviews Bucket Team 03';
+        case '13':
+          return 'Interviews Bucket Team 13';
+        case '14':
+          return 'Interviews Bucket Team 14';
+        case '38':
+          return 'Interviews Bucket Team 38';
+        default:
+          // Fallback to a default bucket if team not found
+          console.warn(`No specific bucket found for team ${teamNumber}, using Team 03 bucket as fallback`);
+          return 'Interviews Bucket Team 03';
+      }
     } else {
-      return `${teamNumber}-street-interviews`;
+      // For frituren, fall back to using the Team 03 bucket
+      return 'Interviews Bucket Team 03';
     }
   };
 
