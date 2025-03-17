@@ -9,7 +9,7 @@ import { formatDistanceToNow } from "date-fns";
 interface VoiceAnalysis {
   id: string;
   team: string;
-  recording_url: string;
+  recording_url: string | null;
   transcript: string | null;
   analysis: string | null;
   status: 'pending' | 'analyzing' | 'completed' | 'failed';
@@ -26,6 +26,7 @@ interface AnalyzedRecordingsListProps {
 const AnalyzedRecordingsList = ({ team, type }: AnalyzedRecordingsListProps) => {
   const [recordings, setRecordings] = useState<VoiceAnalysis[]>([]);
   const [loading, setLoading] = useState(true);
+  const [audioUrls, setAudioUrls] = useState<Record<string, string>>({});
 
   useEffect(() => {
     fetchRecordings();
@@ -48,6 +49,27 @@ const AnalyzedRecordingsList = ({ team, type }: AnalyzedRecordingsListProps) => 
       }
 
       setRecordings(data as VoiceAnalysis[]);
+      
+      // Create temporary URLs for audio playback
+      const urls: Record<string, string> = {};
+      for (const recording of data) {
+        if (recording.file_name) {
+          try {
+            const { data: signedUrlData } = await supabase
+              .storage
+              .from('frituur-attachments')
+              .createSignedUrl(recording.file_name, 3600); // 1 hour expiry
+              
+            if (signedUrlData?.signedUrl) {
+              urls[recording.id] = signedUrlData.signedUrl;
+            }
+          } catch (e) {
+            console.error('Error getting signed URL:', e);
+          }
+        }
+      }
+      setAudioUrls(urls);
+      
     } catch (error) {
       console.error("Error fetching recordings:", error);
       toast.error("Failed to load analyzed recordings");
@@ -158,10 +180,10 @@ const AnalyzedRecordingsList = ({ team, type }: AnalyzedRecordingsListProps) => 
                 )}
                 
                 <div className="mt-3">
-                  {recording.recording_url && (
+                  {audioUrls[recording.id] && (
                     <div className="mb-2">
                       <audio 
-                        src={recording.recording_url} 
+                        src={audioUrls[recording.id]} 
                         controls 
                         className="w-full max-w-md"
                       />

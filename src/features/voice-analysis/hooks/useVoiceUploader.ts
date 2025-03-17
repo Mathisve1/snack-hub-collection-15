@@ -17,7 +17,7 @@ export const useVoiceUploader = (
       // Create a unique file name for the recording
       const fileName = `${uuidv4()}-${type}-recording.webm`;
       
-      // Upload the file to Supabase Storage
+      // Upload the actual file to Supabase Storage
       const { data: fileData, error: uploadError } = await supabase
         .storage
         .from('frituur-attachments')
@@ -28,23 +28,15 @@ export const useVoiceUploader = (
       
       if (uploadError) throw uploadError;
       
-      // Get the public URL of the uploaded file
-      const { data: publicUrlData } = supabase
-        .storage
-        .from('frituur-attachments')
-        .getPublicUrl(fileName);
-      
-      const publicUrl = publicUrlData.publicUrl;
-      
       // Use the correct table name based on the type
       const tableName = type === 'frituren' ? 'frituren_interviews' : 'street_interviews';
       
-      // Insert a record in the database that references the file in storage
+      // Insert a record in the database that references the file in storage by filename
       const { error: insertError } = await supabase
         .from(tableName)
         .insert({
           team,
-          recording_url: publicUrl,
+          recording_url: null, // No longer storing the URL directly
           status: 'pending',
           created_at: new Date().toISOString(),
           duration_seconds: recordingDuration,
