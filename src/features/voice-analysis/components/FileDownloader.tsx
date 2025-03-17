@@ -12,17 +12,18 @@ interface FileDownloaderProps {
 const FileDownloader = ({ fileName, bucketId }: FileDownloaderProps) => {
   const downloadOriginalFile = async () => {
     try {
-      console.log(`Attempting to download file: ${fileName} from bucket: ${bucketId}`);
+      console.log(`Downloading file: ${fileName} from bucket: ${bucketId}`);
       
-      // Get the file directly from storage using the team-specific bucket ID
+      // Get the file directly from storage using the bucket ID
       const { data, error } = await supabase
         .storage
         .from(bucketId)
         .download(fileName);
       
       if (error) {
-        console.error("Supabase storage error:", error);
-        throw error;
+        console.error("Download error:", error.message);
+        toast.error("Failed to download original recording");
+        return;
       }
       
       // Create a download link for the file

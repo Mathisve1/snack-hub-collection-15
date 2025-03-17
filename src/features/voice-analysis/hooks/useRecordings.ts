@@ -13,7 +13,7 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
     // Extract just the team number without the "OV-" prefix
     const teamNumber = teamName.replace('OV-', '');
     
-    // Map team number to the correct bucket - using bucket names as they exist in Supabase
+    // Map team number to the correct bucket - using bucket names exactly as they exist in Supabase
     if (teamNumber === "3" || teamNumber === "03") {
       return "Interviews Bucket Team 03";
     } else if (teamNumber === "13") {
@@ -35,6 +35,8 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
       // Use the correct table name based on the type
       const tableName = type === 'frituren' ? 'frituren_interviews' : 'street_interviews';
       
+      console.log(`Fetching ${type} recordings for team ${team} from table ${tableName}`);
+      
       const { data, error } = await supabase
         .from(tableName)
         .select('*')
@@ -42,7 +44,10 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         .order('created_at', { ascending: false });
 
       if (error) {
-        throw error;
+        console.error("Database query error:", error);
+        toast.error(`Failed to load recordings: ${error.message}`);
+        setLoading(false);
+        return;
       }
 
       // Map data with explicit type casting and default values
@@ -51,6 +56,8 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         const bucketId = item.bucket_id || getBucketId(type, team);
         // Use the file_name as the file_path since that's what we store in the DB
         const filePath = item.file_name || '';
+        
+        console.log(`Recording: ${item.id}, Bucket: ${bucketId}, File: ${filePath}`);
         
         const record: VoiceAnalysis = {
           id: item.id,
@@ -74,14 +81,13 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
       for (const recording of mappedData) {
         if (recording.file_path && recording.bucket_id) {
           try {
-            console.log(`Getting signed URL for file: ${recording.file_path} in bucket: ${recording.bucket_id}`);
             const { data: signedUrlData, error: signedUrlError } = await supabase
               .storage
               .from(recording.bucket_id)
               .createSignedUrl(recording.file_path, 3600); // 1 hour expiry
               
             if (signedUrlError) {
-              console.error('Error getting signed URL:', signedUrlError);
+              console.error(`Error getting signed URL for ${recording.file_path}:`, signedUrlError);
               continue;
             }
               

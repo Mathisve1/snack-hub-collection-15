@@ -16,25 +16,25 @@ export const useVoiceUploader = (
     // Extract just the team number without the "OV-" prefix
     const teamNumber = team.replace('OV-', '');
     
-    // Map team number to the correct bucket - using bucket names as they exist in Supabase
-    let bucketName;
+    // Map team number to the correct bucket - using bucket names exactly as they exist in Supabase
+    let bucketId;
     
     if (teamNumber === "3" || teamNumber === "03") {
-      bucketName = "Interviews Bucket Team 03";
+      bucketId = "Interviews Bucket Team 03";
     } else if (teamNumber === "13") {
-      bucketName = "Interviews Bucket Team 13";
+      bucketId = "Interviews Bucket Team 13";
     } else if (teamNumber === "14") {
-      bucketName = "Interviews Bucket Team 14";
+      bucketId = "Interviews Bucket Team 14";
     } else if (teamNumber === "38") {
-      bucketName = "Interviews Bucket Team 38";
+      bucketId = "Interviews Bucket Team 38";
     } else {
       // Default to team 03 bucket if team not found
-      bucketName = "Interviews Bucket Team 03";
+      bucketId = "Interviews Bucket Team 03";
       console.warn(`Team ${teamNumber} doesn't have a designated bucket, using Team 03's bucket`);
     }
     
-    console.log(`Using bucket: ${bucketName}`);
-    return bucketName;
+    console.log(`Using bucket ID for upload: ${bucketId}`);
+    return bucketId;
   };
 
   const uploadRecording = async (recordingBlob: Blob, recordingDuration: number) => {
@@ -46,7 +46,7 @@ export const useVoiceUploader = (
       // Get the correct bucket ID
       const bucketId = getBucketId();
       
-      console.log(`Uploading to bucket: ${bucketId}`);
+      console.log(`Uploading to bucket: ${bucketId}, file: ${fileName}`);
       
       // Upload the actual file to Supabase Storage
       const { data: fileData, error: uploadError } = await supabase
@@ -59,16 +59,11 @@ export const useVoiceUploader = (
       
       if (uploadError) {
         console.error("Error uploading to bucket:", uploadError);
-        throw uploadError;
+        toast.error(`Upload failed: ${uploadError.message}`);
+        return false;
       }
       
-      // Get public URL for the uploaded file
-      const { data: publicUrlData } = supabase
-        .storage
-        .from(bucketId)
-        .getPublicUrl(fileName);
-        
-      const publicUrl = publicUrlData.publicUrl;
+      console.log(`File uploaded successfully: ${fileName}`);
       
       // Use the correct table name based on the type
       const tableName = type === 'frituren' ? 'frituren_interviews' : 'street_interviews';
@@ -77,8 +72,7 @@ export const useVoiceUploader = (
       const recordData = {
         team,
         file_name: fileName,
-        bucket_id: bucketId, // Store the bucket ID in the database
-        recording_url: publicUrl, // Add this for backward compatibility
+        bucket_id: bucketId,
         status: 'pending',
         created_at: new Date().toISOString(),
         duration_seconds: recordingDuration
@@ -89,14 +83,18 @@ export const useVoiceUploader = (
         .from(tableName)
         .insert(recordData);
         
-      if (insertError) throw insertError;
+      if (insertError) {
+        console.error("Database insert error:", insertError);
+        toast.error(`Failed to save recording info: ${insertError.message}`);
+        return false;
+      }
       
       toast.success("Recording uploaded for analysis");
       onUploadComplete();
       return true;
     } catch (error) {
       console.error("Error uploading recording:", error);
-      toast.error(`Failed to upload recording: ${error.message || 'Unknown error'}`);
+      toast.error(`Upload error: ${error.message || 'Unknown error'}`);
       return false;
     } finally {
       setIsUploading(false);
