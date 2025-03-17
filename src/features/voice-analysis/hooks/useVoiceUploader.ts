@@ -13,14 +13,14 @@ export const useVoiceUploader = (
 
   // Get the correct bucket ID based on team and type
   const getBucketId = () => {
-    // Ensure the team has the correct format without "OV-" prefix
-    const teamId = team.replace('OV-', '');
+    // Extract just the team number without the "OV-" prefix
+    const teamNumber = team.replace('OV-', '');
     
     // Create the correct bucket ID format
     if (type === 'frituren') {
-      return `frituren-team-${teamId}`;
+      return `${teamNumber}-frituren`;
     } else {
-      return `interviews-team-${teamId}`;
+      return `${teamNumber}-street-interviews`;
     }
   };
 
@@ -32,6 +32,8 @@ export const useVoiceUploader = (
       
       // Get the correct team-specific bucket ID
       const bucketId = getBucketId();
+      
+      console.log(`Uploading to bucket: ${bucketId}`);
       
       // Upload the actual file to Supabase Storage
       const { data: fileData, error: uploadError } = await supabase
