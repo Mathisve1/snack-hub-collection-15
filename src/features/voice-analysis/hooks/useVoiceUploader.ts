@@ -11,13 +11,16 @@ export const useVoiceUploader = (
 ) => {
   const [isUploading, setIsUploading] = useState(false);
 
-  // Get the correct bucket ID based on team and type
+  // Get the correct bucket ID based on team
   const getBucketId = () => {
     // Extract just the team number without the "OV-" prefix
     const teamNumber = team.replace('OV-', '');
     
-    // Use a single valid bucket name for all uploads to avoid "bucket not found" errors
-    return 'frituur-attachments';
+    // Create the correct bucket name based on team number
+    const bucketName = `Interviews Bucket Team ${teamNumber.padStart(2, '0')}`;
+    
+    console.log(`Using bucket: ${bucketName}`);
+    return bucketName;
   };
 
   const uploadRecording = async (recordingBlob: Blob, recordingDuration: number) => {
@@ -40,7 +43,10 @@ export const useVoiceUploader = (
           upsert: false
         });
       
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error("Error uploading to bucket:", uploadError);
+        throw uploadError;
+      }
       
       // Get public URL for the uploaded file
       const { data: publicUrlData } = supabase
@@ -76,7 +82,7 @@ export const useVoiceUploader = (
       return true;
     } catch (error) {
       console.error("Error uploading recording:", error);
-      toast.error("Failed to upload recording. Please try again later.");
+      toast.error(`Failed to upload recording: ${error.message || 'Unknown error'}`);
       return false;
     } finally {
       setIsUploading(false);
