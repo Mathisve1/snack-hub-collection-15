@@ -8,8 +8,7 @@ import { useVoiceUploader } from "../hooks/useVoiceUploader";
 import { VoiceAnalysisType } from "../types";
 import { formatDuration } from "../utils/formatUtils";
 
-// Define props interface for the RecordingInterface component
-export interface RecordingInterfaceProps {
+interface RecordingInterfaceProps {
   team: string;
   type: VoiceAnalysisType;
 }

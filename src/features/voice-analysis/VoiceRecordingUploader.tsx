@@ -1,4 +1,3 @@
-
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Upload, Loader2 } from "lucide-react";
@@ -6,7 +5,6 @@ import { toast } from "sonner";
 import { useVoiceRecorder } from "./hooks/useVoiceRecorder";
 import { useVoiceUploader } from "./hooks/useVoiceUploader";
 import { RecordingInterface } from "./components/RecordingInterface";
-import { formatDuration } from "./utils/formatUtils";
 
 interface VoiceRecordingUploaderProps {
   team: string;
@@ -26,6 +24,12 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
   } = useVoiceRecorder();
   
   const { isUploading, uploadRecording } = useVoiceUploader(team, type, onUploadComplete);
+  
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
   
   const handleFileSelect = () => {
     fileInputRef.current?.click();
@@ -76,7 +80,13 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
                   }
                 </p>
                 <div className="flex flex-wrap gap-4 justify-center">
-                  <RecordingInterface team={team} type={type} />
+                  <RecordingInterface
+                    isRecording={isRecording}
+                    recordingDuration={recordingDuration}
+                    onStartRecording={startRecording}
+                    onStopRecording={stopRecording}
+                    formatDuration={formatDuration}
+                  />
                   <Button 
                     variant="outline" 
                     onClick={handleFileSelect}
@@ -88,7 +98,13 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
               </div>
             </>
           ) : (
-            <RecordingInterface team={team} type={type} />
+            <RecordingInterface
+              isRecording={isRecording}
+              recordingDuration={recordingDuration}
+              onStartRecording={startRecording}
+              onStopRecording={stopRecording}
+              formatDuration={formatDuration}
+            />
           )}
         </div>
       ) : (
