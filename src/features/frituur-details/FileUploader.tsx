@@ -46,10 +46,14 @@ const FileUploader = ({
       const fileExt = file.name.split('.').pop();
       const fileName = `${uuidv4()}-${fileType}.${fileExt}`;
       
+      // Use 'frituur-attachments' bucket for general attachments
+      // Voice recordings go to team-specific buckets via VoiceRecordingUploader
+      const bucketId = 'frituur-attachments';
+      
       // Upload file to Supabase Storage
       const { data: fileData, error: uploadError } = await supabase
         .storage
-        .from('frituur-attachments')
+        .from(bucketId)
         .upload(fileName, file);
         
       if (uploadError) {
@@ -61,7 +65,7 @@ const FileUploader = ({
       // Get public URL for the uploaded file
       const { data: publicUrlData } = supabase
         .storage
-        .from('frituur-attachments')
+        .from(bucketId)
         .getPublicUrl(fileName);
         
       const publicUrl = publicUrlData.publicUrl;

@@ -12,7 +12,7 @@ interface FileDownloaderProps {
 const FileDownloader = ({ fileName, bucketId }: FileDownloaderProps) => {
   const downloadOriginalFile = async () => {
     try {
-      // Get the file directly from storage using the bucket ID
+      // Get the file directly from storage using the team-specific bucket ID
       const { data, error } = await supabase
         .storage
         .from(bucketId)

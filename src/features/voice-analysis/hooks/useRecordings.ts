@@ -9,6 +9,14 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
   const [loading, setLoading] = useState(true);
   const [audioUrls, setAudioUrls] = useState<Record<string, string>>({});
 
+  const getBucketId = (recordingType: VoiceAnalysisType, teamName: string) => {
+    if (recordingType === 'frituren') {
+      return `frituren-team-${teamName}`;
+    } else {
+      return `interviews-team-${teamName}`;
+    }
+  };
+
   const fetchRecordings = async () => {
     try {
       setLoading(true);
@@ -27,8 +35,8 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
 
       // Map data with explicit type casting and default values
       const mappedData = data.map(item => {
-        // Create a fixed bucket_id based on our known bucket
-        const bucketId = 'frituur-attachments';
+        // Get the correct team-specific bucket ID
+        const bucketId = item.bucket_id || getBucketId(type, team);
         // Use the file_name as the file_path since that's what we store in the DB
         const filePath = item.file_name || '';
         

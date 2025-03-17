@@ -11,9 +11,13 @@ export const useVoiceUploader = (
 ) => {
   const [isUploading, setIsUploading] = useState(false);
 
-  // Use a fixed bucket for storage to avoid bucket not found errors
+  // Get the correct bucket ID based on team and type
   const getBucketId = () => {
-    return 'frituur-attachments';
+    if (type === 'frituren') {
+      return `frituren-team-${team}`;
+    } else {
+      return `interviews-team-${team}`;
+    }
   };
 
   const uploadRecording = async (recordingBlob: Blob, recordingDuration: number) => {
@@ -22,7 +26,7 @@ export const useVoiceUploader = (
       // Create a unique file name for the recording
       const fileName = `${uuidv4()}-${type}-recording.webm`;
       
-      // Use a fixed bucket ID that we know exists
+      // Get the correct team-specific bucket ID
       const bucketId = getBucketId();
       
       // Upload the actual file to Supabase Storage
@@ -51,6 +55,7 @@ export const useVoiceUploader = (
       const recordData = {
         team,
         file_name: fileName,
+        bucket_id: bucketId, // Store the bucket ID in the database
         recording_url: publicUrl, // Add this for backward compatibility
         status: 'pending',
         created_at: new Date().toISOString(),
