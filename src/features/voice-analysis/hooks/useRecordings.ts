@@ -13,8 +13,20 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
     // Extract just the team number without the "OV-" prefix
     const teamNumber = teamName.replace('OV-', '');
     
-    // Create the correct bucket name based on team number
-    return `Interviews Bucket Team ${teamNumber.padStart(2, '0')}`;
+    // Map team number to the correct bucket - only using existing buckets
+    if (teamNumber === "3" || teamNumber === "03") {
+      return "Interviews Bucket Team 03";
+    } else if (teamNumber === "13") {
+      return "Interviews Bucket Team 13";
+    } else if (teamNumber === "14") {
+      return "Interviews Bucket Team 14";
+    } else if (teamNumber === "38") {
+      return "Interviews Bucket Team 38";
+    } else {
+      // Default to team 03 bucket if team not found
+      console.warn(`Team ${teamNumber} doesn't have a designated bucket, using Team 03's bucket`);
+      return "Interviews Bucket Team 03";
+    }
   };
 
   const fetchRecordings = async () => {

@@ -16,8 +16,22 @@ export const useVoiceUploader = (
     // Extract just the team number without the "OV-" prefix
     const teamNumber = team.replace('OV-', '');
     
-    // Create the correct bucket name based on team number
-    const bucketName = `Interviews Bucket Team ${teamNumber.padStart(2, '0')}`;
+    // Map team number to the correct bucket - only using existing buckets
+    let bucketName;
+    
+    if (teamNumber === "3" || teamNumber === "03") {
+      bucketName = "Interviews Bucket Team 03";
+    } else if (teamNumber === "13") {
+      bucketName = "Interviews Bucket Team 13";
+    } else if (teamNumber === "14") {
+      bucketName = "Interviews Bucket Team 14";
+    } else if (teamNumber === "38") {
+      bucketName = "Interviews Bucket Team 38";
+    } else {
+      // Default to team 03 bucket if team not found
+      bucketName = "Interviews Bucket Team 03";
+      console.warn(`Team ${teamNumber} doesn't have a designated bucket, using Team 03's bucket`);
+    }
     
     console.log(`Using bucket: ${bucketName}`);
     return bucketName;
