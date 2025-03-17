@@ -75,10 +75,15 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         if (recording.file_path && recording.bucket_id) {
           try {
             console.log(`Getting signed URL for file: ${recording.file_path} in bucket: ${recording.bucket_id}`);
-            const { data: signedUrlData } = await supabase
+            const { data: signedUrlData, error: signedUrlError } = await supabase
               .storage
               .from(recording.bucket_id)
               .createSignedUrl(recording.file_path, 3600); // 1 hour expiry
+              
+            if (signedUrlError) {
+              console.error('Error getting signed URL:', signedUrlError);
+              continue;
+            }
               
             if (signedUrlData?.signedUrl) {
               urls[recording.id] = signedUrlData.signedUrl;

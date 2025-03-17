@@ -20,7 +20,10 @@ const FileDownloader = ({ fileName, bucketId }: FileDownloaderProps) => {
         .from(bucketId)
         .download(fileName);
       
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase storage error:", error);
+        throw error;
+      }
       
       // Create a download link for the file
       const url = URL.createObjectURL(data);
