@@ -13,10 +13,14 @@ export const useVoiceUploader = (
 
   // Get the correct bucket ID based on team and type
   const getBucketId = () => {
+    // Ensure the team has the correct format without "OV-" prefix
+    const teamId = team.replace('OV-', '');
+    
+    // Create the correct bucket ID format
     if (type === 'frituren') {
-      return `frituren-team-${team}`;
+      return `frituren-team-${teamId}`;
     } else {
-      return `interviews-team-${team}`;
+      return `interviews-team-${teamId}`;
     }
   };
 

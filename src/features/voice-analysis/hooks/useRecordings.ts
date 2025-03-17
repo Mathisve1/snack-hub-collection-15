@@ -10,10 +10,13 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
   const [audioUrls, setAudioUrls] = useState<Record<string, string>>({});
 
   const getBucketId = (recordingType: VoiceAnalysisType, teamName: string) => {
+    // Ensure the team has the correct format without "OV-" prefix
+    const teamId = teamName.replace('OV-', '');
+    
     if (recordingType === 'frituren') {
-      return `frituren-team-${teamName}`;
+      return `frituren-team-${teamId}`;
     } else {
-      return `interviews-team-${teamName}`;
+      return `interviews-team-${teamId}`;
     }
   };
 
