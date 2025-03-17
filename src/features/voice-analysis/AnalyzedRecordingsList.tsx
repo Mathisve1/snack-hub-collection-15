@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { AudioLines, FileText, Loader2, AlertCircle } from "lucide-react";
+import { AudioLines, FileText, Loader2, AlertCircle, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { formatDistanceToNow } from "date-fns";
@@ -53,6 +53,33 @@ const AnalyzedRecordingsList = ({ team, type }: AnalyzedRecordingsListProps) => 
       toast.error("Failed to load analyzed recordings");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const downloadOriginalFile = async (fileName: string) => {
+    try {
+      const { data, error } = await supabase
+        .storage
+        .from('frituur-attachments')
+        .download(fileName);
+      
+      if (error) throw error;
+      
+      // Create a download link
+      const url = URL.createObjectURL(data);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      
+      // Clean up
+      URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      toast.error("Failed to download original recording");
     }
   };
 
@@ -129,15 +156,28 @@ const AnalyzedRecordingsList = ({ team, type }: AnalyzedRecordingsListProps) => 
                   </div>
                 )}
                 
-                {recording.recording_url && (
-                  <div className="mt-3">
-                    <audio 
-                      src={recording.recording_url} 
-                      controls 
-                      className="w-full max-w-md"
-                    />
-                  </div>
-                )}
+                <div className="mt-3">
+                  {recording.recording_url && (
+                    <div className="mb-2">
+                      <audio 
+                        src={recording.recording_url} 
+                        controls 
+                        className="w-full max-w-md"
+                      />
+                    </div>
+                  )}
+                  
+                  {recording.file_name && (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => downloadOriginalFile(recording.file_name)}
+                      className="flex items-center text-xs"
+                    >
+                      <Download className="h-3 w-3 mr-1" /> Download Original Recording
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
