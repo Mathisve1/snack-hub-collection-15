@@ -134,6 +134,7 @@ export type Database = {
       frituren_interviews: {
         Row: {
           analysis: string | null
+          bucket_id: string | null
           created_at: string | null
           duration_seconds: number | null
           file_name: string
@@ -145,6 +146,7 @@ export type Database = {
         }
         Insert: {
           analysis?: string | null
+          bucket_id?: string | null
           created_at?: string | null
           duration_seconds?: number | null
           file_name: string
@@ -156,6 +158,7 @@ export type Database = {
         }
         Update: {
           analysis?: string | null
+          bucket_id?: string | null
           created_at?: string | null
           duration_seconds?: number | null
           file_name?: string
@@ -203,6 +206,7 @@ export type Database = {
       street_interviews: {
         Row: {
           analysis: string | null
+          bucket_id: string | null
           created_at: string | null
           duration_seconds: number | null
           file_name: string
@@ -214,6 +218,7 @@ export type Database = {
         }
         Insert: {
           analysis?: string | null
+          bucket_id?: string | null
           created_at?: string | null
           duration_seconds?: number | null
           file_name: string
@@ -225,6 +230,7 @@ export type Database = {
         }
         Update: {
           analysis?: string | null
+          bucket_id?: string | null
           created_at?: string | null
           duration_seconds?: number | null
           file_name?: string
