@@ -136,9 +136,9 @@ export type Database = {
           analysis: string | null
           created_at: string | null
           duration_seconds: number | null
-          file_name: string | null
+          file_name: string
           id: string
-          recording_url: string
+          recording_url: string | null
           status: string
           team: string
           transcript: string | null
@@ -147,9 +147,9 @@ export type Database = {
           analysis?: string | null
           created_at?: string | null
           duration_seconds?: number | null
-          file_name?: string | null
+          file_name: string
           id?: string
-          recording_url: string
+          recording_url?: string | null
           status?: string
           team: string
           transcript?: string | null
@@ -158,9 +158,9 @@ export type Database = {
           analysis?: string | null
           created_at?: string | null
           duration_seconds?: number | null
-          file_name?: string | null
+          file_name?: string
           id?: string
-          recording_url?: string
+          recording_url?: string | null
           status?: string
           team?: string
           transcript?: string | null
@@ -205,9 +205,9 @@ export type Database = {
           analysis: string | null
           created_at: string | null
           duration_seconds: number | null
-          file_name: string | null
+          file_name: string
           id: string
-          recording_url: string
+          recording_url: string | null
           status: string
           team: string
           transcript: string | null
@@ -216,9 +216,9 @@ export type Database = {
           analysis?: string | null
           created_at?: string | null
           duration_seconds?: number | null
-          file_name?: string | null
+          file_name: string
           id?: string
-          recording_url: string
+          recording_url?: string | null
           status?: string
           team: string
           transcript?: string | null
@@ -227,9 +227,9 @@ export type Database = {
           analysis?: string | null
           created_at?: string | null
           duration_seconds?: number | null
-          file_name?: string | null
+          file_name?: string
           id?: string
-          recording_url?: string
+          recording_url?: string | null
           status?: string
           team?: string
           transcript?: string | null

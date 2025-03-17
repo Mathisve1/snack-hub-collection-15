@@ -1,3 +1,4 @@
+
 import { useMemo } from 'react';
 import { Frituur } from '@/types';
 import { supabase } from "@/integrations/supabase/client";
@@ -24,7 +25,7 @@ export const useDuplicateValidation = (
   }, [frituren, currentValues["Business Name"]]);
 
   // Simplified check for business name without recursive queries
-  const checkBusinessNameExists = async (businessName: string) => {
+  const checkBusinessNameExists = async (businessName: string): Promise<boolean> => {
     try {
       const { data, error } = await supabase
         .from('frituren')
@@ -49,8 +50,6 @@ export const useDuplicateValidation = (
       return false; // Don't block submission on unexpected errors
     }
   };
-
-  // Remove other duplicate checks that might be causing issues
   
   return {
     isDuplicate,
