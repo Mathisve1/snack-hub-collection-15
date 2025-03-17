@@ -12,6 +12,9 @@ interface RecordingItemProps {
 }
 
 const RecordingItem = ({ recording, audioUrl }: RecordingItemProps) => {
+  const createdDate = recording.created_at ? new Date(recording.created_at) : new Date();
+  const formattedDate = formatDistanceToNow(createdDate, { addSuffix: true });
+
   return (
     <div className="border rounded-lg p-4">
       <div className="flex justify-between items-start">
@@ -20,7 +23,7 @@ const RecordingItem = ({ recording, audioUrl }: RecordingItemProps) => {
           <div>
             <div className="flex items-center gap-2">
               <p className="font-medium">
-                Recording {formatDistanceToNow(new Date(recording.created_at), { addSuffix: true })}
+                Recording {formattedDate}
               </p>
               <StatusBadge status={recording.status} />
             </div>
