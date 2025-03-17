@@ -1,81 +1,62 @@
 
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
-import { VoiceAnalysisType } from "../types";
+import { toast } from "sonner";
 
 export const useVoiceUploader = (
   team: string, 
-  type: VoiceAnalysisType, 
+  type: 'frituren' | 'interviews', 
   onUploadComplete: () => void
 ) => {
   const [isUploading, setIsUploading] = useState(false);
 
-  const uploadRecording = async (blob: Blob, durationSeconds: number): Promise<boolean> => {
+  const uploadRecording = async (recordingBlob: Blob, recordingDuration: number) => {
+    setIsUploading(true);
     try {
-      setIsUploading(true);
+      // Create a unique file name for the recording
+      const fileName = `${uuidv4()}-${type}-recording.webm`;
       
-      // Create a unique file name with appropriate extension
-      const fileName = `${uuidv4()}-voice-recording.webm`;
-      
-      // 1. Upload the actual audio file to storage bucket
+      // Upload the actual file to Supabase Storage
       const { data: fileData, error: uploadError } = await supabase
         .storage
         .from('frituur-attachments')
-        .upload(fileName, blob, {
-          contentType: blob.type || 'audio/webm',
-          cacheControl: '3600'
+        .upload(fileName, recordingBlob, {
+          cacheControl: '3600',
+          upsert: false
         });
-        
-      if (uploadError) {
-        console.error("Error uploading audio file:", uploadError);
-        toast.error("Failed to upload audio recording");
-        return false;
-      }
       
-      // Get the public URL for the uploaded file
-      const { data: urlData } = supabase
-        .storage
-        .from('frituur-attachments')
-        .getPublicUrl(fileName);
+      if (uploadError) throw uploadError;
       
-      const publicUrl = urlData.publicUrl;
-      
-      // Determine which table to use based on the interview type
+      // Use the correct table name based on the type
       const tableName = type === 'frituren' ? 'frituren_interviews' : 'street_interviews';
       
-      // 2. Save the record in the appropriate database table
+      // Insert a record in the database that references the file in storage by filename
       const { error: insertError } = await supabase
         .from(tableName)
         .insert({
           team,
-          recording_url: publicUrl,
-          file_name: fileName,
-          duration_seconds: durationSeconds,
-          status: 'pending'
+          recording_url: null, // No longer storing the URL directly
+          status: 'pending',
+          created_at: new Date().toISOString(),
+          duration_seconds: recordingDuration,
+          file_name: fileName, // Save the filename to reference the file in storage
         });
-        
-      if (insertError) {
-        console.error(`Error saving to ${tableName}:`, insertError);
-        toast.error("Failed to save recording information");
-        return false;
-      }
       
-      toast.success("Recording uploaded successfully! Analysis will begin shortly.");
+      if (insertError) throw insertError;
+      
+      toast.success("Recording uploaded for analysis");
       onUploadComplete();
       return true;
+      
     } catch (error) {
-      console.error("Unexpected error in uploadRecording:", error);
-      toast.error("An unexpected error occurred during upload");
+      console.error("Error uploading recording:", error);
+      toast.error("Failed to upload recording");
       return false;
     } finally {
       setIsUploading(false);
     }
   };
 
-  return {
-    isUploading,
-    uploadRecording
-  };
+  return { isUploading, uploadRecording };
 };

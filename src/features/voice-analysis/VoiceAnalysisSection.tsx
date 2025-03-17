@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import VoiceAnalysisTabs from "./components/VoiceAnalysisTabs";
 
 interface VoiceAnalysisSectionProps {
