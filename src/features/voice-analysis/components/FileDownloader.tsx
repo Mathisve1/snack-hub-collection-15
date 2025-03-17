@@ -12,7 +12,7 @@ interface FileDownloaderProps {
 const FileDownloader = ({ fileName, bucketId }: FileDownloaderProps) => {
   const downloadOriginalFile = async () => {
     try {
-      console.log(`Downloading file: ${fileName} from bucket: ${bucketId}`);
+      console.log(`Attempting to download file: ${fileName} from bucket: ${bucketId}`);
       
       // Get the file directly from storage using the bucket ID
       const { data, error } = await supabase
@@ -21,10 +21,12 @@ const FileDownloader = ({ fileName, bucketId }: FileDownloaderProps) => {
         .download(fileName);
       
       if (error) {
-        console.error("Download error:", error);
-        toast.error("Failed to download original recording");
+        console.error("Download error details:", error);
+        toast.error(`Failed to download: ${error.message || 'Unknown error'}`);
         return;
       }
+      
+      console.log(`File download successful from bucket: ${bucketId}`);
       
       // Create a download link for the file
       const url = URL.createObjectURL(data);
@@ -39,7 +41,7 @@ const FileDownloader = ({ fileName, bucketId }: FileDownloaderProps) => {
       document.body.removeChild(a);
       
     } catch (error) {
-      console.error("Error downloading file:", error);
+      console.error("Error in downloadOriginalFile:", error);
       toast.error("Failed to download original recording");
     }
   };

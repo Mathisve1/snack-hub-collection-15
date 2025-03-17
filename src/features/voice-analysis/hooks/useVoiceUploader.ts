@@ -40,7 +40,7 @@ export const useVoiceUploader = (
       }
     }
     
-    console.log(`Using bucket ID for upload: ${bucketId}`);
+    console.log(`Selected bucket ID for upload: ${bucketId}`);
     return bucketId;
   };
 
@@ -53,7 +53,18 @@ export const useVoiceUploader = (
       // Get the correct bucket ID
       const bucketId = getBucketId();
       
-      console.log(`Uploading to bucket: ${bucketId}, file: ${fileName}`);
+      console.log(`Attempting upload to bucket: ${bucketId}, file: ${fileName}`);
+      
+      // List available buckets for debugging
+      const { data: buckets, error: bucketsError } = await supabase
+        .storage
+        .listBuckets();
+        
+      if (bucketsError) {
+        console.error("Error listing buckets:", bucketsError);
+      } else {
+        console.log("Available buckets:", buckets.map(b => b.id));
+      }
       
       // Upload the actual file to Supabase Storage
       const { data: fileData, error: uploadError } = await supabase
@@ -66,7 +77,7 @@ export const useVoiceUploader = (
       
       if (uploadError) {
         console.error("Error uploading to bucket:", uploadError);
-        toast.error(`Upload failed: ${uploadError.message}`);
+        toast.error(`Upload failed: ${uploadError.message || 'Unknown error'}`);
         return false;
       }
       
@@ -92,7 +103,7 @@ export const useVoiceUploader = (
         
       if (insertError) {
         console.error("Database insert error:", insertError);
-        toast.error(`Failed to save recording info: ${insertError.message}`);
+        toast.error(`Failed to save recording info: ${insertError.message || 'Unknown error'}`);
         return false;
       }
       

@@ -50,7 +50,7 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
 
       if (error) {
         console.error("Database query error:", error);
-        toast.error(`Failed to load recordings: ${error.message}`);
+        toast.error(`Failed to load recordings: ${error.message || 'Unknown error'}`);
         setLoading(false);
         return;
       }
@@ -86,6 +86,8 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
       for (const recording of mappedData) {
         if (recording.file_path && recording.bucket_id) {
           try {
+            console.log(`Getting signed URL for file: ${recording.file_path} from bucket: ${recording.bucket_id}`);
+            
             const { data: signedUrlData, error: signedUrlError } = await supabase
               .storage
               .from(recording.bucket_id)
@@ -98,6 +100,7 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
               
             if (signedUrlData?.signedUrl) {
               urls[recording.id] = signedUrlData.signedUrl;
+              console.log(`Got signed URL successfully for: ${recording.file_path}`);
             }
           } catch (e) {
             console.error('Error getting signed URL:', e);
