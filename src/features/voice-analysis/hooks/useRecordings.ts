@@ -25,11 +25,25 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         throw error;
       }
 
-      setRecordings(data as VoiceAnalysis[]);
+      // Map database records to VoiceAnalysis type
+      const mappedData: VoiceAnalysis[] = data.map(item => ({
+        id: item.id,
+        team: item.team,
+        bucket_id: item.bucket_id || 'team1-recordings', // Default bucket if not set
+        file_path: item.file_path || item.file_name || '', // Use file_path or fallback to file_name
+        transcript: item.transcript,
+        analysis: item.analysis,
+        status: item.status as 'pending' | 'analyzing' | 'completed' | 'failed',
+        created_at: item.created_at || new Date().toISOString(),
+        duration_seconds: item.duration_seconds || 0,
+        file_name: item.file_name // Keep for backward compatibility
+      }));
+      
+      setRecordings(mappedData);
       
       // Create temporary URLs for audio playback
       const urls: Record<string, string> = {};
-      for (const recording of data) {
+      for (const recording of mappedData) {
         if (recording.file_path && recording.bucket_id) {
           try {
             const { data: signedUrlData } = await supabase

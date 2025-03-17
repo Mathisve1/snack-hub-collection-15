@@ -42,18 +42,35 @@ export const useVoiceUploader = (
       const tableName = type === 'frituren' ? 'frituren_interviews' : 'street_interviews';
       
       // Insert a record in the database that references the file in storage
-      const { error: insertError } = await supabase
-        .from(tableName)
-        .insert({
-          team,
-          bucket_id: bucketId,
-          file_path: fileName,
-          status: 'pending',
-          created_at: new Date().toISOString(),
-          duration_seconds: recordingDuration
-        });
-      
-      if (insertError) throw insertError;
+      if (tableName === 'frituren_interviews') {
+        const { error: insertError } = await supabase
+          .from(tableName)
+          .insert({
+            team,
+            file_name: fileName, // Keep file_name for compatibility
+            status: 'pending',
+            created_at: new Date().toISOString(),
+            duration_seconds: recordingDuration,
+            bucket_id: bucketId,
+            file_path: fileName
+          });
+          
+        if (insertError) throw insertError;
+      } else {
+        const { error: insertError } = await supabase
+          .from(tableName)
+          .insert({
+            team,
+            file_name: fileName, // Keep file_name for compatibility
+            status: 'pending',
+            created_at: new Date().toISOString(),
+            duration_seconds: recordingDuration,
+            bucket_id: bucketId,
+            file_path: fileName
+          });
+          
+        if (insertError) throw insertError;
+      }
       
       toast.success("Recording uploaded for analysis");
       onUploadComplete();

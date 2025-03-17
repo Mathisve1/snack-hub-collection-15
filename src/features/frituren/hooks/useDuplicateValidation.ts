@@ -19,7 +19,7 @@ export const useDuplicateValidation = (
       // Only check for duplicates if there's a business name
       if (!frituur["Business Name"]) return false;
       
-      // Simple string comparison to avoid type issues
+      // Simple string comparison without recursion
       return frituur["Business Name"].toLowerCase().trim() === normalizedName;
     });
   }, [frituren, currentValues["Business Name"]]);
@@ -27,11 +27,10 @@ export const useDuplicateValidation = (
   // Simplified check for business name without recursive queries
   const checkBusinessNameExists = async (businessName: string): Promise<boolean> => {
     try {
-      const { data, error } = await supabase
+      const { count, error } = await supabase
         .from('frituren')
-        .select('count')
-        .eq('"Business Name"', businessName)
-        .single();
+        .select('*', { count: 'exact', head: true })
+        .eq('"Business Name"', businessName);
 
       if (error) {
         console.error("Error checking for duplicate business name:", error);
@@ -39,7 +38,7 @@ export const useDuplicateValidation = (
         return false; // Don't block submission on error
       }
 
-      if (data && data.count > 0) {
+      if (count && count > 0) {
         toast.error(`A frituur with the name "${businessName}" already exists. Please use a different name.`);
         return true;
       }
