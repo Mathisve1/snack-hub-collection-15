@@ -55,6 +55,17 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         return;
       }
 
+      // List available buckets for debugging
+      const { data: buckets, error: bucketsError } = await supabase
+        .storage
+        .listBuckets();
+        
+      if (bucketsError) {
+        console.error("Error listing buckets:", bucketsError);
+      } else {
+        console.log("Available buckets for playback:", buckets?.map(b => b.id));
+      }
+
       // Map data with explicit type casting and default values
       const mappedData = data.map(item => {
         // Get the bucket ID from the record or generate it if missing
@@ -87,6 +98,25 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         if (recording.file_path && recording.bucket_id) {
           try {
             console.log(`Getting signed URL for file: ${recording.file_path} from bucket: ${recording.bucket_id}`);
+            
+            // Check bucket existence first
+            if (buckets && !buckets.some(b => b.id === recording.bucket_id)) {
+              console.error(`Bucket ${recording.bucket_id} not found for recording ${recording.id}`);
+              continue;
+            }
+            
+            // Check bucket access by listing files
+            const { data: files, error: listError } = await supabase
+              .storage
+              .from(recording.bucket_id)
+              .list();
+              
+            if (listError) {
+              console.error(`Error listing files in bucket ${recording.bucket_id}:`, listError);
+              continue;
+            }
+            
+            console.log(`Files in bucket ${recording.bucket_id}:`, files?.map(f => f.name));
             
             const { data: signedUrlData, error: signedUrlError } = await supabase
               .storage

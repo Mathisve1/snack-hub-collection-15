@@ -63,7 +63,28 @@ export const useVoiceUploader = (
       if (bucketsError) {
         console.error("Error listing buckets:", bucketsError);
       } else {
-        console.log("Available buckets:", buckets.map(b => b.id));
+        console.log("Available buckets:", buckets?.map(b => b.id));
+        
+        // Check if the bucket exists
+        const bucketExists = buckets?.some(b => b.id === bucketId);
+        if (!bucketExists) {
+          console.error(`Bucket ${bucketId} not found in available buckets`);
+          toast.error(`Upload failed: Bucket ${bucketId} not found. Please contact support.`);
+          return false;
+        }
+      }
+      
+      // List existing files in bucket to check access
+      const { data: existingFiles, error: listError } = await supabase
+        .storage
+        .from(bucketId)
+        .list();
+        
+      if (listError) {
+        console.error(`Error listing files in bucket ${bucketId}:`, listError);
+        console.log("This may indicate a permissions issue with the bucket");
+      } else {
+        console.log(`Files in bucket ${bucketId}:`, existingFiles?.map(f => f.name));
       }
       
       // Upload the actual file to Supabase Storage
@@ -112,7 +133,7 @@ export const useVoiceUploader = (
       return true;
     } catch (error) {
       console.error("Error uploading recording:", error);
-      toast.error(`Upload error: ${error.message || 'Unknown error'}`);
+      toast.error(`Upload error: ${error instanceof Error ? error.message : 'Unknown error'}`);
       return false;
     } finally {
       setIsUploading(false);
