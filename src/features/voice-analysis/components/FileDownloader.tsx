@@ -10,24 +10,14 @@ interface FileDownloaderProps {
 }
 
 const FileDownloader = ({ fileName, bucketId }: FileDownloaderProps) => {
-  // Convert bucket ID format if needed (for backward compatibility)
-  const getBucketIdForDownload = (id: string) => {
-    // If the bucket ID has spaces, convert to kebab-case
-    if (id.includes(' ')) {
-      return id.toLowerCase().replace(/\s+/g, '-');
-    }
-    return id;
-  };
-
   const downloadOriginalFile = async () => {
     try {
-      const bucketIdForDownload = getBucketIdForDownload(bucketId);
-      console.log(`Downloading from bucket: ${bucketIdForDownload}`);
+      console.log(`Attempting to download file: ${fileName} from bucket: ${bucketId}`);
       
       // Get the file directly from storage using the team-specific bucket ID
       const { data, error } = await supabase
         .storage
-        .from(bucketIdForDownload)
+        .from(bucketId)
         .download(fileName);
       
       if (error) throw error;

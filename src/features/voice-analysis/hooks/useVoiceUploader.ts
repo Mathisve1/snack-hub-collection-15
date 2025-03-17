@@ -16,20 +16,20 @@ export const useVoiceUploader = (
     // Extract just the team number without the "OV-" prefix
     const teamNumber = team.replace('OV-', '');
     
-    // Map team number to the correct bucket - only using existing buckets
+    // Map team number to the correct bucket - using bucket names as they exist in Supabase
     let bucketName;
     
     if (teamNumber === "3" || teamNumber === "03") {
-      bucketName = "interviews-bucket-team-03"; // Using kebab-case without spaces
+      bucketName = "Interviews Bucket Team 03";
     } else if (teamNumber === "13") {
-      bucketName = "interviews-bucket-team-13"; // Using kebab-case without spaces
+      bucketName = "Interviews Bucket Team 13";
     } else if (teamNumber === "14") {
-      bucketName = "interviews-bucket-team-14"; // Using kebab-case without spaces
+      bucketName = "Interviews Bucket Team 14";
     } else if (teamNumber === "38") {
-      bucketName = "interviews-bucket-team-38"; // Using kebab-case without spaces
+      bucketName = "Interviews Bucket Team 38";
     } else {
       // Default to team 03 bucket if team not found
-      bucketName = "interviews-bucket-team-03"; // Using kebab-case without spaces
+      bucketName = "Interviews Bucket Team 03";
       console.warn(`Team ${teamNumber} doesn't have a designated bucket, using Team 03's bucket`);
     }
     

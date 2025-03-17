@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -12,19 +13,19 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
     // Extract just the team number without the "OV-" prefix
     const teamNumber = teamName.replace('OV-', '');
     
-    // Map team number to the correct bucket - only using existing buckets
+    // Map team number to the correct bucket - using bucket names as they exist in Supabase
     if (teamNumber === "3" || teamNumber === "03") {
-      return "interviews-bucket-team-03"; // Using kebab-case without spaces
+      return "Interviews Bucket Team 03";
     } else if (teamNumber === "13") {
-      return "interviews-bucket-team-13"; // Using kebab-case without spaces
+      return "Interviews Bucket Team 13";
     } else if (teamNumber === "14") {
-      return "interviews-bucket-team-14"; // Using kebab-case without spaces
+      return "Interviews Bucket Team 14";
     } else if (teamNumber === "38") {
-      return "interviews-bucket-team-38"; // Using kebab-case without spaces
+      return "Interviews Bucket Team 38";
     } else {
       // Default to team 03 bucket if team not found
       console.warn(`Team ${teamNumber} doesn't have a designated bucket, using Team 03's bucket`);
-      return "interviews-bucket-team-03"; // Using kebab-case without spaces
+      return "Interviews Bucket Team 03";
     }
   };
 
@@ -73,6 +74,7 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
       for (const recording of mappedData) {
         if (recording.file_path && recording.bucket_id) {
           try {
+            console.log(`Getting signed URL for file: ${recording.file_path} in bucket: ${recording.bucket_id}`);
             const { data: signedUrlData } = await supabase
               .storage
               .from(recording.bucket_id)
