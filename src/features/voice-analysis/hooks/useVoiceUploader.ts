@@ -30,7 +30,8 @@ export const useVoiceUploader = (
       
       const publicUrl = publicUrlData.publicUrl;
       
-      const tableName = type === 'frituren' ? 'voice_analysis' : 'street_interviews';
+      // Use the appropriate table based on type
+      const tableName = type === 'frituren' ? 'frituren_interviews' : 'street_interviews';
       
       const { error: insertError } = await supabase
         .from(tableName)
