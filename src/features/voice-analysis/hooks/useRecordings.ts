@@ -25,13 +25,18 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         throw error;
       }
 
-      // Map data with explicit type casting
+      // Map data with explicit type casting and default values
       const mappedData = data.map(item => {
+        // Create a fixed bucket_id based on our known bucket
+        const bucketId = 'frituur-attachments';
+        // Use the file_name as the file_path since that's what we store in the DB
+        const filePath = item.file_name || '';
+        
         const record: VoiceAnalysis = {
           id: item.id,
           team: item.team,
-          bucket_id: item.bucket_id || team + '-recordings',
-          file_path: item.file_path || item.file_name || '',
+          bucket_id: bucketId,
+          file_path: filePath,
           transcript: item.transcript,
           analysis: item.analysis,
           status: (item.status || 'pending') as 'pending' | 'analyzing' | 'completed' | 'failed',
