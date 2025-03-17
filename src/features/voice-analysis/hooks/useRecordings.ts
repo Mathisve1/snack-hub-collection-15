@@ -30,12 +30,12 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
       // Create temporary URLs for audio playback
       const urls: Record<string, string> = {};
       for (const recording of data) {
-        if (recording.file_name) {
+        if (recording.file_path && recording.bucket_id) {
           try {
             const { data: signedUrlData } = await supabase
               .storage
-              .from('frituur-attachments')
-              .createSignedUrl(recording.file_name, 3600); // 1 hour expiry
+              .from(recording.bucket_id)
+              .createSignedUrl(recording.file_path, 3600); // 1 hour expiry
               
             if (signedUrlData?.signedUrl) {
               urls[recording.id] = signedUrlData.signedUrl;

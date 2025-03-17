@@ -6,15 +6,16 @@ import { toast } from "sonner";
 
 interface FileDownloaderProps {
   fileName: string;
+  bucketId: string;
 }
 
-const FileDownloader = ({ fileName }: FileDownloaderProps) => {
+const FileDownloader = ({ fileName, bucketId }: FileDownloaderProps) => {
   const downloadOriginalFile = async () => {
     try {
-      // Get the file directly from storage
+      // Get the file directly from storage using the bucket ID
       const { data, error } = await supabase
         .storage
-        .from('frituur-attachments')
+        .from(bucketId)
         .download(fileName);
       
       if (error) throw error;
