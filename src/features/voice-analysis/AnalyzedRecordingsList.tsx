@@ -34,7 +34,8 @@ const AnalyzedRecordingsList = ({ team, type }: AnalyzedRecordingsListProps) => 
   const fetchRecordings = async () => {
     try {
       setLoading(true);
-      const tableName = type === 'frituren' ? 'voice_analysis' : 'street_interviews';
+      // Use the correct table name based on the type
+      const tableName = type === 'frituren' ? 'frituren_interviews' : 'street_interviews';
       
       const { data, error } = await supabase
         .from(tableName)
