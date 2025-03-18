@@ -3,9 +3,10 @@ import { useState } from "react";
 import { useRecordings } from "../hooks/useRecordings";
 import { VoiceAnalysisType, VoiceAnalysis } from "../types";
 import { Card } from "@/components/ui/card";
-import { AudioLines, ArrowLeft, ListFilter } from "lucide-react";
+import { AudioLines, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 interface AnalysisResultsProps {
   team: string;
@@ -13,7 +14,7 @@ interface AnalysisResultsProps {
 }
 
 const AnalysisResults = ({ team, type }: AnalysisResultsProps) => {
-  const { recordings, loading } = useRecordings(team, type);
+  const { recordings, loading, audioUrls } = useRecordings(team, type);
   const [view, setView] = useState<'transcripts' | 'analyses' | null>(null);
   const [selectedRecording, setSelectedRecording] = useState<VoiceAnalysis | null>(null);
   const [showDetailsDialog, setShowDetailsDialog] = useState(false);
@@ -47,13 +48,29 @@ const AnalysisResults = ({ team, type }: AnalysisResultsProps) => {
     setShowDetailsDialog(true);
   };
 
+  const handlePlayAudio = (recordingId: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    const audioUrl = audioUrls[recordingId];
+    
+    if (!audioUrl) {
+      toast.error("Audio file not available");
+      return;
+    }
+    
+    const audio = new Audio(audioUrl);
+    audio.play().catch(error => {
+      console.error("Error playing audio:", error);
+      toast.error("Failed to play audio");
+    });
+  };
+
   if (view === 'transcripts') {
     return (
       <div className="space-y-4">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-medium">Transcripts</h3>
           <Button variant="outline" size="sm" onClick={() => setView(null)}>
-            Back
+            <ArrowLeft className="h-4 w-4 mr-2" /> Back
           </Button>
         </div>
         
@@ -65,9 +82,20 @@ const AnalysisResults = ({ team, type }: AnalysisResultsProps) => {
               onClick={() => handleShowDetails(recording)}
             >
               <div className="bg-gray-50 p-4 rounded-lg border">
-                <h4 className="text-sm font-semibold mb-2 text-gray-700">
-                  Recording {new Date(recording.created_at).toLocaleString()}
-                </h4>
+                <div className="flex justify-between items-center mb-2">
+                  <h4 className="text-sm font-semibold text-gray-700">
+                    {new Date(recording.created_at).toLocaleString()}
+                  </h4>
+                  {audioUrls[recording.id] && (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={(e) => handlePlayAudio(recording.id, e)}
+                    >
+                      Play Audio
+                    </Button>
+                  )}
+                </div>
                 <div className="max-h-20 overflow-y-hidden pr-2 text-sm whitespace-pre-wrap line-clamp-3">
                   {recording.transcript || "No transcript available"}
                 </div>
@@ -86,7 +114,7 @@ const AnalysisResults = ({ team, type }: AnalysisResultsProps) => {
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-medium">Analyses</h3>
           <Button variant="outline" size="sm" onClick={() => setView(null)}>
-            Back
+            <ArrowLeft className="h-4 w-4 mr-2" /> Back
           </Button>
         </div>
         
@@ -98,9 +126,20 @@ const AnalysisResults = ({ team, type }: AnalysisResultsProps) => {
               onClick={() => handleShowDetails(recording)}
             >
               <div className="bg-gray-50 p-4 rounded-lg border">
-                <h4 className="text-sm font-semibold mb-2 text-gray-700">
-                  Recording {new Date(recording.created_at).toLocaleString()}
-                </h4>
+                <div className="flex justify-between items-center mb-2">
+                  <h4 className="text-sm font-semibold text-gray-700">
+                    {new Date(recording.created_at).toLocaleString()}
+                  </h4>
+                  {audioUrls[recording.id] && (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={(e) => handlePlayAudio(recording.id, e)}
+                    >
+                      Play Audio
+                    </Button>
+                  )}
+                </div>
                 <div className="max-h-20 overflow-y-hidden pr-2 text-sm whitespace-pre-wrap line-clamp-3">
                   {recording.analysis || "No analysis available"}
                 </div>
@@ -148,6 +187,23 @@ const AnalysisResults = ({ team, type }: AnalysisResultsProps) => {
             <h3 className="text-sm font-medium mb-2">
               Recorded {selectedRecording && new Date(selectedRecording.created_at).toLocaleString()}
             </h3>
+            {selectedRecording && audioUrls[selectedRecording.id] && (
+              <div className="mb-4">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => {
+                    const audio = new Audio(audioUrls[selectedRecording.id]);
+                    audio.play().catch(error => {
+                      console.error("Error playing audio:", error);
+                      toast.error("Failed to play audio");
+                    });
+                  }}
+                >
+                  Play Recording
+                </Button>
+              </div>
+            )}
             <div className="bg-gray-50 p-4 rounded-lg border overflow-y-auto max-h-96">
               <p className="whitespace-pre-wrap text-sm">
                 {view === 'transcripts' 
