@@ -61,7 +61,7 @@ export const useVoiceUploader = (
       console.log(`File uploaded successfully: ${fileName}`);
       
       // Determine the correct table name based on the type
-      let tableName: string;
+      let tableName;
       if (type === 'frituren') {
         tableName = 'frituren_interviews';
       } else if (type === 'interviews') {
