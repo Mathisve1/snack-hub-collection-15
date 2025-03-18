@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VoiceRecordingUploader from "./VoiceRecordingUploader";
-import AnalyzedRecordingsList from "./AnalyzedRecordingsList";
 
 interface VoiceAnalysisSectionProps {
   team: string;
@@ -37,53 +36,19 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
           </TabsList>
           
           <TabsContent value="frituren">
-            <Tabs defaultValue="upload" className="w-full">
-              <TabsList className="mb-4">
-                <TabsTrigger value="upload">Upload Recording</TabsTrigger>
-                <TabsTrigger value="analyzed">Analyzed Recordings</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="upload">
-                <VoiceRecordingUploader 
-                  team={team} 
-                  onUploadComplete={handleFriturenUploadComplete}
-                  type="frituren"
-                />
-              </TabsContent>
-              
-              <TabsContent value="analyzed">
-                <AnalyzedRecordingsList 
-                  key={refreshFrituren}
-                  team={team}
-                  type="frituren"
-                />
-              </TabsContent>
-            </Tabs>
+            <VoiceRecordingUploader 
+              team={team} 
+              onUploadComplete={handleFriturenUploadComplete}
+              type="frituren"
+            />
           </TabsContent>
           
           <TabsContent value="interviews">
-            <Tabs defaultValue="upload" className="w-full">
-              <TabsList className="mb-4">
-                <TabsTrigger value="upload">Upload Recording</TabsTrigger>
-                <TabsTrigger value="analyzed">Analyzed Recordings</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="upload">
-                <VoiceRecordingUploader 
-                  team={team} 
-                  onUploadComplete={handleInterviewsUploadComplete}
-                  type="interviews"
-                />
-              </TabsContent>
-              
-              <TabsContent value="analyzed">
-                <AnalyzedRecordingsList 
-                  key={refreshInterviews}
-                  team={team}
-                  type="interviews"
-                />
-              </TabsContent>
-            </Tabs>
+            <VoiceRecordingUploader 
+              team={team} 
+              onUploadComplete={handleInterviewsUploadComplete}
+              type="interviews"
+            />
           </TabsContent>
         </Tabs>
       </CardContent>
