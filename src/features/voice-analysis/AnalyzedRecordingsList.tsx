@@ -4,6 +4,7 @@ import RecordingItem from "./components/RecordingItem";
 import EmptyRecordingsList from "./components/EmptyRecordingsList";
 import LoadingState from "./components/LoadingState";
 import { VoiceAnalysisType } from "./types";
+import TeamFriturenAnalysis from "./components/TeamFriturenAnalysis";
 
 interface AnalyzedRecordingsListProps {
   team: string;
@@ -19,6 +20,10 @@ const AnalyzedRecordingsList = ({ team, type }: AnalyzedRecordingsListProps) => 
 
   if (recordings.length === 0) {
     return <EmptyRecordingsList />;
+  }
+
+  if (type === 'frituren') {
+    return <TeamFriturenAnalysis recordings={recordings} />;
   }
 
   return (

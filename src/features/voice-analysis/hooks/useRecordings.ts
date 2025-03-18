@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -10,18 +9,14 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
   const [audioUrls, setAudioUrls] = useState<Record<string, string>>({});
 
   const getBucketId = (teamName: string, recordingType: VoiceAnalysisType) => {
-    // Extract just the team number without the "OV-" prefix
     const teamNumber = teamName.replace('OV-', '');
     
-    // Format the team number for consistent naming
     let teamFormatted = teamNumber;
     
-    // Pad with leading zero if needed
     if (teamNumber.length === 1) {
       teamFormatted = `0${teamNumber}`;
     }
     
-    // Generate the bucket ID using the new naming convention
     const bucketId = `team-${teamFormatted}-${recordingType}`;
     
     console.log(`Selected bucket ID: ${bucketId}`);
@@ -31,21 +26,20 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
   const getTableName = (teamName: string, recordingType: VoiceAnalysisType) => {
     const teamNumber = teamName.replace('OV-', '');
     
-    // Define allowed team numbers
-    const validTeams = ['3', '13', '14', '38'];
-    
-    if (!validTeams.includes(teamNumber)) {
-      console.error('Invalid team number:', teamNumber);
-      return 'street_interviews' as const;
-    }
-    
     if (recordingType === 'frituren') {
-      // Use type assertion to specify the exact type
-      return `Team_${teamNumber}_frituren_analysis` as 
-        | 'Team_3_frituren_analysis'
-        | 'Team_13_frituren_analysis'
-        | 'Team_14_frituren_analysis'
-        | 'Team_38_frituren_analysis';
+      switch(teamNumber) {
+        case '3':
+          return 'Team_3_frituren_analysis' as const;
+        case '13':
+          return 'Team_13_frituren_analysis' as const;
+        case '14':
+          return 'Team_14_frituren_analysis' as const;
+        case '38':
+          return 'Team_38_frituren_analysis' as const;
+        default:
+          console.error('Invalid team number:', teamNumber);
+          return 'street_interviews' as const;
+      }
     }
     
     return 'street_interviews' as const;
@@ -76,30 +70,21 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         return;
       }
 
-      // Map data with explicit type assertion
-      const mappedData = data.map(item => {
-        const bucketId = item.bucket_id || getBucketId(team, type);
-        
-        console.log(`Recording: ${item.id}, Bucket: ${bucketId}, File: ${item.file_name}`);
-        
-        const record: VoiceAnalysis = {
-          id: item.id,
-          team: item.team,
-          bucket_id: bucketId,
-          file_path: item.file_name || '',
-          transcript: item.transcript,
-          analysis: item.analysis,
-          status: (item.status || 'pending') as 'pending' | 'analyzing' | 'completed' | 'failed',
-          created_at: item.created_at || new Date().toISOString(),
-          duration_seconds: item.duration_seconds || 0,
-          file_name: item.file_name
-        };
-        return record;
-      });
+      const mappedData = data.map(item => ({
+        id: item.id,
+        team: item.team,
+        bucket_id: item.bucket_id || getBucketId(team, type),
+        file_path: item.file_name || '',
+        transcript: item.transcript,
+        analysis: item.analysis,
+        status: item.status as VoiceAnalysis['status'],
+        created_at: item.created_at || new Date().toISOString(),
+        duration_seconds: item.duration_seconds || 0,
+        file_name: item.file_name
+      }));
       
       setRecordings(mappedData);
       
-      // Create temporary URLs for audio playback
       const urls: Record<string, string> = {};
       for (const recording of mappedData) {
         if (recording.file_path && recording.bucket_id) {
