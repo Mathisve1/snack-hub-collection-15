@@ -60,20 +60,6 @@ export const useVoiceUploader = (
       
       console.log(`File uploaded successfully: ${fileName}`);
       
-      // Determine the correct table name based on the type
-      let tableName: string;
-      if (type === 'frituren') {
-        tableName = 'frituren_interviews';
-      } else if (type === 'interviews') {
-        tableName = 'street_interviews';
-      } else if (type === 'buyer') {
-        // For buyer analysis, we need to select the specific table based on team
-        const teamNumber = team.replace('OV-', '');
-        tableName = `Team_${teamNumber}_buyer_analysis`;
-      } else {
-        tableName = 'street_interviews'; // Default fallback
-      }
-      
       // Common record properties for all tables
       const recordData = {
         team,
@@ -84,10 +70,34 @@ export const useVoiceUploader = (
         duration_seconds: recordingDuration
       };
       
-      // Insert the record into the appropriate table
-      const { error: insertError } = await supabase
-        .from(tableName)
-        .insert(recordData);
+      // Insert the record into the appropriate table based on type
+      let insertError;
+      
+      if (type === 'frituren') {
+        const { error } = await supabase
+          .from('frituren_interviews')
+          .insert(recordData);
+        insertError = error;
+      } else if (type === 'interviews') {
+        const { error } = await supabase
+          .from('street_interviews')
+          .insert(recordData);
+        insertError = error;
+      } else if (type === 'buyer') {
+        // For buyer analysis, we need to handle team-specific tables
+        const teamNumber = team.replace('OV-', '');
+        
+        // Check which team-specific table exists
+        // We'll try a pattern of Team_X_buyer_analysis where X is the team number
+        const buyerTableName = `Team_${teamNumber}_buyer_analysis`;
+        
+        // Using type assertion to handle the dynamic table name
+        // This is needed because Supabase types are strict about table names
+        const { error } = await supabase
+          .from(buyerTableName as any)
+          .insert(recordData);
+        insertError = error;
+      }
         
       if (insertError) {
         console.error("Database insert error:", insertError);
