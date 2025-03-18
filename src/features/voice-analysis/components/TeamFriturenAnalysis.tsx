@@ -32,18 +32,20 @@ const TeamFriturenAnalysis = ({ recordings }: TeamFriturenAnalysisProps) => {
             </AccordionTrigger>
             <AccordionContent>
               <div className="space-y-4 mt-2">
-                {recordings.filter(r => r.transcript).map((recording) => (
-                  <Card key={recording.id} className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="text-sm text-gray-500">
-                        {formatDistanceToNow(new Date(recording.created_at), { addSuffix: true })} 
-                        {recording.duration_seconds > 0 && ` • ${formatDuration(recording.duration_seconds)}`}
+                {recordings
+                  .filter(r => r.transcript)
+                  .map((recording) => (
+                    <Card key={recording.id} className="p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="text-sm text-gray-500">
+                          {formatDistanceToNow(new Date(recording.created_at), { addSuffix: true })} 
+                          {recording.duration_seconds > 0 && ` • ${formatDuration(recording.duration_seconds)}`}
+                        </div>
+                        <StatusBadge status={recording.status} />
                       </div>
-                      <StatusBadge status={recording.status} />
-                    </div>
-                    <p className="text-sm whitespace-pre-wrap">{recording.transcript}</p>
-                  </Card>
-                ))}
+                      <p className="text-sm whitespace-pre-wrap">{recording.transcript}</p>
+                    </Card>
+                  ))}
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -58,18 +60,20 @@ const TeamFriturenAnalysis = ({ recordings }: TeamFriturenAnalysisProps) => {
             </AccordionTrigger>
             <AccordionContent>
               <div className="space-y-4 mt-2">
-                {recordings.filter(r => r.analysis).map((recording) => (
-                  <Card key={recording.id} className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="text-sm text-gray-500">
-                        {formatDistanceToNow(new Date(recording.created_at), { addSuffix: true })}
-                        {recording.duration_seconds > 0 && ` • ${formatDuration(recording.duration_seconds)}`}
+                {recordings
+                  .filter(r => r.analysis)
+                  .map((recording) => (
+                    <Card key={recording.id} className="p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="text-sm text-gray-500">
+                          {formatDistanceToNow(new Date(recording.created_at), { addSuffix: true })}
+                          {recording.duration_seconds > 0 && ` • ${formatDuration(recording.duration_seconds)}`}
+                        </div>
+                        <StatusBadge status={recording.status} />
                       </div>
-                      <StatusBadge status={recording.status} />
-                    </div>
-                    <p className="text-sm whitespace-pre-wrap">{recording.analysis}</p>
-                  </Card>
-                ))}
+                      <p className="text-sm whitespace-pre-wrap">{recording.analysis}</p>
+                    </Card>
+                  ))}
               </div>
             </AccordionContent>
           </AccordionItem>

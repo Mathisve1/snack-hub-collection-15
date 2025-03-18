@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -7,21 +8,6 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
   const [recordings, setRecordings] = useState<VoiceAnalysis[]>([]);
   const [loading, setLoading] = useState(true);
   const [audioUrls, setAudioUrls] = useState<Record<string, string>>({});
-
-  const getBucketId = (teamName: string, recordingType: VoiceAnalysisType) => {
-    const teamNumber = teamName.replace('OV-', '');
-    
-    let teamFormatted = teamNumber;
-    
-    if (teamNumber.length === 1) {
-      teamFormatted = `0${teamNumber}`;
-    }
-    
-    const bucketId = `team-${teamFormatted}-${recordingType}`;
-    
-    console.log(`Selected bucket ID: ${bucketId}`);
-    return bucketId;
-  };
 
   const getTableName = (teamName: string, recordingType: VoiceAnalysisType) => {
     const teamNumber = teamName.replace('OV-', '');
@@ -38,7 +24,7 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
           return 'Team_38_frituren_analysis' as const;
         default:
           console.error('Invalid team number:', teamNumber);
-          return 'street_interviews' as const;
+          return null;
       }
     }
     
@@ -49,6 +35,13 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
     try {
       setLoading(true);
       const tableName = getTableName(team, type);
+      
+      if (!tableName) {
+        console.error(`No table found for team ${team} and type ${type}`);
+        setRecordings([]);
+        setLoading(false);
+        return;
+      }
       
       console.log(`Fetching ${type} recordings for team ${team} from table ${tableName}`);
       
@@ -73,12 +66,12 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
       const mappedData = data.map(item => ({
         id: item.id,
         team: item.team,
-        bucket_id: item.bucket_id || getBucketId(team, type),
+        bucket_id: item.bucket_id || '',
         file_path: item.file_name || '',
-        transcript: item.transcript,
-        analysis: item.analysis,
-        status: item.status as VoiceAnalysis['status'],
-        created_at: item.created_at || new Date().toISOString(),
+        transcript: item.transcript || null,
+        analysis: item.analysis || null,
+        status: item.status,
+        created_at: item.created_at,
         duration_seconds: item.duration_seconds || 0,
         file_name: item.file_name
       }));
