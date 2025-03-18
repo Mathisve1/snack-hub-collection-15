@@ -31,10 +31,23 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
   const getTableName = (teamName: string, recordingType: VoiceAnalysisType) => {
     const teamNumber = teamName.replace('OV-', '');
     
-    // Return the specific table name based on team and type
-    if (type === 'frituren') {
-      return `Team_${teamNumber}_frituren_analysis` as const;
+    // Define allowed team numbers
+    const validTeams = ['3', '13', '14', '38'];
+    
+    if (!validTeams.includes(teamNumber)) {
+      console.error('Invalid team number:', teamNumber);
+      return 'street_interviews' as const;
     }
+    
+    if (recordingType === 'frituren') {
+      // Use type assertion to specify the exact type
+      return `Team_${teamNumber}_frituren_analysis` as 
+        | 'Team_3_frituren_analysis'
+        | 'Team_13_frituren_analysis'
+        | 'Team_14_frituren_analysis'
+        | 'Team_38_frituren_analysis';
+    }
+    
     return 'street_interviews' as const;
   };
 
@@ -45,7 +58,6 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
       
       console.log(`Fetching ${type} recordings for team ${team} from table ${tableName}`);
       
-      // Type assertion for the table name to match Supabase's expected types
       const { data, error } = await supabase
         .from(tableName)
         .select('*')
