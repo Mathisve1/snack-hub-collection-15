@@ -2,12 +2,8 @@
 import { useRecordings } from "../hooks/useRecordings";
 import { VoiceAnalysisType } from "../types";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { AudioLines, ListFilter } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import { formatDuration } from "../utils/formatUtils";
-import StatusBadge from "./StatusBadge";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
@@ -75,54 +71,39 @@ const AnalysisResults = ({ team, type }: AnalysisResultsProps) => {
         </div>
       </div>
 
-      <Accordion type="single" collapsible className="w-full space-y-3">
+      <div className="grid grid-cols-1 gap-4">
         {filteredRecordings.map((recording) => (
-          <AccordionItem key={recording.id} value={recording.id} className="border rounded-lg">
-            <AccordionTrigger className="px-4 hover:no-underline hover:bg-gray-50 rounded-t-lg">
-              <div className="flex flex-col items-start text-left">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium">
-                    Recording from {formatDistanceToNow(new Date(recording.created_at), { addSuffix: true })}
-                  </span>
-                  <StatusBadge status={recording.status} />
-                </div>
-                {recording.duration_seconds > 0 && (
-                  <span className="text-xs text-gray-500">
-                    Duration: {formatDuration(recording.duration_seconds)}
-                  </span>
-                )}
-              </div>
-            </AccordionTrigger>
-            <AccordionContent className="px-4 pb-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
-                {recording.transcript && (
-                  <Card className="p-4 bg-gray-50 border">
-                    <h4 className="text-sm font-semibold mb-2 text-gray-700">Transcript</h4>
-                    <div className="max-h-60 overflow-y-auto pr-2 text-sm whitespace-pre-wrap">
-                      {recording.transcript}
-                    </div>
-                  </Card>
-                )}
-                
-                {recording.analysis && (
-                  <Card className="p-4 bg-gray-50 border">
-                    <h4 className="text-sm font-semibold mb-2 text-gray-700">Analysis</h4>
-                    <div className="max-h-60 overflow-y-auto pr-2 text-sm whitespace-pre-wrap">
-                      {recording.analysis}
-                    </div>
-                  </Card>
-                )}
-                
-                {!recording.transcript && !recording.analysis && (
-                  <div className="col-span-2 py-6 text-center text-gray-500 italic">
-                    Analysis in progress. Results will appear here when processing is complete.
+          <Card key={recording.id} className="p-4 border rounded-lg overflow-hidden">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {recording.transcript ? (
+                <div className="bg-gray-50 p-4 rounded-lg border">
+                  <h4 className="text-sm font-semibold mb-2 text-gray-700">Transcript</h4>
+                  <div className="max-h-60 overflow-y-auto pr-2 text-sm whitespace-pre-wrap">
+                    {recording.transcript}
                   </div>
-                )}
-              </div>
-            </AccordionContent>
-          </AccordionItem>
+                </div>
+              ) : (
+                <div className="bg-gray-50 p-4 rounded-lg border flex items-center justify-center text-gray-500 italic">
+                  No transcript available
+                </div>
+              )}
+              
+              {recording.analysis ? (
+                <div className="bg-gray-50 p-4 rounded-lg border">
+                  <h4 className="text-sm font-semibold mb-2 text-gray-700">Analysis</h4>
+                  <div className="max-h-60 overflow-y-auto pr-2 text-sm whitespace-pre-wrap">
+                    {recording.analysis}
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-gray-50 p-4 rounded-lg border flex items-center justify-center text-gray-500 italic">
+                  No analysis available
+                </div>
+              )}
+            </div>
+          </Card>
         ))}
-      </Accordion>
+      </div>
     </div>
   );
 };
