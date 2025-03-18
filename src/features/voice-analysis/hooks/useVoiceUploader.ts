@@ -3,11 +3,10 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "sonner";
-import { VoiceAnalysisType } from "../types";
 
 export const useVoiceUploader = (
   team: string, 
-  type: VoiceAnalysisType, 
+  type: 'frituren' | 'interviews', 
   onUploadComplete: () => void
 ) => {
   const [isUploading, setIsUploading] = useState(false);
@@ -60,7 +59,10 @@ export const useVoiceUploader = (
       
       console.log(`File uploaded successfully: ${fileName}`);
       
-      // Common record properties for all tables
+      // Use the correct table name based on the type
+      const tableName = type === 'frituren' ? 'frituren_interviews' : 'street_interviews';
+      
+      // Common record properties for both tables
       const recordData = {
         team,
         file_name: fileName,
@@ -70,29 +72,10 @@ export const useVoiceUploader = (
         duration_seconds: recordingDuration
       };
       
-      // Insert the record into the appropriate table based on type and team
-      let insertError;
-      const teamNumber = team.replace('OV-', '');
-      
-      if (type === 'frituren') {
-        const tableName = `Team_${teamNumber}_frituren_analysis`;
-        const { error } = await supabase
-          .from(tableName as any)
-          .insert(recordData);
-        insertError = error;
-      } else if (type === 'buyer') {
-        const tableName = `Team_${teamNumber}_buyer_analysis`;
-        const { error } = await supabase
-          .from(tableName as any)
-          .insert(recordData);
-        insertError = error;
-      } else if (type === 'interviews') {
-        const tableName = `Team_${teamNumber}_street_interviews_analysis`;
-        const { error } = await supabase
-          .from(tableName as any)
-          .insert(recordData);
-        insertError = error;
-      }
+      // Insert the record into the appropriate table
+      const { error: insertError } = await supabase
+        .from(tableName)
+        .insert(recordData);
         
       if (insertError) {
         console.error("Database insert error:", insertError);

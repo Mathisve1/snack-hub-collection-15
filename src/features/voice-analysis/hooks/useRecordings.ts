@@ -38,19 +38,6 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         default:
           throw new Error(`Invalid team number: ${teamNumber}`);
       }
-    } else if (recordingType === 'interviews') {
-      switch (teamNumber) {
-        case '3':
-          return 'Team_3_street_interviews_analysis' as const;
-        case '13':
-          return 'Team_13_street_interviews_analysis' as const;
-        case '14':
-          return 'Team_14_street_interviews_analysis' as const;
-        case '38':
-          return 'Team_38_street_interviews_analysis' as const;
-        default:
-          return 'street_interviews' as const;
-      }
     }
     
     return 'street_interviews' as const;
@@ -94,8 +81,6 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         setRecordings([]);
         return;
       }
-
-      console.log(`Fetched data from ${tableName}:`, data);
 
       const mappedData: VoiceAnalysis[] = data.map(record => ({
         id: record.id,

@@ -1,4 +1,3 @@
-
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Upload, Loader2 } from "lucide-react";
@@ -6,12 +5,11 @@ import { toast } from "sonner";
 import { useVoiceRecorder } from "./hooks/useVoiceRecorder";
 import { useVoiceUploader } from "./hooks/useVoiceUploader";
 import { RecordingInterface } from "./components/RecordingInterface";
-import { VoiceAnalysisType } from "./types";
 
 interface VoiceRecordingUploaderProps {
   team: string;
   onUploadComplete: () => void;
-  type: VoiceAnalysisType;
+  type: 'frituren' | 'interviews';
 }
 
 const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecordingUploaderProps) => {
@@ -78,9 +76,7 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
                 <p className="text-gray-500 mb-4">
                   {type === 'frituren' 
                     ? 'Record voice or upload audio file about your frituur visit'
-                    : type === 'interviews'
-                      ? 'Record voice or upload audio file of street interviews'
-                      : 'Record voice or upload audio file of buyer analysis'
+                    : 'Record voice or upload audio file of street interviews'
                   }
                 </p>
                 <div className="flex flex-wrap gap-4 justify-center">
@@ -144,9 +140,7 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
         <p>
           {type === 'frituren' 
             ? 'Voice recordings will be automatically analyzed for key points about frituren.'
-            : type === 'interviews'
-              ? 'Voice recordings will be automatically analyzed for street interview insights.'
-              : 'Voice recordings will be automatically analyzed for buyer analysis insights.'
+            : 'Voice recordings will be automatically analyzed for street interview insights.'
           }
         </p>
       </div>
