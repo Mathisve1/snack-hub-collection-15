@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { Play } from "lucide-react";
 import { toast } from "sonner";
 
 interface AudioPlayerButtonProps {
@@ -30,6 +31,7 @@ export const AudioPlayerButton = ({ audioUrl, className }: AudioPlayerButtonProp
       onClick={handlePlayAudio}
       className={className}
     >
+      <Play className="h-4 w-4 mr-2" />
       Play Audio
     </Button>
   );
