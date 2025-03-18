@@ -29,23 +29,23 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
   };
 
   const getTableName = (teamName: string, recordingType: VoiceAnalysisType) => {
-    // Extract team number and remove leading zero if present
     const teamNumber = teamName.replace('OV-', '');
     
+    // Return the specific table name based on team and type
     if (type === 'frituren') {
-      return `Team_${teamNumber}_frituren_analysis`;
+      return `Team_${teamNumber}_frituren_analysis` as const;
     }
-    return 'street_interviews';
+    return 'street_interviews' as const;
   };
 
   const fetchRecordings = async () => {
     try {
       setLoading(true);
-      // Use the team-specific table name for frituren
       const tableName = getTableName(team, type);
       
       console.log(`Fetching ${type} recordings for team ${team} from table ${tableName}`);
       
+      // Type assertion for the table name to match Supabase's expected types
       const { data, error } = await supabase
         .from(tableName)
         .select('*')
@@ -59,26 +59,28 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         return;
       }
 
-      // Map data with explicit type casting and default values
+      if (!data) {
+        setRecordings([]);
+        return;
+      }
+
+      // Map data with explicit type assertion
       const mappedData = data.map(item => {
-        // Get the bucket ID from the record or generate it if missing
         const bucketId = item.bucket_id || getBucketId(team, type);
-        // Use the file_name as the file_path since that's what we store in the DB
-        const filePath = item.file_name || '';
         
-        console.log(`Recording: ${item.id}, Bucket: ${bucketId}, File: ${filePath}`);
+        console.log(`Recording: ${item.id}, Bucket: ${bucketId}, File: ${item.file_name}`);
         
         const record: VoiceAnalysis = {
           id: item.id,
           team: item.team,
           bucket_id: bucketId,
-          file_path: filePath,
+          file_path: item.file_name || '',
           transcript: item.transcript,
           analysis: item.analysis,
           status: (item.status || 'pending') as 'pending' | 'analyzing' | 'completed' | 'failed',
           created_at: item.created_at || new Date().toISOString(),
           duration_seconds: item.duration_seconds || 0,
-          file_name: item.file_name // Keep for backward compatibility
+          file_name: item.file_name
         };
         return record;
       });
@@ -95,7 +97,7 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
             const { data: signedUrlData, error: signedUrlError } = await supabase
               .storage
               .from(recording.bucket_id)
-              .createSignedUrl(recording.file_path, 3600); // 1 hour expiry
+              .createSignedUrl(recording.file_path, 3600);
               
             if (signedUrlError) {
               console.error(`Error getting signed URL for ${recording.file_path}:`, signedUrlError);
