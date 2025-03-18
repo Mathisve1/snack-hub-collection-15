@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -15,19 +14,19 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
     if (recordingType === 'frituren') {
       switch (teamNumber) {
         case '3':
-          return 'Team_3_frituren_analysis';
+          return 'Team_3_frituren_analysis' as const;
         case '13':
-          return 'Team_13_frituren_analysis';
+          return 'Team_13_frituren_analysis' as const;
         case '14':
-          return 'Team_14_frituren_analysis';
+          return 'Team_14_frituren_analysis' as const;
         case '38':
-          return 'Team_38_frituren_analysis';
+          return 'Team_38_frituren_analysis' as const;
         default:
           throw new Error(`Invalid team number: ${teamNumber}`);
       }
     }
     
-    return 'street_interviews';
+    return 'street_interviews' as const;
   };
 
   const mapDatabaseStatus = (status: string): VoiceAnalysis['status'] => {
@@ -85,7 +84,6 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
       console.log(`Found ${mappedData.length} recordings`);
       setRecordings(mappedData);
       
-      // Get signed URLs for audio files
       const urls: Record<string, string> = {};
       for (const recording of mappedData) {
         if (recording.file_path && recording.bucket_id) {
