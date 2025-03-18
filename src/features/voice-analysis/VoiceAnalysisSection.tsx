@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VoiceRecordingUploader from "./VoiceRecordingUploader";
 import AnalysisResults from "./components/AnalysisResults";
-import AllRecordingsView from "./components/AllRecordingsView";
 
 interface VoiceAnalysisSectionProps {
   team: string;
@@ -14,21 +13,17 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
   const [refreshFrituren, setRefreshFrituren] = useState(0);
   const [refreshInterviews, setRefreshInterviews] = useState(0);
   const [refreshBuyer, setRefreshBuyer] = useState(0);
-  const [refreshAll, setRefreshAll] = useState(0);
   
   const handleFriturenUploadComplete = () => {
     setRefreshFrituren(prev => prev + 1);
-    setRefreshAll(prev => prev + 1);
   };
 
   const handleInterviewsUploadComplete = () => {
     setRefreshInterviews(prev => prev + 1);
-    setRefreshAll(prev => prev + 1);
   };
 
   const handleBuyerUploadComplete = () => {
     setRefreshBuyer(prev => prev + 1);
-    setRefreshAll(prev => prev + 1);
   };
 
   return (
@@ -83,20 +78,12 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="all" className="w-full">
+          <Tabs defaultValue="frituren" className="w-full">
             <TabsList className="mb-4">
-              <TabsTrigger value="all">All Recordings</TabsTrigger>
               <TabsTrigger value="frituren">Frituren</TabsTrigger>
               <TabsTrigger value="interviews">Street Interviews</TabsTrigger>
               <TabsTrigger value="buyer">Buyer Analysis</TabsTrigger>
             </TabsList>
-            
-            <TabsContent value="all">
-              <AllRecordingsView 
-                key={`all-${refreshAll}`}
-                team={team}
-              />
-            </TabsContent>
             
             <TabsContent value="frituren">
               <AnalysisResults 
