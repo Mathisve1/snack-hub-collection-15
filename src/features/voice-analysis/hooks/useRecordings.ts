@@ -13,22 +13,26 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
     const teamNumber = teamName.replace('OV-', '');
     
     if (recordingType === 'frituren') {
-      switch(teamNumber) {
-        case '3':
-          return 'Team_3_frituren_analysis' as const;
-        case '13':
-          return 'Team_13_frituren_analysis' as const;
-        case '14':
-          return 'Team_14_frituren_analysis' as const;
-        case '38':
-          return 'Team_38_frituren_analysis' as const;
-        default:
-          console.error('Invalid team number:', teamNumber);
-          return null;
-      }
+      return `Team_${teamNumber}_frituren_analysis`;
     }
     
-    return 'street_interviews' as const;
+    return 'street_interviews';
+  };
+
+  const mapDatabaseStatus = (status: string): VoiceAnalysis['status'] => {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return 'pending';
+      case 'analyzing':
+        return 'analyzing';
+      case 'completed':
+        return 'completed';
+      case 'failed':
+        return 'failed';
+      default:
+        console.warn(`Unknown status: ${status}, defaulting to pending`);
+        return 'pending';
+    }
   };
 
   const fetchRecordings = async () => {
@@ -36,25 +40,16 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
       setLoading(true);
       const tableName = getTableName(team, type);
       
-      if (!tableName) {
-        console.error(`No table found for team ${team} and type ${type}`);
-        setRecordings([]);
-        setLoading(false);
-        return;
-      }
-      
       console.log(`Fetching ${type} recordings for team ${team} from table ${tableName}`);
       
       const { data, error } = await supabase
         .from(tableName)
         .select('*')
-        .eq('team', team)
         .order('created_at', { ascending: false });
 
       if (error) {
         console.error("Database query error:", error);
         toast.error(`Failed to load recordings: ${error.message || 'Unknown error'}`);
-        setLoading(false);
         return;
       }
 
@@ -76,14 +71,14 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         file_name: item.file_name
       }));
       
+      console.log(`Found ${mappedData.length} recordings`);
       setRecordings(mappedData);
       
+      // Get signed URLs for audio files
       const urls: Record<string, string> = {};
       for (const recording of mappedData) {
         if (recording.file_path && recording.bucket_id) {
           try {
-            console.log(`Getting signed URL for file: ${recording.file_path} from bucket: ${recording.bucket_id}`);
-            
             const { data: signedUrlData, error: signedUrlError } = await supabase
               .storage
               .from(recording.bucket_id)
@@ -96,7 +91,6 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
               
             if (signedUrlData?.signedUrl) {
               urls[recording.id] = signedUrlData.signedUrl;
-              console.log(`Got signed URL successfully for: ${recording.file_path}`);
             }
           } catch (e) {
             console.error('Error getting signed URL:', e);
@@ -113,27 +107,9 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
     }
   };
 
-  // Helper function to map database status to VoiceAnalysis status
-  const mapDatabaseStatus = (status: string): VoiceAnalysis['status'] => {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return 'pending';
-      case 'analyzing':
-        return 'analyzing';
-      case 'completed':
-        return 'completed';
-      case 'failed':
-        return 'failed';
-      default:
-        console.warn(`Unknown status: ${status}, defaulting to pending`);
-        return 'pending';
-    }
-  };
-
   useEffect(() => {
     fetchRecordings();
   }, [team, type]);
 
   return { recordings, loading, audioUrls, fetchRecordings };
 };
-

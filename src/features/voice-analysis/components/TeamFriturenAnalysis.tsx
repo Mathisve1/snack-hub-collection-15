@@ -43,7 +43,7 @@ const TeamFriturenAnalysis = ({ recordings }: TeamFriturenAnalysisProps) => {
           {transcripts.length > 0 ? (
             <Accordion type="single" collapsible className="w-full space-y-4">
               {transcripts.map((recording) => (
-                <AccordionItem key={recording.id} value={recording.id}>
+                <AccordionItem key={recording.id} value={recording.id} className="border rounded-lg">
                   <AccordionTrigger className="px-4 hover:no-underline hover:bg-gray-50 rounded-lg">
                     <div className="flex flex-col items-start">
                       <div className="flex items-center gap-2">
@@ -78,7 +78,7 @@ const TeamFriturenAnalysis = ({ recordings }: TeamFriturenAnalysisProps) => {
           {analyses.length > 0 ? (
             <Accordion type="single" collapsible className="w-full space-y-4">
               {analyses.map((recording) => (
-                <AccordionItem key={recording.id} value={recording.id}>
+                <AccordionItem key={recording.id} value={recording.id} className="border rounded-lg">
                   <AccordionTrigger className="px-4 hover:no-underline hover:bg-gray-50 rounded-lg">
                     <div className="flex flex-col items-start">
                       <div className="flex items-center gap-2">
