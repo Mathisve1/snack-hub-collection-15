@@ -13,10 +13,10 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
     const teamNumber = teamName.replace('OV-', '');
     
     if (recordingType === 'frituren') {
-      return `Team_${teamNumber}_frituren_analysis`;
+      return `Team_${teamNumber}_frituren_analysis` as const;
     }
     
-    return 'street_interviews';
+    return 'street_interviews' as const;
   };
 
   const mapDatabaseStatus = (status: string): VoiceAnalysis['status'] => {
@@ -42,6 +42,7 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
       
       console.log(`Fetching ${type} recordings for team ${team} from table ${tableName}`);
       
+      // Use explicit type casting for the table name to match Supabase's expected types
       const { data, error } = await supabase
         .from(tableName)
         .select('*')
@@ -58,17 +59,18 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         return;
       }
 
-      const mappedData: VoiceAnalysis[] = data.map(item => ({
-        id: item.id,
-        team: item.team,
-        bucket_id: item.bucket_id || '',
-        file_path: item.file_name || '',
-        transcript: item.transcript || null,
-        analysis: item.analysis || null,
-        status: mapDatabaseStatus(item.status),
-        created_at: item.created_at,
-        duration_seconds: item.duration_seconds || 0,
-        file_name: item.file_name
+      // Type safety: ensure we're mapping the correct data structure
+      const mappedData: VoiceAnalysis[] = data.map(record => ({
+        id: record.id,
+        team: record.team,
+        bucket_id: record.bucket_id || '',
+        file_path: record.file_name || '',
+        transcript: record.transcript || null,
+        analysis: record.analysis || null,
+        status: mapDatabaseStatus(record.status || 'pending'),
+        created_at: record.created_at || new Date().toISOString(),
+        duration_seconds: record.duration_seconds || 0,
+        file_name: record.file_name
       }));
       
       console.log(`Found ${mappedData.length} recordings`);
