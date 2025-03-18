@@ -1,9 +1,7 @@
 
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import VoiceRecordingUploader from "./VoiceRecordingUploader";
-import AnalysisResults from "./components/AnalysisResults";
+import VoiceRecordingCard from "./components/cards/VoiceRecordingCard";
+import AnalysisResultsCard from "./components/cards/AnalysisResultsCard";
 
 interface VoiceAnalysisSectionProps {
   team: string;
@@ -28,89 +26,19 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
 
   return (
     <div className="space-y-8">
-      <Card className="bg-white shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-xl">Voice Analysis Tool</CardTitle>
-          <CardDescription>
-            Upload voice recordings for automatic analysis
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="frituren" className="w-full">
-            <TabsList className="mb-4">
-              <TabsTrigger value="frituren">Frituren</TabsTrigger>
-              <TabsTrigger value="interviews">Street Interviews</TabsTrigger>
-              <TabsTrigger value="buyer">Buyer Analysis</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="frituren">
-              <VoiceRecordingUploader 
-                team={team} 
-                onUploadComplete={handleFriturenUploadComplete}
-                type="frituren"
-              />
-            </TabsContent>
-            
-            <TabsContent value="interviews">
-              <VoiceRecordingUploader 
-                team={team} 
-                onUploadComplete={handleInterviewsUploadComplete}
-                type="interviews"
-              />
-            </TabsContent>
+      <VoiceRecordingCard 
+        team={team}
+        onFriturenUploadComplete={handleFriturenUploadComplete}
+        onInterviewsUploadComplete={handleInterviewsUploadComplete}
+        onBuyerUploadComplete={handleBuyerUploadComplete}
+      />
 
-            <TabsContent value="buyer">
-              <VoiceRecordingUploader 
-                team={team} 
-                onUploadComplete={handleBuyerUploadComplete}
-                type="buyer"
-              />
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
-
-      <Card className="bg-white shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-xl">Analysis Results</CardTitle>
-          <CardDescription>
-            View transcripts and analyses from your uploaded voice recordings
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="frituren" className="w-full">
-            <TabsList className="mb-4">
-              <TabsTrigger value="frituren">Frituren</TabsTrigger>
-              <TabsTrigger value="interviews">Street Interviews</TabsTrigger>
-              <TabsTrigger value="buyer">Buyer Analysis</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="frituren">
-              <AnalysisResults 
-                key={`frituren-${refreshFrituren}`}
-                team={team}
-                type="frituren"
-              />
-            </TabsContent>
-            
-            <TabsContent value="interviews">
-              <AnalysisResults 
-                key={`interviews-${refreshInterviews}`}
-                team={team}
-                type="interviews"
-              />
-            </TabsContent>
-
-            <TabsContent value="buyer">
-              <AnalysisResults 
-                key={`buyer-${refreshBuyer}`}
-                team={team}
-                type="buyer"
-              />
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+      <AnalysisResultsCard 
+        team={team}
+        refreshFrituren={refreshFrituren}
+        refreshInterviews={refreshInterviews}
+        refreshBuyer={refreshBuyer}
+      />
     </div>
   );
 };
