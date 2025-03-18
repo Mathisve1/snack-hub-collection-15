@@ -3,10 +3,11 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "sonner";
+import { VoiceAnalysisType } from "../types";
 
 export const useVoiceUploader = (
   team: string, 
-  type: 'frituren' | 'interviews', 
+  type: VoiceAnalysisType, 
   onUploadComplete: () => void
 ) => {
   const [isUploading, setIsUploading] = useState(false);
@@ -59,10 +60,21 @@ export const useVoiceUploader = (
       
       console.log(`File uploaded successfully: ${fileName}`);
       
-      // Use the correct table name based on the type
-      const tableName = type === 'frituren' ? 'frituren_interviews' : 'street_interviews';
+      // Determine the correct table name based on the type
+      let tableName: string;
+      if (type === 'frituren') {
+        tableName = 'frituren_interviews';
+      } else if (type === 'interviews') {
+        tableName = 'street_interviews';
+      } else if (type === 'buyer') {
+        // For buyer analysis, we need to select the specific table based on team
+        const teamNumber = team.replace('OV-', '');
+        tableName = `Team_${teamNumber}_buyer_analysis`;
+      } else {
+        tableName = 'street_interviews'; // Default fallback
+      }
       
-      // Common record properties for both tables
+      // Common record properties for all tables
       const recordData = {
         team,
         file_name: fileName,
