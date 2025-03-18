@@ -1,10 +1,11 @@
 
 import { useState } from "react";
 import { useRecordings } from "../hooks/useRecordings";
-import { VoiceAnalysisType } from "../types";
+import { VoiceAnalysisType, VoiceAnalysis } from "../types";
 import { Card } from "@/components/ui/card";
-import { AudioLines, ListFilter } from "lucide-react";
+import { AudioLines, ArrowLeft, ListFilter } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface AnalysisResultsProps {
   team: string;
@@ -14,6 +15,8 @@ interface AnalysisResultsProps {
 const AnalysisResults = ({ team, type }: AnalysisResultsProps) => {
   const { recordings, loading } = useRecordings(team, type);
   const [view, setView] = useState<'transcripts' | 'analyses' | null>(null);
+  const [selectedRecording, setSelectedRecording] = useState<VoiceAnalysis | null>(null);
+  const [showDetailsDialog, setShowDetailsDialog] = useState(false);
   
   // Filter recordings to only show those for the current team
   const teamRecordings = recordings.filter(recording => recording.team === team);
@@ -39,6 +42,11 @@ const AnalysisResults = ({ team, type }: AnalysisResultsProps) => {
     );
   }
 
+  const handleShowDetails = (recording: VoiceAnalysis) => {
+    setSelectedRecording(recording);
+    setShowDetailsDialog(true);
+  };
+
   if (view === 'transcripts') {
     return (
       <div className="space-y-4">
@@ -51,14 +59,19 @@ const AnalysisResults = ({ team, type }: AnalysisResultsProps) => {
         
         <div className="grid grid-cols-1 gap-4">
           {teamRecordings.map((recording) => (
-            <Card key={recording.id} className="p-4 border rounded-lg overflow-hidden">
+            <Card 
+              key={recording.id} 
+              className="p-4 border rounded-lg overflow-hidden cursor-pointer hover:bg-gray-100 transition-colors"
+              onClick={() => handleShowDetails(recording)}
+            >
               <div className="bg-gray-50 p-4 rounded-lg border">
                 <h4 className="text-sm font-semibold mb-2 text-gray-700">
                   Recording {new Date(recording.created_at).toLocaleString()}
                 </h4>
-                <div className="max-h-none overflow-y-auto pr-2 text-sm whitespace-pre-wrap">
+                <div className="max-h-20 overflow-y-hidden pr-2 text-sm whitespace-pre-wrap line-clamp-3">
                   {recording.transcript || "No transcript available"}
                 </div>
+                <p className="text-xs text-blue-600 mt-2">Click to view full transcript</p>
               </div>
             </Card>
           ))}
@@ -79,14 +92,19 @@ const AnalysisResults = ({ team, type }: AnalysisResultsProps) => {
         
         <div className="grid grid-cols-1 gap-4">
           {teamRecordings.map((recording) => (
-            <Card key={recording.id} className="p-4 border rounded-lg overflow-hidden">
+            <Card 
+              key={recording.id} 
+              className="p-4 border rounded-lg overflow-hidden cursor-pointer hover:bg-gray-100 transition-colors"
+              onClick={() => handleShowDetails(recording)}
+            >
               <div className="bg-gray-50 p-4 rounded-lg border">
                 <h4 className="text-sm font-semibold mb-2 text-gray-700">
                   Recording {new Date(recording.created_at).toLocaleString()}
                 </h4>
-                <div className="max-h-none overflow-y-auto pr-2 text-sm whitespace-pre-wrap">
+                <div className="max-h-20 overflow-y-hidden pr-2 text-sm whitespace-pre-wrap line-clamp-3">
                   {recording.analysis || "No analysis available"}
                 </div>
+                <p className="text-xs text-blue-600 mt-2">Click to view full analysis</p>
               </div>
             </Card>
           ))}
@@ -96,27 +114,56 @@ const AnalysisResults = ({ team, type }: AnalysisResultsProps) => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div 
-        className="p-8 border rounded-lg overflow-hidden bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer flex flex-col items-center justify-center text-center"
-        onClick={() => setView('transcripts')}
-      >
-        <h3 className="text-xl font-semibold mb-2">Transcripts</h3>
-        <p className="text-gray-500">
-          View all transcriptions of your {type} recordings
-        </p>
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div 
+          className="p-8 border rounded-lg overflow-hidden bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer flex flex-col items-center justify-center text-center"
+          onClick={() => setView('transcripts')}
+        >
+          <h3 className="text-xl font-semibold mb-2">Transcripts</h3>
+          <p className="text-gray-500">
+            View all transcriptions of your {type} recordings
+          </p>
+        </div>
+
+        <div 
+          className="p-8 border rounded-lg overflow-hidden bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer flex flex-col items-center justify-center text-center"
+          onClick={() => setView('analyses')}
+        >
+          <h3 className="text-xl font-semibold mb-2">Analysis</h3>
+          <p className="text-gray-500">
+            View all AI analyses of your {type} recordings
+          </p>
+        </div>
       </div>
 
-      <div 
-        className="p-8 border rounded-lg overflow-hidden bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer flex flex-col items-center justify-center text-center"
-        onClick={() => setView('analyses')}
-      >
-        <h3 className="text-xl font-semibold mb-2">Analysis</h3>
-        <p className="text-gray-500">
-          View all AI analyses of your {type} recordings
-        </p>
-      </div>
-    </div>
+      <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>
+              {view === 'transcripts' ? 'Transcript Details' : 'Analysis Details'}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            <h3 className="text-sm font-medium mb-2">
+              Recorded {selectedRecording && new Date(selectedRecording.created_at).toLocaleString()}
+            </h3>
+            <div className="bg-gray-50 p-4 rounded-lg border overflow-y-auto max-h-96">
+              <p className="whitespace-pre-wrap text-sm">
+                {view === 'transcripts' 
+                  ? (selectedRecording?.transcript || "No transcript available") 
+                  : (selectedRecording?.analysis || "No analysis available")}
+              </p>
+            </div>
+          </div>
+          <div className="flex justify-end mt-4">
+            <Button variant="outline" onClick={() => setShowDetailsDialog(false)}>
+              Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
