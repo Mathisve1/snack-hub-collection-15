@@ -30,9 +30,8 @@ const RecordingsList = ({ team, type }: RecordingsListProps) => {
           <TableHead>Status</TableHead>
           <TableHead>Created</TableHead>
           <TableHead>Duration</TableHead>
-          <TableHead>Audio</TableHead>
-          <TableHead>Transcript</TableHead>
-          <TableHead>Analysis</TableHead>
+          <TableHead className="w-1/3">Transcript</TableHead>
+          <TableHead className="w-1/3">Analysis</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -47,16 +46,15 @@ const RecordingsList = ({ team, type }: RecordingsListProps) => {
             <TableCell>
               {formatDuration(recording.duration_seconds)}
             </TableCell>
-            <TableCell>
-              {audioUrls[recording.id] && (
-                <audio src={audioUrls[recording.id]} controls className="w-40" />
-              )}
+            <TableCell className="whitespace-normal">
+              <div className="max-h-40 overflow-y-auto">
+                {recording.transcript || '-'}
+              </div>
             </TableCell>
-            <TableCell className="max-w-xs truncate">
-              {recording.transcript || '-'}
-            </TableCell>
-            <TableCell className="max-w-xs truncate">
-              {recording.analysis || '-'}
+            <TableCell className="whitespace-normal">
+              <div className="max-h-40 overflow-y-auto">
+                {recording.analysis || '-'}
+              </div>
             </TableCell>
           </TableRow>
         ))}
