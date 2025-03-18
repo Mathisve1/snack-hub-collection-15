@@ -16,9 +16,12 @@ const AnalysisResults = ({ team, type }: AnalysisResultsProps) => {
   const { recordings, loading } = useRecordings(team, type);
   const [filter, setFilter] = useState<'all' | 'completed'>('all');
   
+  // Filter recordings to only show those for the current team
+  const teamRecordings = recordings.filter(recording => recording.team === team);
+  
   const filteredRecordings = filter === 'all' 
-    ? recordings 
-    : recordings.filter(r => r.status === 'completed');
+    ? teamRecordings 
+    : teamRecordings.filter(r => r.status === 'completed');
   
   if (loading) {
     return (

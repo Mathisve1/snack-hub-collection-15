@@ -9,17 +9,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface TeamFriturenAnalysisProps {
   recordings: VoiceAnalysis[];
+  team: string;
 }
 
-const TeamFriturenAnalysis = ({ recordings }: TeamFriturenAnalysisProps) => {
+const TeamFriturenAnalysis = ({ recordings, team }: TeamFriturenAnalysisProps) => {
+  // Filter recordings for the specific team first
+  const teamRecordings = recordings.filter(recording => recording.team === team);
+  
   // Filter completed recordings since those are the ones we want to display
-  const completedRecordings = recordings.filter(r => r.status === 'completed');
+  const completedRecordings = teamRecordings.filter(r => r.status === 'completed');
   
   // Group recordings by type (transcripts and analyses)
   const transcripts = completedRecordings.filter(r => r.transcript);
   const analyses = completedRecordings.filter(r => r.analysis);
 
-  if (recordings.length === 0) {
+  if (teamRecordings.length === 0) {
     return (
       <div className="text-center py-8 text-gray-500">
         No recordings found for this team.
