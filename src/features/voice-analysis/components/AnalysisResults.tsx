@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRecordings } from "../hooks/useRecordings";
 import { VoiceAnalysisType, VoiceAnalysis } from "../types";
 import { TranscriptsView } from "./views/TranscriptsView";
@@ -15,9 +15,14 @@ interface AnalysisResultsProps {
 }
 
 const AnalysisResults = ({ team, type, viewMode }: AnalysisResultsProps) => {
-  const { recordings, loading, audioUrls } = useRecordings(team, type);
+  const { recordings, loading, audioUrls, fetchRecordings } = useRecordings(team, type);
   const [selectedRecording, setSelectedRecording] = useState<VoiceAnalysis | null>(null);
   const [showDetailsDialog, setShowDetailsDialog] = useState(false);
+  
+  useEffect(() => {
+    console.log(`Team: ${team}, Type: ${type}, ViewMode: ${viewMode}`);
+    console.log(`Found ${recordings.length} recordings, filtered to ${teamRecordings.length}`);
+  }, [recordings, team, type, viewMode]);
   
   // Filter recordings to only show those for the current team
   const teamRecordings = recordings.filter(recording => recording.team === team);

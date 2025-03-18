@@ -12,6 +12,12 @@ interface AnalysisTabProps {
 }
 
 const AnalysisTab = ({ team, type, onUploadComplete }: AnalysisTabProps) => {
+  const [activeTab, setActiveTab] = useState("transcripts");
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+  };
+
   return (
     <div className="space-y-6">
       <div className="bg-white p-6 rounded-lg border shadow-sm">
@@ -25,8 +31,8 @@ const AnalysisTab = ({ team, type, onUploadComplete }: AnalysisTabProps) => {
       
       <div className="bg-white p-6 rounded-lg border shadow-sm">
         <h3 className="text-lg font-medium mb-4">View Results</h3>
-        <Tabs defaultValue="transcripts">
-          <TabsList>
+        <Tabs defaultValue="transcripts" onValueChange={handleTabChange} value={activeTab}>
+          <TabsList className="mb-4">
             <TabsTrigger value="transcripts">Transcripts</TabsTrigger>
             <TabsTrigger value="analyses">Analysis</TabsTrigger>
           </TabsList>
