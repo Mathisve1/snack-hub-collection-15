@@ -4,9 +4,10 @@ import { toast } from "sonner";
 
 interface AudioPlayerButtonProps {
   audioUrl: string;
+  className?: string;
 }
 
-export const AudioPlayerButton = ({ audioUrl }: AudioPlayerButtonProps) => {
+export const AudioPlayerButton = ({ audioUrl, className }: AudioPlayerButtonProps) => {
   const handlePlayAudio = (event: React.MouseEvent) => {
     event.stopPropagation();
     
@@ -27,6 +28,7 @@ export const AudioPlayerButton = ({ audioUrl }: AudioPlayerButtonProps) => {
       variant="outline" 
       size="sm"
       onClick={handlePlayAudio}
+      className={className}
     >
       Play Audio
     </Button>

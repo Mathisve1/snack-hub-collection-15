@@ -95,6 +95,8 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         return;
       }
 
+      console.log(`Fetched data from ${tableName}:`, data);
+
       const mappedData: VoiceAnalysis[] = data.map(record => ({
         id: record.id,
         team: record.team,
