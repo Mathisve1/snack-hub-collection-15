@@ -63,14 +63,14 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         return;
       }
 
-      const mappedData = data.map(item => ({
+      const mappedData: VoiceAnalysis[] = data.map(item => ({
         id: item.id,
         team: item.team,
         bucket_id: item.bucket_id || '',
         file_path: item.file_name || '',
         transcript: item.transcript || null,
         analysis: item.analysis || null,
-        status: item.status,
+        status: mapDatabaseStatus(item.status),
         created_at: item.created_at,
         duration_seconds: item.duration_seconds || 0,
         file_name: item.file_name
@@ -113,9 +113,27 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
     }
   };
 
+  // Helper function to map database status to VoiceAnalysis status
+  const mapDatabaseStatus = (status: string): VoiceAnalysis['status'] => {
+    switch (status.toLowerCase()) {
+      case 'pending':
+        return 'pending';
+      case 'analyzing':
+        return 'analyzing';
+      case 'completed':
+        return 'completed';
+      case 'failed':
+        return 'failed';
+      default:
+        console.warn(`Unknown status: ${status}, defaulting to pending`);
+        return 'pending';
+    }
+  };
+
   useEffect(() => {
     fetchRecordings();
   }, [team, type]);
 
   return { recordings, loading, audioUrls, fetchRecordings };
 };
+
