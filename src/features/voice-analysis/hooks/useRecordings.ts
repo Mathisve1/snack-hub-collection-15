@@ -13,10 +13,21 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
     const teamNumber = teamName.replace('OV-', '');
     
     if (recordingType === 'frituren') {
-      return `Team_${teamNumber}_frituren_analysis` as const;
+      switch (teamNumber) {
+        case '3':
+          return 'Team_3_frituren_analysis';
+        case '13':
+          return 'Team_13_frituren_analysis';
+        case '14':
+          return 'Team_14_frituren_analysis';
+        case '38':
+          return 'Team_38_frituren_analysis';
+        default:
+          throw new Error(`Invalid team number: ${teamNumber}`);
+      }
     }
     
-    return 'street_interviews' as const;
+    return 'street_interviews';
   };
 
   const mapDatabaseStatus = (status: string): VoiceAnalysis['status'] => {
@@ -42,7 +53,6 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
       
       console.log(`Fetching ${type} recordings for team ${team} from table ${tableName}`);
       
-      // Use explicit type casting for the table name to match Supabase's expected types
       const { data, error } = await supabase
         .from(tableName)
         .select('*')
@@ -59,7 +69,6 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         return;
       }
 
-      // Type safety: ensure we're mapping the correct data structure
       const mappedData: VoiceAnalysis[] = data.map(record => ({
         id: record.id,
         team: record.team,
