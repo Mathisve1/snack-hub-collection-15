@@ -70,31 +70,26 @@ export const useVoiceUploader = (
         duration_seconds: recordingDuration
       };
       
-      // Insert the record into the appropriate table based on type
+      // Insert the record into the appropriate table based on type and team
       let insertError;
+      const teamNumber = team.replace('OV-', '');
       
       if (type === 'frituren') {
+        const tableName = `Team_${teamNumber}_frituren_analysis`;
         const { error } = await supabase
-          .from('frituren_interviews')
-          .insert(recordData);
-        insertError = error;
-      } else if (type === 'interviews') {
-        const { error } = await supabase
-          .from('street_interviews')
+          .from(tableName as any)
           .insert(recordData);
         insertError = error;
       } else if (type === 'buyer') {
-        // For buyer analysis, we need to handle team-specific tables
-        const teamNumber = team.replace('OV-', '');
-        
-        // Check which team-specific table exists
-        // We'll try a pattern of Team_X_buyer_analysis where X is the team number
-        const buyerTableName = `Team_${teamNumber}_buyer_analysis`;
-        
-        // Using type assertion to handle the dynamic table name
-        // This is needed because Supabase types are strict about table names
+        const tableName = `Team_${teamNumber}_buyer_analysis`;
         const { error } = await supabase
-          .from(buyerTableName as any)
+          .from(tableName as any)
+          .insert(recordData);
+        insertError = error;
+      } else if (type === 'interviews') {
+        const tableName = `Team_${teamNumber}_street_interviews_analysis`;
+        const { error } = await supabase
+          .from(tableName as any)
           .insert(recordData);
         insertError = error;
       }
