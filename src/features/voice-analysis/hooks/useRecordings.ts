@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -21,6 +22,19 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
           return 'Team_14_frituren_analysis' as const;
         case '38':
           return 'Team_38_frituren_analysis' as const;
+        default:
+          throw new Error(`Invalid team number: ${teamNumber}`);
+      }
+    } else if (recordingType === 'buyer') {
+      switch (teamNumber) {
+        case '3':
+          return 'Team_3_buyer_analysis' as const;
+        case '13':
+          return 'Team_13_buyer_analysis' as const;
+        case '14':
+          return 'Team_14_buyer_analysis' as const;
+        case '38':
+          return 'Team_38_buyer_analysis' as const;
         default:
           throw new Error(`Invalid team number: ${teamNumber}`);
       }

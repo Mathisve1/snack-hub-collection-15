@@ -40,7 +40,7 @@ const AnalysisResults = ({ team, type }: AnalysisResultsProps) => {
         <h3 className="text-lg font-medium text-gray-900 mb-1">No recordings available</h3>
         <p className="text-gray-500">
           {filter === 'all' 
-            ? "Upload a voice recording to see the analysis results here." 
+            ? `Upload a voice recording for ${type} analysis to see the results here.` 
             : "No completed analyses found. Try switching to 'All recordings'."}
         </p>
       </div>

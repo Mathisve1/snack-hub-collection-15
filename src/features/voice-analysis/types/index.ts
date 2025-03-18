@@ -12,4 +12,4 @@ export interface VoiceAnalysis {
   file_name?: string; // Kept for backward compatibility
 }
 
-export type VoiceAnalysisType = 'frituren' | 'interviews';
+export type VoiceAnalysisType = 'frituren' | 'interviews' | 'buyer';

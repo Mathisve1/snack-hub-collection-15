@@ -12,6 +12,7 @@ interface VoiceAnalysisSectionProps {
 const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
   const [refreshFrituren, setRefreshFrituren] = useState(0);
   const [refreshInterviews, setRefreshInterviews] = useState(0);
+  const [refreshBuyer, setRefreshBuyer] = useState(0);
   
   const handleFriturenUploadComplete = () => {
     setRefreshFrituren(prev => prev + 1);
@@ -21,13 +22,17 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
     setRefreshInterviews(prev => prev + 1);
   };
 
+  const handleBuyerUploadComplete = () => {
+    setRefreshBuyer(prev => prev + 1);
+  };
+
   return (
     <div className="space-y-8">
       <Card className="bg-white shadow-sm">
         <CardHeader>
           <CardTitle className="text-xl">Voice Analysis Tool</CardTitle>
           <CardDescription>
-            Upload voice recordings of frituren visits or street interviews for automatic analysis
+            Upload voice recordings for automatic analysis
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -35,6 +40,7 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
             <TabsList className="mb-4">
               <TabsTrigger value="frituren">Frituren</TabsTrigger>
               <TabsTrigger value="interviews">Street Interviews</TabsTrigger>
+              <TabsTrigger value="buyer">Buyer Analysis</TabsTrigger>
             </TabsList>
             
             <TabsContent value="frituren">
@@ -50,6 +56,14 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
                 team={team} 
                 onUploadComplete={handleInterviewsUploadComplete}
                 type="interviews"
+              />
+            </TabsContent>
+
+            <TabsContent value="buyer">
+              <VoiceRecordingUploader 
+                team={team} 
+                onUploadComplete={handleBuyerUploadComplete}
+                type="buyer"
               />
             </TabsContent>
           </Tabs>
@@ -68,6 +82,7 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
             <TabsList className="mb-4">
               <TabsTrigger value="frituren">Frituren</TabsTrigger>
               <TabsTrigger value="interviews">Street Interviews</TabsTrigger>
+              <TabsTrigger value="buyer">Buyer Analysis</TabsTrigger>
             </TabsList>
             
             <TabsContent value="frituren">
@@ -83,6 +98,14 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
                 key={`interviews-${refreshInterviews}`}
                 team={team}
                 type="interviews"
+              />
+            </TabsContent>
+
+            <TabsContent value="buyer">
+              <AnalysisResults 
+                key={`buyer-${refreshBuyer}`}
+                team={team}
+                type="buyer"
               />
             </TabsContent>
           </Tabs>
