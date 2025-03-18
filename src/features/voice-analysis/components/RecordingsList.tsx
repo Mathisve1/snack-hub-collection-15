@@ -2,9 +2,6 @@
 import { AudioLines } from "lucide-react";
 import { useRecordings } from "../hooks/useRecordings";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import StatusBadge from "./StatusBadge";
-import { formatDistanceToNow } from "date-fns";
-import { formatDuration } from "../utils/formatUtils";
 
 interface RecordingsListProps {
   team: string;
@@ -27,31 +24,19 @@ const RecordingsList = ({ team, type }: RecordingsListProps) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Status</TableHead>
-          <TableHead>Created</TableHead>
-          <TableHead>Duration</TableHead>
-          <TableHead className="w-1/3">Transcript</TableHead>
-          <TableHead className="w-1/3">Analysis</TableHead>
+          <TableHead className="w-1/2">Transcript</TableHead>
+          <TableHead className="w-1/2">Analysis</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {recordings.map((recording) => (
           <TableRow key={recording.id}>
-            <TableCell>
-              <StatusBadge status={recording.status} />
-            </TableCell>
-            <TableCell>
-              {formatDistanceToNow(new Date(recording.created_at), { addSuffix: true })}
-            </TableCell>
-            <TableCell>
-              {formatDuration(recording.duration_seconds)}
-            </TableCell>
-            <TableCell className="whitespace-normal">
+            <TableCell className="whitespace-normal align-top">
               <div className="max-h-40 overflow-y-auto">
                 {recording.transcript || '-'}
               </div>
             </TableCell>
-            <TableCell className="whitespace-normal">
+            <TableCell className="whitespace-normal align-top">
               <div className="max-h-40 overflow-y-auto">
                 {recording.analysis || '-'}
               </div>
