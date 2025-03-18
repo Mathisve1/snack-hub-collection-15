@@ -242,7 +242,7 @@ export type Database = {
         }
         Relationships: []
       }
-      Team_13_street_interviews_analysis_duplicate: {
+      Team_13_buyer_analysis: {
         Row: {
           analysis: string | null
           bucket_id: string | null
@@ -281,7 +281,241 @@ export type Database = {
         }
         Relationships: []
       }
-      Team_14_street_interviews_analysis_duplicate: {
+      Team_13_frituren_analysis: {
+        Row: {
+          analysis: string | null
+          bucket_id: string | null
+          created_at: string | null
+          duration_seconds: number | null
+          file_name: string
+          id: string
+          recording_url: string | null
+          status: string
+          team: string
+          transcript: string | null
+        }
+        Insert: {
+          analysis?: string | null
+          bucket_id?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          file_name: string
+          id?: string
+          recording_url?: string | null
+          status?: string
+          team: string
+          transcript?: string | null
+        }
+        Update: {
+          analysis?: string | null
+          bucket_id?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          file_name?: string
+          id?: string
+          recording_url?: string | null
+          status?: string
+          team?: string
+          transcript?: string | null
+        }
+        Relationships: []
+      }
+      Team_13_street_interviews_analysis: {
+        Row: {
+          analysis: string | null
+          bucket_id: string | null
+          created_at: string | null
+          duration_seconds: number | null
+          file_name: string
+          id: string
+          recording_url: string | null
+          status: string
+          team: string
+          transcript: string | null
+        }
+        Insert: {
+          analysis?: string | null
+          bucket_id?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          file_name: string
+          id?: string
+          recording_url?: string | null
+          status?: string
+          team: string
+          transcript?: string | null
+        }
+        Update: {
+          analysis?: string | null
+          bucket_id?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          file_name?: string
+          id?: string
+          recording_url?: string | null
+          status?: string
+          team?: string
+          transcript?: string | null
+        }
+        Relationships: []
+      }
+      Team_14_buyer_analysis: {
+        Row: {
+          analysis: string | null
+          bucket_id: string | null
+          created_at: string | null
+          duration_seconds: number | null
+          file_name: string
+          id: string
+          recording_url: string | null
+          status: string
+          team: string
+          transcript: string | null
+        }
+        Insert: {
+          analysis?: string | null
+          bucket_id?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          file_name: string
+          id?: string
+          recording_url?: string | null
+          status?: string
+          team: string
+          transcript?: string | null
+        }
+        Update: {
+          analysis?: string | null
+          bucket_id?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          file_name?: string
+          id?: string
+          recording_url?: string | null
+          status?: string
+          team?: string
+          transcript?: string | null
+        }
+        Relationships: []
+      }
+      Team_14_frituren_analysis: {
+        Row: {
+          analysis: string | null
+          bucket_id: string | null
+          created_at: string | null
+          duration_seconds: number | null
+          file_name: string
+          id: string
+          recording_url: string | null
+          status: string
+          team: string
+          transcript: string | null
+        }
+        Insert: {
+          analysis?: string | null
+          bucket_id?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          file_name: string
+          id?: string
+          recording_url?: string | null
+          status?: string
+          team: string
+          transcript?: string | null
+        }
+        Update: {
+          analysis?: string | null
+          bucket_id?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          file_name?: string
+          id?: string
+          recording_url?: string | null
+          status?: string
+          team?: string
+          transcript?: string | null
+        }
+        Relationships: []
+      }
+      Team_14_street_interviews_analysis: {
+        Row: {
+          analysis: string | null
+          bucket_id: string | null
+          created_at: string | null
+          duration_seconds: number | null
+          file_name: string
+          id: string
+          recording_url: string | null
+          status: string
+          team: string
+          transcript: string | null
+        }
+        Insert: {
+          analysis?: string | null
+          bucket_id?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          file_name: string
+          id?: string
+          recording_url?: string | null
+          status?: string
+          team: string
+          transcript?: string | null
+        }
+        Update: {
+          analysis?: string | null
+          bucket_id?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          file_name?: string
+          id?: string
+          recording_url?: string | null
+          status?: string
+          team?: string
+          transcript?: string | null
+        }
+        Relationships: []
+      }
+      Team_3_buyer_analysis: {
+        Row: {
+          analysis: string | null
+          bucket_id: string | null
+          created_at: string | null
+          duration_seconds: number | null
+          file_name: string
+          id: string
+          recording_url: string | null
+          status: string
+          team: string
+          transcript: string | null
+        }
+        Insert: {
+          analysis?: string | null
+          bucket_id?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          file_name: string
+          id?: string
+          recording_url?: string | null
+          status?: string
+          team: string
+          transcript?: string | null
+        }
+        Update: {
+          analysis?: string | null
+          bucket_id?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          file_name?: string
+          id?: string
+          recording_url?: string | null
+          status?: string
+          team?: string
+          transcript?: string | null
+        }
+        Relationships: []
+      }
+      Team_3_frituren_analysis: {
         Row: {
           analysis: string | null
           bucket_id: string | null
@@ -359,7 +593,85 @@ export type Database = {
         }
         Relationships: []
       }
-      Team_38_street_interviews_analysis_duplicate: {
+      Team_38_buyer_analysis: {
+        Row: {
+          analysis: string | null
+          bucket_id: string | null
+          created_at: string | null
+          duration_seconds: number | null
+          file_name: string
+          id: string
+          recording_url: string | null
+          status: string
+          team: string
+          transcript: string | null
+        }
+        Insert: {
+          analysis?: string | null
+          bucket_id?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          file_name: string
+          id?: string
+          recording_url?: string | null
+          status?: string
+          team: string
+          transcript?: string | null
+        }
+        Update: {
+          analysis?: string | null
+          bucket_id?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          file_name?: string
+          id?: string
+          recording_url?: string | null
+          status?: string
+          team?: string
+          transcript?: string | null
+        }
+        Relationships: []
+      }
+      Team_38_frituren_analysis: {
+        Row: {
+          analysis: string | null
+          bucket_id: string | null
+          created_at: string | null
+          duration_seconds: number | null
+          file_name: string
+          id: string
+          recording_url: string | null
+          status: string
+          team: string
+          transcript: string | null
+        }
+        Insert: {
+          analysis?: string | null
+          bucket_id?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          file_name: string
+          id?: string
+          recording_url?: string | null
+          status?: string
+          team: string
+          transcript?: string | null
+        }
+        Update: {
+          analysis?: string | null
+          bucket_id?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          file_name?: string
+          id?: string
+          recording_url?: string | null
+          status?: string
+          team?: string
+          transcript?: string | null
+        }
+        Relationships: []
+      }
+      Team_38_street_interviews_analysis: {
         Row: {
           analysis: string | null
           bucket_id: string | null

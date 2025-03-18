@@ -28,11 +28,21 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
     return bucketId;
   };
 
+  const getTableName = (teamName: string, recordingType: VoiceAnalysisType) => {
+    // Extract team number and remove leading zero if present
+    const teamNumber = teamName.replace('OV-', '');
+    
+    if (type === 'frituren') {
+      return `Team_${teamNumber}_frituren_analysis`;
+    }
+    return 'street_interviews';
+  };
+
   const fetchRecordings = async () => {
     try {
       setLoading(true);
-      // Use the correct table name based on the type
-      const tableName = type === 'frituren' ? 'frituren_interviews' : 'street_interviews';
+      // Use the team-specific table name for frituren
+      const tableName = getTableName(team, type);
       
       console.log(`Fetching ${type} recordings for team ${team} from table ${tableName}`);
       
