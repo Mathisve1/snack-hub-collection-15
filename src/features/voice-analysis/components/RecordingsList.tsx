@@ -12,7 +12,7 @@ interface RecordingsListProps {
 }
 
 const RecordingsList = ({ team, type }: RecordingsListProps) => {
-  const { recordings, loading, audioUrls } = useRecordings(team, type);
+  const { recordings, loading } = useRecordings(team, type);
 
   if (recordings.length === 0) {
     return (
