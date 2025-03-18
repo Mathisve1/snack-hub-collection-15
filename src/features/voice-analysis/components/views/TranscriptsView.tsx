@@ -1,32 +1,21 @@
 
-import { VoiceAnalysis, VoiceAnalysisType } from "../../types";
+import { VoiceAnalysis } from "../../types";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import { AudioPlayerButton } from "../shared/AudioPlayerButton";
 
 interface TranscriptsViewProps {
   recordings: VoiceAnalysis[];
   audioUrls: Record<string, string>;
-  onBack: () => void;
   onShowDetails: (recording: VoiceAnalysis) => void;
 }
 
 export const TranscriptsView = ({
   recordings,
   audioUrls,
-  onBack,
   onShowDetails,
 }: TranscriptsViewProps) => {
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-medium">Transcripts</h3>
-        <Button variant="outline" size="sm" onClick={onBack}>
-          <ArrowLeft className="h-4 w-4 mr-2" /> Back
-        </Button>
-      </div>
-      
       <div className="grid grid-cols-1 gap-4">
         {recordings.map((recording) => (
           <Card 

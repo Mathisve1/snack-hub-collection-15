@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { useRecordings } from "../hooks/useRecordings";
 import { VoiceAnalysisType, VoiceAnalysis } from "../types";
-import { MainMenuView } from "./views/MainMenuView";
 import { TranscriptsView } from "./views/TranscriptsView";
 import { AnalysesView } from "./views/AnalysesView";
 import { RecordingDetailsDialog } from "./dialogs/RecordingDetailsDialog";
@@ -12,11 +11,11 @@ import { EmptyRecordingsState } from "./shared/EmptyRecordingsState";
 interface AnalysisResultsProps {
   team: string;
   type: VoiceAnalysisType;
+  viewMode?: 'transcripts' | 'analyses';
 }
 
-const AnalysisResults = ({ team, type }: AnalysisResultsProps) => {
+const AnalysisResults = ({ team, type, viewMode }: AnalysisResultsProps) => {
   const { recordings, loading, audioUrls } = useRecordings(team, type);
-  const [view, setView] = useState<'transcripts' | 'analyses' | null>(null);
   const [selectedRecording, setSelectedRecording] = useState<VoiceAnalysis | null>(null);
   const [showDetailsDialog, setShowDetailsDialog] = useState(false);
   
@@ -36,48 +35,70 @@ const AnalysisResults = ({ team, type }: AnalysisResultsProps) => {
     setShowDetailsDialog(true);
   };
 
-  const handleBackToMenu = () => {
-    setView(null);
-  };
-
-  // Render the appropriate view based on the current state
-  if (view === 'transcripts') {
+  // Render the appropriate view based on the viewMode prop
+  if (viewMode === 'transcripts') {
     return (
-      <TranscriptsView 
-        recordings={teamRecordings}
-        audioUrls={audioUrls}
-        onBack={handleBackToMenu}
-        onShowDetails={handleShowDetails}
-      />
+      <>
+        <TranscriptsView 
+          recordings={teamRecordings}
+          audioUrls={audioUrls}
+          onShowDetails={handleShowDetails}
+        />
+        <RecordingDetailsDialog
+          recording={selectedRecording}
+          audioUrl={selectedRecording ? audioUrls[selectedRecording.id] : undefined}
+          view="transcripts"
+          open={showDetailsDialog}
+          onOpenChange={setShowDetailsDialog}
+        />
+      </>
     );
   }
 
-  if (view === 'analyses') {
+  if (viewMode === 'analyses') {
     return (
-      <AnalysesView 
-        recordings={teamRecordings}
-        audioUrls={audioUrls}
-        onBack={handleBackToMenu}
-        onShowDetails={handleShowDetails}
-      />
+      <>
+        <AnalysesView 
+          recordings={teamRecordings}
+          audioUrls={audioUrls}
+          onShowDetails={handleShowDetails}
+        />
+        <RecordingDetailsDialog
+          recording={selectedRecording}
+          audioUrl={selectedRecording ? audioUrls[selectedRecording.id] : undefined}
+          view="analyses"
+          open={showDetailsDialog}
+          onOpenChange={setShowDetailsDialog}
+        />
+      </>
     );
   }
 
+  // If no viewMode is provided, show a simple list of recordings
   return (
-    <>
-      <MainMenuView 
-        onSelectView={setView} 
-        type={type} 
-      />
-
+    <div className="space-y-4">
+      <h3 className="text-lg font-medium">Recent Recordings</h3>
+      <div className="grid grid-cols-1 gap-4">
+        {teamRecordings.slice(0, 5).map((recording) => (
+          <div 
+            key={recording.id} 
+            className="p-4 border rounded-lg overflow-hidden cursor-pointer hover:bg-gray-100 transition-colors"
+            onClick={() => handleShowDetails(recording)}
+          >
+            <p className="text-sm font-medium">
+              {new Date(recording.created_at).toLocaleString()}
+            </p>
+          </div>
+        ))}
+      </div>
       <RecordingDetailsDialog
         recording={selectedRecording}
         audioUrl={selectedRecording ? audioUrls[selectedRecording.id] : undefined}
-        view={view}
+        view={null}
         open={showDetailsDialog}
         onOpenChange={setShowDetailsDialog}
       />
-    </>
+    </div>
   );
 };
 
