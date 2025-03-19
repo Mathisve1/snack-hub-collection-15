@@ -7,7 +7,12 @@ import { useLocation } from "react-router-dom";
 
 const BuyingPersonasTable = () => {
   const location = useLocation();
-  const isTeam3 = location.pathname.includes("team-3");
+  // Fix the path checking logic with exact path matching
+  const isTeam3 = location.pathname === "/team-3-results";
+  const isTeam38 = location.pathname === "/team-38-results";
+  
+  // Log the current path and which team was detected
+  console.log(`BuyingPersonasTable - Current path: ${location.pathname}, isTeam3: ${isTeam3}, isTeam38: ${isTeam38}`);
   
   // Use the appropriate hook based on the current path
   const team38Data = useTeam38BuyingPersonas();
