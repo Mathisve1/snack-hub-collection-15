@@ -10,6 +10,7 @@ type EmptyPersonasStateProps = {
     currentPath?: string;
     isTeam3?: boolean;
     isTeam38?: boolean;
+    isTeam3Data?: boolean; // Add this new property
   };
 };
 
@@ -34,6 +35,7 @@ export const EmptyPersonasState = ({ debug }: EmptyPersonasStateProps) => {
           {debug.currentPath && <p>Current Path: {debug.currentPath}</p>}
           {debug.isTeam3 !== undefined && <p>Is Team 3: {String(debug.isTeam3)}</p>}
           {debug.isTeam38 !== undefined && <p>Is Team 38: {String(debug.isTeam38)}</p>}
+          {debug.isTeam3Data !== undefined && <p>Is Team 3 Data: {String(debug.isTeam3Data)}</p>}
           {debug.error && <p>Error: {debug.error}</p>}
         </div>
       )}
