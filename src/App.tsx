@@ -10,6 +10,7 @@ import SnackPage from "./pages/SnackPage";
 import FriturenList from "./pages/FriturenList";
 import FrituurDetails from "./pages/FrituurDetails";
 import AddFrituurPage from "./pages/AddFrituurPage";
+import Team38Results from "./pages/Team38Results";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/frituren/:team" element={<FriturenList />} />
           <Route path="/frituur/:team/:businessName" element={<FrituurDetails />} />
           <Route path="/frituren/:team/add" element={<AddFrituurPage />} />
+          <Route path="/team-38-results" element={<Team38Results />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

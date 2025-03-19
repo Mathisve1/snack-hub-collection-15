@@ -1,7 +1,7 @@
+
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Database } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import Team38DataContainer from "../team-data/Team38DataContainer";
 
 interface FrituurHeaderProps {
   businessName: string;
@@ -28,16 +28,27 @@ const FrituurHeader = ({ businessName, team, rating }: FrituurHeaderProps) => {
             <h1 className="text-xl font-semibold truncate">{businessName}</h1>
           </div>
           
-          {rating && (
-            <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-md flex items-center">
-              <span className="font-medium">{rating}</span>
-              <span className="ml-1">★</span>
-            </div>
-          )}
+          <div className="flex items-center gap-2">
+            {team === "OV-38" && (
+              <Button 
+                variant="outline"
+                onClick={() => navigate('/team-38-results')}
+                className="flex items-center gap-2"
+              >
+                <Database className="h-4 w-4" />
+                <span>Team 38 Research Data</span>
+              </Button>
+            )}
+            
+            {rating && (
+              <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded-md flex items-center">
+                <span className="font-medium">{rating}</span>
+                <span className="ml-1">★</span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-      
-      <Team38DataContainer />
     </div>
   );
 };
