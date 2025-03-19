@@ -7,9 +7,22 @@ import BuyingPersonasTable from "@/features/team-data/components/BuyingPersonasT
 import FriturenTable from "@/features/team-data/components/FriturenTable";
 import StreetInterviewsTable from "@/features/team-data/components/StreetInterviewsTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  useTeam38BuyingPersonas, 
+  useTeam38Frituren, 
+  useTeam38StreetInterviews 
+} from "@/features/team-data/hooks/useTeam38Data";
+import { Loader2 } from "lucide-react";
 
 const Team38Results = () => {
   const navigate = useNavigate();
+  const { data: personas, loading: personasLoading, error: personasError } = useTeam38BuyingPersonas();
+  const { data: frituren, loading: friturenLoading, error: friturenError } = useTeam38Frituren();
+  const { data: interviews, loading: interviewsLoading, error: interviewsError } = useTeam38StreetInterviews();
+
+  // Check if any data is loading or has errors
+  const isLoading = personasLoading || friturenLoading || interviewsLoading;
+  const hasErrors = personasError || friturenError || interviewsError;
 
   return (
     <>
@@ -43,25 +56,45 @@ const Team38Results = () => {
                 product development and marketing strategies.
               </p>
               
-              <Tabs defaultValue="buyingPersonas" className="w-full">
-                <TabsList className="mb-6 w-full max-w-lg">
-                  <TabsTrigger value="buyingPersonas">Buying Personas</TabsTrigger>
-                  <TabsTrigger value="frituren">Frituren</TabsTrigger>
-                  <TabsTrigger value="streetInterviews">Street Interviews</TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="buyingPersonas">
-                  <BuyingPersonasTable />
-                </TabsContent>
-                
-                <TabsContent value="frituren">
-                  <FriturenTable />
-                </TabsContent>
-                
-                <TabsContent value="streetInterviews">
-                  <StreetInterviewsTable />
-                </TabsContent>
-              </Tabs>
+              {isLoading ? (
+                <div className="flex flex-col items-center justify-center py-20">
+                  <Loader2 className="h-10 w-10 animate-spin text-gray-500 mb-4" />
+                  <p className="text-gray-500">Loading research data...</p>
+                </div>
+              ) : hasErrors ? (
+                <div className="text-red-500 p-6 text-center">
+                  <p>There was a problem loading the research data. Please try again later.</p>
+                  {personasError && <p className="mt-2">Personas error: {personasError}</p>}
+                  {friturenError && <p className="mt-2">Frituren error: {friturenError}</p>}
+                  {interviewsError && <p className="mt-2">Interviews error: {interviewsError}</p>}
+                </div>
+              ) : (
+                <Tabs defaultValue="buyingPersonas" className="w-full">
+                  <TabsList className="mb-6 w-full max-w-lg">
+                    <TabsTrigger value="buyingPersonas">
+                      Buying Personas ({personas?.length || 0})
+                    </TabsTrigger>
+                    <TabsTrigger value="frituren">
+                      Frituren ({frituren?.length || 0})
+                    </TabsTrigger>
+                    <TabsTrigger value="streetInterviews">
+                      Street Interviews ({interviews?.length || 0})
+                    </TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="buyingPersonas">
+                    <BuyingPersonasTable />
+                  </TabsContent>
+                  
+                  <TabsContent value="frituren">
+                    <FriturenTable />
+                  </TabsContent>
+                  
+                  <TabsContent value="streetInterviews">
+                    <StreetInterviewsTable />
+                  </TabsContent>
+                </Tabs>
+              )}
             </div>
           </div>
         </div>
