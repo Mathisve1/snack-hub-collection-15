@@ -1,16 +1,14 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Frituur } from "../../types";
 import { processFriturenData, getMostCommon, calculateAverage, formatBreakdown } from "./FriturenDataUtils";
 import { TrendingUp, ShoppingCart, Truck, Percent, Star, Target, Megaphone } from "lucide-react";
-
 type FriturenSummaryProps = {
   data: Frituur[];
 };
-
-const FriturenSummary = ({ data }: FriturenSummaryProps) => {
+const FriturenSummary = ({
+  data
+}: FriturenSummaryProps) => {
   const processedData = processFriturenData(data);
-  
   const bestsellerInfo = getMostCommon(processedData.bestsellers);
   const trendInfo = getMostCommon(processedData.trends);
   const groothandelInfo = getMostCommon(processedData.groothandel);
@@ -19,14 +17,11 @@ const FriturenSummary = ({ data }: FriturenSummaryProps) => {
   const marketingInfo = getMostCommon(processedData.marketing);
   const bereidheidInfo = getMostCommon(processedData.bereidheid_aanbieden);
   const waaromNietInfo = getMostCommon(processedData.waarom_niet_verkopen);
-  
   const gemiddeldeMargesAvg = calculateAverage(processedData.gemiddelde_marges);
   const absoluteMargesAvg = calculateAverage(processedData.absolute_marges);
   const aankoopprijsAvg = calculateAverage(processedData.aankoopprijs);
   const aankoopprijsProteineAvg = calculateAverage(processedData.aankoopprijs_proteine_snacks);
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+  return <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
       {/* Bestsellers Card */}
       <Card>
         <CardHeader className="pb-2">
@@ -188,7 +183,7 @@ const FriturenSummary = ({ data }: FriturenSummaryProps) => {
               <p className="text-sm text-gray-600">{formatBreakdown(processedData.bereidheid_aanbieden)}</p>
             </div>
             <div>
-              <p className="font-semibold">Redenen om niet te verkopen:</p>
+              <p className="font-semibold">Redenen om de proteine snack niet te kopen:</p>
               <p>{waaromNietInfo.value} ({waaromNietInfo.percentage}%)</p>
               <p className="font-semibold text-sm mt-2">Details:</p>
               <p className="text-sm text-gray-600">{formatBreakdown(processedData.waarom_niet_verkopen)}</p>
@@ -196,8 +191,6 @@ const FriturenSummary = ({ data }: FriturenSummaryProps) => {
           </div>
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>;
 };
-
 export default FriturenSummary;
