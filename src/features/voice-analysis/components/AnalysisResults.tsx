@@ -7,7 +7,7 @@ import { VoiceAnalysisType } from "../types";
 interface AnalysisResultsProps {
   team: string;
   type: VoiceAnalysisType;
-  viewMode: "list" | "detail"; // Added this prop
+  viewMode: "list" | "detail";
 }
 
 const AnalysisResults = ({ team, type, viewMode }: AnalysisResultsProps) => {

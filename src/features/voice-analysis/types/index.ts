@@ -1,3 +1,4 @@
+
 export type VoiceAnalysisType = 'frituren' | 'interviews' | 'buyer';
 
 export interface VoiceAnalysis {

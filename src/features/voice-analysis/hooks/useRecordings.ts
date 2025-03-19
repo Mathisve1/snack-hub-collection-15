@@ -19,8 +19,11 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
         } else if (type === 'interviews') {
           tableName = 'street_interviews';
         } else if (type === 'buyer') {
-          // Use the appropriate table for buyer analysis
-          tableName = `Team_${team.replace('OV-', '')}_buyer_analysis`;
+          // Extract team number to use in table name
+          const teamNumber = team.replace('OV-', '');
+          tableName = `Team_${teamNumber}_buyer_analysis`;
+        } else {
+          throw new Error(`Invalid recording type: ${type}`);
         }
 
         // Fetch the recordings from the appropriate table
@@ -35,7 +38,8 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
           throw error;
         }
 
-        setRecordings(data || []);
+        // Type assertion to ensure the data conforms to VoiceAnalysis[]
+        setRecordings((data || []) as unknown as VoiceAnalysis[]);
       } catch (error) {
         console.error("Error in useRecordings:", error);
         setRecordings([]);

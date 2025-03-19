@@ -2,7 +2,7 @@
 import { Loader2, AlertCircle } from "lucide-react";
 
 interface StatusBadgeProps {
-  status: 'pending' | 'analyzing' | 'completed' | 'failed';
+  status: 'pending' | 'processing' | 'completed' | 'failed';
 }
 
 const StatusBadge = ({ status }: StatusBadgeProps) => {
@@ -14,10 +14,10 @@ const StatusBadge = ({ status }: StatusBadgeProps) => {
     );
   }
   
-  if (status === 'analyzing') {
+  if (status === 'processing') {
     return (
       <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full flex items-center">
-        <Loader2 className="h-3 w-3 mr-1 animate-spin" /> Analyzing
+        <Loader2 className="h-3 w-3 mr-1 animate-spin" /> Processing
       </span>
     );
   }
