@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StreetInterview } from "../../types";
 import { 
@@ -6,7 +5,8 @@ import {
   getMostCommon, 
   calculateBooleanPercentage, 
   formatBreakdown,
-  calculateAverageResponse
+  calculateAverageResponse,
+  calculateAverageFromRecord
 } from "./StreetInterviewsDataUtils";
 import { 
   MessageSquare, 
@@ -46,12 +46,13 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
   const hogerePrijsPercentage = calculateBooleanPercentage(processedData.hogere_prijs_bereidheid);
   const vervangenTraditionalPercentage = calculateBooleanPercentage(processedData.vervangen_traditionele_snack);
   
-  // Calculate average response positivity
   const gemiddeldePositiefResponse = calculateAverageResponse(data);
+  
+  const gemiddeldeEiwitgehalte = calculateAverageFromRecord(processedData.eiwitgehalte);
+  const gemiddeldePrijs = calculateAverageFromRecord(processedData.prijzen);
   
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-      {/* Eerste reactie & Verkoopskanalen Card */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center">
@@ -75,7 +76,6 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
         </CardContent>
       </Card>
 
-      {/* Motivatie & Populaire Snacks Card */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center">
@@ -99,7 +99,6 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
         </CardContent>
       </Card>
 
-      {/* Eiwitgehalte & Prijs Card */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center">
@@ -112,18 +111,19 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
             <div>
               <p className="font-semibold">Gewenst eiwitgehalte:</p>
               <p>{eiwitgehalteInfo.value} ({eiwitgehalteInfo.percentage}%)</p>
+              <p className="text-sm text-muted-foreground mt-1">Gemiddeld: {gemiddeldeEiwitgehalte}%</p>
               <p className="text-sm text-gray-600 mt-1">{formatBreakdown(processedData.eiwitgehalte)}</p>
             </div>
             <div>
               <p className="font-semibold">Prijsindicatie:</p>
               <p>{prijsInfo.value} ({prijsInfo.percentage}%)</p>
+              <p className="text-sm text-muted-foreground mt-1">Gemiddeld: €{gemiddeldePrijs}</p>
               <p className="text-sm text-gray-600 mt-1">{formatBreakdown(processedData.prijzen)}</p>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Smaak & Coating Card */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center">
@@ -147,7 +147,6 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
         </CardContent>
       </Card>
 
-      {/* Bereiding & Krokantheid Card */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center">
@@ -171,7 +170,6 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
         </CardContent>
       </Card>
 
-      {/* Aankoopbarrière & Bezoekfrequentie Card */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center">
@@ -195,7 +193,6 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
         </CardContent>
       </Card>
 
-      {/* Average Card */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center">
@@ -212,11 +209,18 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
                 Berekend op basis van innovatie openheid, hogere prijs bereidheid, en bereidheid traditionele snacks te vervangen
               </p>
             </div>
+            <div className="mt-4">
+              <p className="font-semibold">Gemiddeld gewenst eiwitgehalte:</p>
+              <p>{gemiddeldeEiwitgehalte}%</p>
+            </div>
+            <div className="mt-4">
+              <p className="font-semibold">Gemiddelde prijsindicatie:</p>
+              <p>€{gemiddeldePrijs}</p>
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Innovatie & Hogere Prijs Card */}
       <Card className="md:col-span-1">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center">

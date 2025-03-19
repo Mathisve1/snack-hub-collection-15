@@ -181,6 +181,52 @@ export const calculateAverageResponse = (data: StreetInterview[]): string => {
   return `${Math.round(averagePositivity)}%`;
 };
 
+// Calculate average numeric value from a string record, extracting numbers from strings
+export const calculateAverageFromRecord = (record: Record<string, number>): string => {
+  if (Object.keys(record).length === 0) return "Niet beschikbaar";
+  
+  let total = 0;
+  let count = 0;
+  
+  // Process each key in the record to extract numeric values
+  Object.entries(record).forEach(([key, frequency]) => {
+    // Try to extract numeric value from the key
+    let numericValue: number | null = null;
+    
+    // For protein content: extract percentages
+    if (key.includes('%')) {
+      const match = key.match(/(\d+)%/);
+      if (match && match[1]) {
+        numericValue = parseInt(match[1], 10);
+      }
+    } 
+    // For price: extract numeric values (assuming format like "€3,50" or "3-4 euro")
+    else if (key.includes('€') || key.includes('euro')) {
+      const match = key.match(/(\d+[.,]?\d*)/);
+      if (match && match[1]) {
+        numericValue = parseFloat(match[1].replace(',', '.'));
+      }
+    }
+    // Otherwise try to extract any number
+    else {
+      const match = key.match(/(\d+[.,]?\d*)/);
+      if (match && match[1]) {
+        numericValue = parseFloat(match[1].replace(',', '.'));
+      }
+    }
+    
+    // If we found a numeric value, add it to the total
+    if (numericValue !== null) {
+      total += numericValue * frequency;
+      count += frequency;
+    }
+  });
+  
+  if (count === 0) return "Niet beschikbaar";
+  
+  return (total / count).toFixed(1);
+};
+
 // Utility function to format breakdown of values with counts
 export const formatBreakdown = (record: Record<string, number>): string => {
   if (Object.keys(record).length === 0) return "Geen gegevens";
