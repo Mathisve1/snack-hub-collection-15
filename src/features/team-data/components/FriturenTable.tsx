@@ -1,88 +1,67 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useTeam38Frituren } from "../hooks/useTeam38Data";
 import { Loader2 } from "lucide-react";
 
-export const FriturenTable = () => {
-  const { data: frituren, loading, error } = useTeam38Frituren();
+const FriturenTable = () => {
+  const { data, loading, error } = useTeam38Frituren();
 
   if (loading) {
     return (
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>Team 38 Frituren Information</CardTitle>
-        </CardHeader>
-        <CardContent className="flex justify-center items-center h-48">
-          <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-        </CardContent>
-      </Card>
+      <div className="flex justify-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>Team 38 Frituren Information</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-red-500">Error loading data: {error}</div>
-        </CardContent>
-      </Card>
+      <div className="text-red-500 p-4">
+        Error loading frituren data: {error}
+      </div>
     );
   }
 
+  if (!data || data.length === 0) {
+    return (
+      <div className="text-gray-500 p-4 text-center">
+        No frituren data available.
+      </div>
+    );
+  }
+
+  // Get all unique column keys excluding 'id'
+  const columnKeys = Object.keys(data[0]).filter(key => key !== 'id');
+
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Team 38 Frituren Information</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Bestseller 1</TableHead>
-                <TableHead>Bestseller 2</TableHead>
-                <TableHead>Bestseller 3</TableHead>
-                <TableHead>Trends</TableHead>
-                <TableHead>Aankoopprijs</TableHead>
-                <TableHead>Marges</TableHead>
-                <TableHead>Bereidheid aanbieden</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {frituren.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center py-4">
-                    No frituren data available
+    <div className="rounded-md border overflow-hidden">
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {columnKeys.map((key) => (
+                <TableHead key={key} className="font-semibold">
+                  {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.map((frituur) => (
+              <TableRow key={frituur.id}>
+                {columnKeys.map((key) => (
+                  <TableCell key={`${frituur.id}-${key}`}>
+                    {typeof frituur[key] === 'boolean' 
+                      ? frituur[key] ? 'Yes' : 'No'
+                      : frituur[key] || '—'}
                   </TableCell>
-                </TableRow>
-              ) : (
-                frituren.map((frituur) => (
-                  <TableRow key={frituur.id}>
-                    <TableCell>{frituur.bestseller_1}</TableCell>
-                    <TableCell>{frituur.bestseller_2 || "-"}</TableCell>
-                    <TableCell>{frituur.bestseller_3 || "-"}</TableCell>
-                    <TableCell>
-                      {frituur.trends_1 && <div>{frituur.trends_1}</div>}
-                      {frituur.trends_2 && <div className="mt-1">{frituur.trends_2}</div>}
-                    </TableCell>
-                    <TableCell>{frituur.aankoopprijs || "-"}</TableCell>
-                    <TableCell>
-                      {frituur.gemiddlede_marges && <div>Gem: {frituur.gemiddlede_marges}</div>}
-                      {frituur.absolute_marges && <div className="mt-1">Abs: {frituur.absolute_marges}</div>}
-                    </TableCell>
-                    <TableCell>{frituur.bereidheid_aanbieden || "-"}</TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      </CardContent>
-    </Card>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
   );
 };
 
