@@ -5,7 +5,8 @@ import {
   processStreetInterviewsData, 
   getMostCommon, 
   calculateBooleanPercentage, 
-  formatBreakdown 
+  formatBreakdown,
+  calculateAverageResponse
 } from "./StreetInterviewsDataUtils";
 import { 
   MessageSquare, 
@@ -17,7 +18,8 @@ import {
   Sparkles, 
   Clock, 
   Tag, 
-  Droplet 
+  Droplet,
+  BarChart
 } from "lucide-react";
 
 type StreetInterviewsSummaryProps = {
@@ -43,6 +45,9 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
   const innovatieRuimtePercentage = calculateBooleanPercentage(processedData.innovatie_ruimte);
   const hogerePrijsPercentage = calculateBooleanPercentage(processedData.hogere_prijs_bereidheid);
   const vervangenTraditionalPercentage = calculateBooleanPercentage(processedData.vervangen_traditionele_snack);
+  
+  // Calculate average response positivity
+  const gemiddeldePositiefResponse = calculateAverageResponse(data);
   
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -190,8 +195,29 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
         </CardContent>
       </Card>
 
+      {/* Average Card */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center">
+            <BarChart className="h-5 w-5 mr-2 text-indigo-500" />
+            Gemiddelde responswaarden
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div>
+              <p className="font-semibold">Gemiddelde positieve respons:</p>
+              <p>{gemiddeldePositiefResponse}</p>
+              <p className="text-sm text-gray-600 mt-1">
+                Berekend op basis van innovatie openheid, hogere prijs bereidheid, en bereidheid traditionele snacks te vervangen
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Innovatie & Hogere Prijs Card */}
-      <Card className="md:col-span-2">
+      <Card className="md:col-span-1">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center">
             <Sparkles className="h-5 w-5 mr-2 text-yellow-500" />
@@ -199,7 +225,7 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <div>
               <p className="font-semibold">Ruimte voor innovatie:</p>
               <p>{innovatieRuimtePercentage} van respondenten</p>

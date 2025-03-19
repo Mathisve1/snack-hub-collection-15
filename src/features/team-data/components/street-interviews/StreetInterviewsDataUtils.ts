@@ -1,4 +1,3 @@
-
 import { StreetInterview } from "../../types";
 
 export type GroupedStreetInterviewData = {
@@ -166,6 +165,20 @@ export const calculateBooleanPercentage = (values: number[]): string => {
   
   const sum = values.reduce((acc, val) => acc + val, 0);
   return `${Math.round((sum / values.length) * 100)}%`;
+};
+
+// Utility function for calculating overall average satisfaction or response rate
+export const calculateAverageResponse = (data: StreetInterview[]): string => {
+  const totalResponses = data.length;
+  const positiveResponses = data.filter(item => 
+    item.ruimte_voor_innovatie === true || 
+    item.hogere_prijs === true || 
+    item.vervangen_traditionele_snack === true
+  ).length;
+  
+  if (totalResponses === 0) return "Niet beschikbaar";
+  const averagePositivity = (positiveResponses / (totalResponses * 3)) * 100;
+  return `${Math.round(averagePositivity)}%`;
 };
 
 // Utility function to format breakdown of values with counts
