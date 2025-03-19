@@ -110,14 +110,14 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
           <div className="space-y-4">
             <div>
               <p className="font-semibold">Gewenst eiwitgehalte:</p>
-              <p>{eiwitgehalteInfo.value} ({eiwitgehalteInfo.percentage}%)</p>
-              <p className="text-sm text-muted-foreground mt-1">Gemiddeld: {gemiddeldeEiwitgehalte}%</p>
+              <p className="text-xl font-medium">Gemiddeld: {gemiddeldeEiwitgehalte}%</p>
+              <p className="text-sm text-muted-foreground mt-1">Meest voorkomend: {eiwitgehalteInfo.value} ({eiwitgehalteInfo.percentage}%)</p>
               <p className="text-sm text-gray-600 mt-1">{formatBreakdown(processedData.eiwitgehalte)}</p>
             </div>
             <div>
               <p className="font-semibold">Prijsindicatie:</p>
-              <p>{prijsInfo.value} ({prijsInfo.percentage}%)</p>
-              <p className="text-sm text-muted-foreground mt-1">Gemiddeld: €{gemiddeldePrijs}</p>
+              <p className="text-xl font-medium">Gemiddeld: €{gemiddeldePrijs}</p>
+              <p className="text-sm text-muted-foreground mt-1">Meest voorkomend: {prijsInfo.value} ({prijsInfo.percentage}%)</p>
               <p className="text-sm text-gray-600 mt-1">{formatBreakdown(processedData.prijzen)}</p>
             </div>
           </div>
@@ -204,18 +204,18 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
           <div className="space-y-4">
             <div>
               <p className="font-semibold">Gemiddelde positieve respons:</p>
-              <p>{gemiddeldePositiefResponse}</p>
+              <p className="text-xl font-medium">{gemiddeldePositiefResponse}</p>
               <p className="text-sm text-gray-600 mt-1">
                 Berekend op basis van innovatie openheid, hogere prijs bereidheid, en bereidheid traditionele snacks te vervangen
               </p>
             </div>
             <div className="mt-4">
               <p className="font-semibold">Gemiddeld gewenst eiwitgehalte:</p>
-              <p>{gemiddeldeEiwitgehalte}%</p>
+              <p className="text-xl font-medium">{gemiddeldeEiwitgehalte}%</p>
             </div>
             <div className="mt-4">
               <p className="font-semibold">Gemiddelde prijsindicatie:</p>
-              <p>€{gemiddeldePrijs}</p>
+              <p className="text-xl font-medium">€{gemiddeldePrijs}</p>
             </div>
           </div>
         </CardContent>
