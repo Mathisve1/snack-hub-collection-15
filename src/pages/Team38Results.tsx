@@ -1,9 +1,10 @@
 
 import { Helmet } from "react-helmet";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Table as TableIcon, LayoutGrid } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BuyingPersonasTable from "@/features/team-data/components/BuyingPersonasTable";
+import BuyingPersonasCards from "@/features/team-data/components/BuyingPersonasCards";
 import FriturenTable from "@/features/team-data/components/FriturenTable";
 import StreetInterviewsTable from "@/features/team-data/components/StreetInterviewsTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,12 +14,16 @@ import {
   useTeam38StreetInterviews 
 } from "@/features/team-data/hooks/useTeam38Data";
 import { Loader2 } from "lucide-react";
+import { useState } from "react";
 
 const Team38Results = () => {
   const navigate = useNavigate();
   const { data: personas, loading: personasLoading, error: personasError } = useTeam38BuyingPersonas();
   const { data: frituren, loading: friturenLoading, error: friturenError } = useTeam38Frituren();
   const { data: interviews, loading: interviewsLoading, error: interviewsError } = useTeam38StreetInterviews();
+  
+  // State to toggle between table and card view for buying personas
+  const [personasViewMode, setPersonasViewMode] = useState<"table" | "cards">("cards");
 
   // Check if any data is loading or has errors
   const isLoading = personasLoading || friturenLoading || interviewsLoading;
@@ -83,7 +88,34 @@ const Team38Results = () => {
                   </TabsList>
                   
                   <TabsContent value="buyingPersonas">
-                    <BuyingPersonasTable />
+                    <div className="flex justify-end mb-4">
+                      <div className="bg-gray-100 rounded-md p-1 inline-flex">
+                        <Button
+                          variant={personasViewMode === "cards" ? "default" : "ghost"}
+                          size="sm"
+                          onClick={() => setPersonasViewMode("cards")}
+                          className="rounded-md"
+                        >
+                          <LayoutGrid className="h-4 w-4 mr-1" />
+                          Cards
+                        </Button>
+                        <Button
+                          variant={personasViewMode === "table" ? "default" : "ghost"}
+                          size="sm"
+                          onClick={() => setPersonasViewMode("table")}
+                          className="rounded-md"
+                        >
+                          <TableIcon className="h-4 w-4 mr-1" />
+                          Table
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    {personasViewMode === "table" ? (
+                      <BuyingPersonasTable />
+                    ) : (
+                      <BuyingPersonasCards />
+                    )}
                   </TabsContent>
                   
                   <TabsContent value="frituren">
