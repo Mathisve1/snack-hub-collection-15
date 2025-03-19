@@ -64,7 +64,7 @@ export const processFriturenData = (data: Frituur[]): GroupedFrituurData => {
       result.extra_groothandel[frituur.extra_groothandel] = (result.extra_groothandel[frituur.extra_groothandel] || 0) + 1;
     }
 
-    // Process numeric values
+    // Process numeric values - improved handling for both string and number types
     if (frituur.gemiddlede_marges !== null && frituur.gemiddlede_marges !== undefined) {
       const value = typeof frituur.gemiddlede_marges === 'string' 
         ? parseFloat(frituur.gemiddlede_marges) 

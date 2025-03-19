@@ -2,26 +2,22 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StreetInterview } from "../../types";
 import { 
-  processStreetInterviewsData,
-  getMostCommon,
-  calculateBooleanPercentage,
-  formatBreakdown
+  processStreetInterviewsData, 
+  getMostCommon, 
+  calculateBooleanPercentage, 
+  formatBreakdown 
 } from "./StreetInterviewsDataUtils";
 import { 
-  ThumbsUp, 
-  ShoppingBag, 
+  MessageSquare, 
   Store, 
+  Lightbulb, 
   Utensils, 
-  Dumbbell, 
-  PiggyBank, 
-  Palette, 
-  Megaphone, 
-  Coffee, 
-  Cookie, 
-  Flame, 
-  ArrowUpRight, 
-  BarChart,
-  Clock
+  DollarSign, 
+  Package, 
+  Sparkles, 
+  Clock, 
+  Tag, 
+  Droplet 
 } from "lucide-react";
 
 type StreetInterviewsSummaryProps = {
@@ -33,109 +29,66 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
   
   const eersteReactieInfo = getMostCommon(processedData.eerste_reacties);
   const verkoopskanalenInfo = getMostCommon(processedData.verkoopskanalen);
-  const motivatieFrituurInfo = getMostCommon(processedData.motivatie_frituur);
-  const populaireSnacksInfo = getMostCommon(processedData.populaire_snacks);
+  const motivatieInfo = getMostCommon(processedData.motivatie_frituur);
+  const populaireSnackInfo = getMostCommon(processedData.populaire_snacks);
   const eiwitgehalteInfo = getMostCommon(processedData.eiwitgehalte);
   const prijsInfo = getMostCommon(processedData.prijzen);
-  const brandingInfo = getMostCommon(processedData.branding);
-  const marketingInfo = getMostCommon(processedData.marketing);
   const smaakvoorkeurenInfo = getMostCommon(processedData.smaakvoorkeuren);
   const coatingInfo = getMostCommon(processedData.coating);
   const bereidingsvoorkeurInfo = getMostCommon(processedData.bereidingsvoorkeur);
-  const hogerePrijsFactorenInfo = getMostCommon(processedData.hogere_prijs_factoren);
-  const aankoopbarrieresInfo = getMostCommon(processedData.aankoopbarrieres);
-  const frituurbezoekFrequentieInfo = getMostCommon(processedData.frituurbezoek_frequentie);
   const belangKrokantheidInfo = getMostCommon(processedData.belang_krokantheid);
+  const aankoopbarriereInfo = getMostCommon(processedData.aankoopbarrieres);
+  const frequentieInfo = getMostCommon(processedData.frituurbezoek_frequentie);
   
   const innovatieRuimtePercentage = calculateBooleanPercentage(processedData.innovatie_ruimte);
-  const hogerePrijsBereidheidPercentage = calculateBooleanPercentage(processedData.hogere_prijs_bereidheid);
-  const vervangenTraditioneleSnackPercentage = calculateBooleanPercentage(processedData.vervangen_traditionele_snack);
-
+  const hogerePrijsPercentage = calculateBooleanPercentage(processedData.hogere_prijs_bereidheid);
+  const vervangenTraditionalPercentage = calculateBooleanPercentage(processedData.vervangen_traditionele_snack);
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-      {/* Eerste Reacties Card */}
+      {/* Eerste reactie & Verkoopskanalen Card */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center">
-            <ThumbsUp className="h-5 w-5 mr-2 text-blue-500" />
-            Eerste Reacties
+            <MessageSquare className="h-5 w-5 mr-2 text-blue-500" />
+            Eerste Reactie & Verkoopskanalen
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-2">
+          <div className="space-y-4">
             <div>
-              <p className="font-semibold">Meest voorkomende reactie:</p>
+              <p className="font-semibold">Meest voorkomende eerste reactie:</p>
               <p>{eersteReactieInfo.value} ({eersteReactieInfo.percentage}%)</p>
+              <p className="text-sm text-gray-600 mt-1">{formatBreakdown(processedData.eerste_reacties)}</p>
             </div>
             <div>
-              <p className="font-semibold text-sm">Alle reacties:</p>
-              <p className="text-sm text-gray-600">{formatBreakdown(processedData.eerste_reacties)}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Verkoopskanalen Card */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg flex items-center">
-            <ShoppingBag className="h-5 w-5 mr-2 text-green-500" />
-            Verkoopskanalen
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            <div>
-              <p className="font-semibold">Meest genoemde verkoopskanaal:</p>
+              <p className="font-semibold">Populairste verkoopskanalen:</p>
               <p>{verkoopskanalenInfo.value} ({verkoopskanalenInfo.percentage}%)</p>
-            </div>
-            <div>
-              <p className="font-semibold text-sm">Alle verkoopskanalen:</p>
-              <p className="text-sm text-gray-600">{formatBreakdown(processedData.verkoopskanalen)}</p>
+              <p className="text-sm text-gray-600 mt-1">{formatBreakdown(processedData.verkoopskanalen)}</p>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Motivatie Frituur Card */}
+      {/* Motivatie & Populaire Snacks Card */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center">
-            <Store className="h-5 w-5 mr-2 text-purple-500" />
-            Motivatie Frituur
+            <Store className="h-5 w-5 mr-2 text-orange-500" />
+            Motivatie & Populaire Snacks
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-2">
+          <div className="space-y-4">
             <div>
-              <p className="font-semibold">Belangrijkste motivatie:</p>
-              <p>{motivatieFrituurInfo.value} ({motivatieFrituurInfo.percentage}%)</p>
+              <p className="font-semibold">Meest voorkomende motivatie frituur:</p>
+              <p>{motivatieInfo.value} ({motivatieInfo.percentage}%)</p>
+              <p className="text-sm text-gray-600 mt-1">{formatBreakdown(processedData.motivatie_frituur)}</p>
             </div>
             <div>
-              <p className="font-semibold text-sm">Alle motivaties:</p>
-              <p className="text-sm text-gray-600">{formatBreakdown(processedData.motivatie_frituur)}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Populaire Snacks Card */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg flex items-center">
-            <Utensils className="h-5 w-5 mr-2 text-orange-500" />
-            Populaire Snacks
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            <div>
-              <p className="font-semibold">Meest populaire snack:</p>
-              <p>{populaireSnacksInfo.value} ({populaireSnacksInfo.percentage}%)</p>
-            </div>
-            <div>
-              <p className="font-semibold text-sm">Alle populaire snacks:</p>
-              <p className="text-sm text-gray-600">{formatBreakdown(processedData.populaire_snacks)}</p>
+              <p className="font-semibold">Populairste snacks:</p>
+              <p>{populaireSnackInfo.value} ({populaireSnackInfo.percentage}%)</p>
+              <p className="text-sm text-gray-600 mt-1">{formatBreakdown(processedData.populaire_snacks)}</p>
             </div>
           </div>
         </CardContent>
@@ -145,45 +98,21 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center">
-            <Dumbbell className="h-5 w-5 mr-2 text-red-500" />
+            <DollarSign className="h-5 w-5 mr-2 text-green-500" />
             Eiwitgehalte & Prijs
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div>
-              <p className="font-semibold">Voorkeur eiwitgehalte:</p>
+              <p className="font-semibold">Gewenst eiwitgehalte:</p>
               <p>{eiwitgehalteInfo.value} ({eiwitgehalteInfo.percentage}%)</p>
               <p className="text-sm text-gray-600 mt-1">{formatBreakdown(processedData.eiwitgehalte)}</p>
             </div>
             <div>
-              <p className="font-semibold">Prijsperceptie:</p>
+              <p className="font-semibold">Prijsindicatie:</p>
               <p>{prijsInfo.value} ({prijsInfo.percentage}%)</p>
               <p className="text-sm text-gray-600 mt-1">{formatBreakdown(processedData.prijzen)}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Branding & Marketing Card */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg flex items-center">
-            <Megaphone className="h-5 w-5 mr-2 text-pink-500" />
-            Branding & Marketing
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div>
-              <p className="font-semibold">Branding voorkeur:</p>
-              <p>{brandingInfo.value} ({brandingInfo.percentage}%)</p>
-              <p className="text-sm text-gray-600 mt-1">{formatBreakdown(processedData.branding)}</p>
-            </div>
-            <div>
-              <p className="font-semibold">Effectieve marketing:</p>
-              <p>{marketingInfo.value} ({marketingInfo.percentage}%)</p>
-              <p className="text-sm text-gray-600 mt-1">{formatBreakdown(processedData.marketing)}</p>
             </div>
           </div>
         </CardContent>
@@ -193,7 +122,7 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center">
-            <Coffee className="h-5 w-5 mr-2 text-yellow-600" />
+            <Utensils className="h-5 w-5 mr-2 text-purple-500" />
             Smaak & Coating
           </CardTitle>
         </CardHeader>
@@ -213,11 +142,11 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
         </CardContent>
       </Card>
 
-      {/* Bereidingsvoorkeur & Krokantheid Card */}
+      {/* Bereiding & Krokantheid Card */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center">
-            <Flame className="h-5 w-5 mr-2 text-amber-500" />
+            <Package className="h-5 w-5 mr-2 text-red-500" />
             Bereiding & Krokantheid
           </CardTitle>
         </CardHeader>
@@ -237,77 +166,51 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
         </CardContent>
       </Card>
 
-      {/* Prijsgevoeligheid Card */}
+      {/* Aankoopbarrière & Bezoekfrequentie Card */}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center">
-            <PiggyBank className="h-5 w-5 mr-2 text-green-600" />
-            Prijsgevoeligheid
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div>
-              <p className="font-semibold">Bereidheid hogere prijs te betalen:</p>
-              <p>{hogerePrijsBereidheidPercentage} zegt ja</p>
-            </div>
-            <div>
-              <p className="font-semibold">Belangrijkste factoren voor hogere prijs:</p>
-              <p>{hogerePrijsFactorenInfo.value} ({hogerePrijsFactorenInfo.percentage}%)</p>
-              <p className="text-sm text-gray-600 mt-1">{formatBreakdown(processedData.hogere_prijs_factoren)}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Barrières & Frequentie Card */}
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg flex items-center">
-            <Clock className="h-5 w-5 mr-2 text-indigo-500" />
-            Barrières & Frequentie
+            <Clock className="h-5 w-5 mr-2 text-pink-500" />
+            Aankoopbarrière & Bezoekfrequentie
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div>
               <p className="font-semibold">Belangrijkste aankoopbarrière:</p>
-              <p>{aankoopbarrieresInfo.value} ({aankoopbarrieresInfo.percentage}%)</p>
+              <p>{aankoopbarriereInfo.value} ({aankoopbarriereInfo.percentage}%)</p>
               <p className="text-sm text-gray-600 mt-1">{formatBreakdown(processedData.aankoopbarrieres)}</p>
             </div>
             <div>
               <p className="font-semibold">Frituurbezoek frequentie:</p>
-              <p>{frituurbezoekFrequentieInfo.value} ({frituurbezoekFrequentieInfo.percentage}%)</p>
+              <p>{frequentieInfo.value} ({frequentieInfo.percentage}%)</p>
               <p className="text-sm text-gray-600 mt-1">{formatBreakdown(processedData.frituurbezoek_frequentie)}</p>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Innovatie & Vervanging Card */}
+      {/* Innovatie & Hogere Prijs Card */}
       <Card className="md:col-span-2">
         <CardHeader className="pb-2">
           <CardTitle className="text-lg flex items-center">
-            <BarChart className="h-5 w-5 mr-2 text-blue-600" />
-            Innovatie & Bereidheid tot Verandering
+            <Sparkles className="h-5 w-5 mr-2 text-yellow-500" />
+            Bereidheid voor Innovatie & Hogere Prijs
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <p className="font-semibold">Ruimte voor innovatie:</p>
-              <p className="text-2xl font-bold">{innovatieRuimtePercentage}</p>
-              <p className="text-sm text-gray-600">Percentage dat vindt dat er ruimte is voor innovatie</p>
+              <p>{innovatieRuimtePercentage} van respondenten</p>
             </div>
             <div>
-              <p className="font-semibold">Bereidheid hogere prijs te betalen:</p>
-              <p className="text-2xl font-bold">{hogerePrijsBereidheidPercentage}</p>
-              <p className="text-sm text-gray-600">Percentage dat bereid is meer te betalen</p>
+              <p className="font-semibold">Bereidheid hogere prijs:</p>
+              <p>{hogerePrijsPercentage} van respondenten</p>
             </div>
             <div>
-              <p className="font-semibold">Bereidheid traditionele snack te vervangen:</p>
-              <p className="text-2xl font-bold">{vervangenTraditioneleSnackPercentage}</p>
-              <p className="text-sm text-gray-600">Percentage dat bereid is traditionele snack te vervangen</p>
+              <p className="font-semibold">Vervangen traditionele snack:</p>
+              <p>{vervangenTraditionalPercentage} van respondenten</p>
             </div>
           </div>
         </CardContent>

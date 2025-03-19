@@ -23,10 +23,10 @@ export interface Frituur {
   trends_2?: string;
   groothandel?: string;
   extra_groothandel?: string;
-  gemiddlede_marges?: string;
-  absolute_marges?: string;
-  aankoopprijs?: string;
-  aankoopprijs_proteine_snacks?: string;
+  gemiddlede_marges?: string | number;  // Updated to accept both string and number
+  absolute_marges?: string | number;    // Updated to accept both string and number
+  aankoopprijs?: string | number;       // Updated to accept both string and number
+  aankoopprijs_proteine_snacks?: string | number; // Updated to accept both string and number
   belangrijke_factor_1?: string;
   belangrijke_factor_2?: string;
   marketing_1?: string;
