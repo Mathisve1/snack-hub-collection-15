@@ -28,16 +28,20 @@ const BuyingPersonasCards = () => {
   }
 
   if (!data || data.length === 0) {
+    console.log("No data available for buying personas");
     return <EmptyPersonasState />;
   }
 
+  console.log("Raw buying personas data:", data);
+  
   // Process the raw data to match the GroupedPersona format expected by PersonaCardItem
   const groupedPersonas = groupPersonasByName(data);
   
-  // Make sure we have processed data correctly
-  console.log("Grouped personas:", groupedPersonas);
+  // Additional debug logging
+  console.log("Grouped personas result:", groupedPersonas);
   
-  if (groupedPersonas.length === 0) {
+  if (!groupedPersonas || groupedPersonas.length === 0) {
+    console.log("No grouped personas were created");
     return <EmptyPersonasState />;
   }
 

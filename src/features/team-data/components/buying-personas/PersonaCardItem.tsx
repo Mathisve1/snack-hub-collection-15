@@ -16,7 +16,14 @@ type PersonaCardItemProps = {
 };
 
 export const PersonaCardItem = ({ persona, index }: PersonaCardItemProps) => {
-  console.log("Rendering PersonaCardItem:", persona, index);
+  console.log("Rendering PersonaCardItem:", persona.name, index);
+  
+  // Additional verification of persona data
+  if (!persona) {
+    console.error("Received undefined persona");
+    return null;
+  }
+  
   return (
     <Card 
       className={`overflow-hidden border shadow-md hover:shadow-lg transition-shadow ${getCardColor(index)}`}
