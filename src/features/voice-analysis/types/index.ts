@@ -1,15 +1,14 @@
+export type VoiceAnalysisType = 'frituren' | 'interviews' | 'buyer';
 
 export interface VoiceAnalysis {
   id: string;
   team: string;
-  bucket_id: string;
-  file_path: string;
-  transcript: string | null;
-  analysis: string | null;
-  status: 'pending' | 'analyzing' | 'completed' | 'failed';
+  recording_url?: string;
+  transcript?: string;
+  analysis?: string;
+  status: 'pending' | 'processing' | 'completed' | 'failed';
   created_at: string;
   duration_seconds: number;
-  file_name?: string; // Kept for backward compatibility
+  file_path?: string;
+  bucket_id?: string;
 }
-
-export type VoiceAnalysisType = 'frituren' | 'interviews' | 'buyer';

@@ -2,10 +2,11 @@
 import { AudioLines } from "lucide-react";
 import { useRecordings } from "../hooks/useRecordings";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { VoiceAnalysisType } from "../types";
 
 interface RecordingsListProps {
   team: string;
-  type: 'frituren' | 'interviews';
+  type: VoiceAnalysisType;
 }
 
 const RecordingsList = ({ team, type }: RecordingsListProps) => {

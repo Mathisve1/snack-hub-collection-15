@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VoiceRecordingUploader from "./VoiceRecordingUploader";
 import AnalysisResults from "./components/AnalysisResults";
+import { VoiceAnalysisType } from "./types";
 
 interface VoiceAnalysisSectionProps {
   team: string;
@@ -63,7 +64,7 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
               <VoiceRecordingUploader 
                 team={team} 
                 onUploadComplete={handleBuyerUploadComplete}
-                type="buyer"
+                type="buyer" 
               />
             </TabsContent>
           </Tabs>
@@ -90,6 +91,7 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
                 key={`frituren-${refreshFrituren}`}
                 team={team}
                 type="frituren"
+                viewMode="list"
               />
             </TabsContent>
             
@@ -98,6 +100,7 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
                 key={`interviews-${refreshInterviews}`}
                 team={team}
                 type="interviews"
+                viewMode="list"
               />
             </TabsContent>
 
@@ -106,6 +109,7 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
                 key={`buyer-${refreshBuyer}`}
                 team={team}
                 type="buyer"
+                viewMode="list"
               />
             </TabsContent>
           </Tabs>
