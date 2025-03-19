@@ -1,11 +1,10 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useBuyingPersonas } from "../hooks/useTeam38Data";
+import { useTeam38BuyingPersonas } from "../hooks/useTeam38Data";
 import { CheckCircle, XCircle, Loader2 } from "lucide-react";
 
 export const BuyingPersonasTable = () => {
-  const { data: personas, loading, error } = useBuyingPersonas();
+  const { data: personas, loading, error } = useTeam38BuyingPersonas();
 
   if (loading) {
     return (

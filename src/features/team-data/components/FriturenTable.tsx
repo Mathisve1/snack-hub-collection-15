@@ -1,11 +1,10 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useFrituren } from "../hooks/useTeam38Data";
+import { useTeam38Frituren } from "../hooks/useTeam38Data";
 import { Loader2 } from "lucide-react";
 
 export const FriturenTable = () => {
-  const { data: frituren, loading, error } = useFrituren();
+  const { data: frituren, loading, error } = useTeam38Frituren();
 
   if (loading) {
     return (
