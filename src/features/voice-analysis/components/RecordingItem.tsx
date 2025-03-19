@@ -51,7 +51,7 @@ const RecordingItem = ({ recording, audioUrl }: RecordingItemProps) => {
                 </div>
               )}
               
-              {recording.file_path && (
+              {recording.file_path && recording.bucket_id && (
                 <FileDownloader 
                   fileName={recording.file_path} 
                   bucketId={recording.bucket_id} 

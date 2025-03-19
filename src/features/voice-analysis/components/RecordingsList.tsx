@@ -11,6 +11,15 @@ interface RecordingsListProps {
 const RecordingsList = ({ team, type }: RecordingsListProps) => {
   const { recordings, loading } = useRecordings(team, type);
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-40">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-indigo-500"></div>
+        <span className="ml-3 text-gray-600">Loading recordings...</span>
+      </div>
+    );
+  }
+
   if (recordings.length === 0) {
     return (
       <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">

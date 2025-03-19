@@ -211,7 +211,7 @@ export type Database = {
           duration_seconds: number | null
           file_name: string
           id: string
-          recording_url: string | null
+          recording_url: string
           status: string
           team: string
           transcript: string | null
@@ -223,7 +223,7 @@ export type Database = {
           duration_seconds?: number | null
           file_name: string
           id?: string
-          recording_url?: string | null
+          recording_url: string
           status?: string
           team: string
           transcript?: string | null
@@ -235,7 +235,7 @@ export type Database = {
           duration_seconds?: number | null
           file_name?: string
           id?: string
-          recording_url?: string | null
+          recording_url?: string
           status?: string
           team?: string
           transcript?: string | null
@@ -752,6 +752,702 @@ export type Database = {
           id?: string
           selected_at?: string | null
           team?: string
+        }
+        Relationships: []
+      }
+      Team13buyingpersonasforwebsite: {
+        Row: {
+          buying_persona: string
+          consumptie_situatie: string | null
+          frequentie_frituurbezoek: string | null
+          geslacht: string | null
+          id: string
+          leeftijd: string | null
+          marketing: string | null
+          motivatie_kiezen_proteine_snack: string | null
+          openheid_nieuwe_snack: boolean | null
+        }
+        Insert: {
+          buying_persona: string
+          consumptie_situatie?: string | null
+          frequentie_frituurbezoek?: string | null
+          geslacht?: string | null
+          id?: string
+          leeftijd?: string | null
+          marketing?: string | null
+          motivatie_kiezen_proteine_snack?: string | null
+          openheid_nieuwe_snack?: boolean | null
+        }
+        Update: {
+          buying_persona?: string
+          consumptie_situatie?: string | null
+          frequentie_frituurbezoek?: string | null
+          geslacht?: string | null
+          id?: string
+          leeftijd?: string | null
+          marketing?: string | null
+          motivatie_kiezen_proteine_snack?: string | null
+          openheid_nieuwe_snack?: boolean | null
+        }
+        Relationships: []
+      }
+      Team13friturenforwebsite: {
+        Row: {
+          aankoopprijs: string | null
+          aankoopprijs_proteine_snacks: string | null
+          absolute_marges: string | null
+          belangrijke_factor_1: string | null
+          belangrijke_factor_2: string | null
+          bereidheid_aanbieden: string | null
+          bestseller_1: string
+          bestseller_2: string | null
+          bestseller_3: string | null
+          extra_groothandel: string | null
+          gemiddlede_marges: string | null
+          groothandel: string | null
+          id: string
+          marketing_1: string | null
+          marketing_2: string | null
+          trends_1: string | null
+          trends_2: string | null
+          waarom_niet_verkopen: string | null
+          waarom_niet_verkopen_2: string | null
+        }
+        Insert: {
+          aankoopprijs?: string | null
+          aankoopprijs_proteine_snacks?: string | null
+          absolute_marges?: string | null
+          belangrijke_factor_1?: string | null
+          belangrijke_factor_2?: string | null
+          bereidheid_aanbieden?: string | null
+          bestseller_1: string
+          bestseller_2?: string | null
+          bestseller_3?: string | null
+          extra_groothandel?: string | null
+          gemiddlede_marges?: string | null
+          groothandel?: string | null
+          id?: string
+          marketing_1?: string | null
+          marketing_2?: string | null
+          trends_1?: string | null
+          trends_2?: string | null
+          waarom_niet_verkopen?: string | null
+          waarom_niet_verkopen_2?: string | null
+        }
+        Update: {
+          aankoopprijs?: string | null
+          aankoopprijs_proteine_snacks?: string | null
+          absolute_marges?: string | null
+          belangrijke_factor_1?: string | null
+          belangrijke_factor_2?: string | null
+          bereidheid_aanbieden?: string | null
+          bestseller_1?: string
+          bestseller_2?: string | null
+          bestseller_3?: string | null
+          extra_groothandel?: string | null
+          gemiddlede_marges?: string | null
+          groothandel?: string | null
+          id?: string
+          marketing_1?: string | null
+          marketing_2?: string | null
+          trends_1?: string | null
+          trends_2?: string | null
+          waarom_niet_verkopen?: string | null
+          waarom_niet_verkopen_2?: string | null
+        }
+        Relationships: []
+      }
+      Team13streetinterviewsforwebsite: {
+        Row: {
+          belang_van_krokantheid: string | null
+          belangrijkst_aankoopbariere: string | null
+          bereidingsvoorkeur: string | null
+          branding: string | null
+          eerste_reactie: string | null
+          eiwitgehalte: string | null
+          frituurbezoek_frequentie: string
+          hogere_prijs: boolean | null
+          hogere_prijs_factoren: string | null
+          id: string
+          marketing_1: string | null
+          marketing_2: string | null
+          motivatie_frituur: string | null
+          populaire_snack_1: string | null
+          populaire_snack_2: string | null
+          prijs: string | null
+          ruimte_voor_innovatie: boolean | null
+          smaakvoorkeuren: string | null
+          verkoopskanalen: string | null
+          vervangen_traditionele_snack: boolean | null
+          welke_coating: string | null
+        }
+        Insert: {
+          belang_van_krokantheid?: string | null
+          belangrijkst_aankoopbariere?: string | null
+          bereidingsvoorkeur?: string | null
+          branding?: string | null
+          eerste_reactie?: string | null
+          eiwitgehalte?: string | null
+          frituurbezoek_frequentie: string
+          hogere_prijs?: boolean | null
+          hogere_prijs_factoren?: string | null
+          id?: string
+          marketing_1?: string | null
+          marketing_2?: string | null
+          motivatie_frituur?: string | null
+          populaire_snack_1?: string | null
+          populaire_snack_2?: string | null
+          prijs?: string | null
+          ruimte_voor_innovatie?: boolean | null
+          smaakvoorkeuren?: string | null
+          verkoopskanalen?: string | null
+          vervangen_traditionele_snack?: boolean | null
+          welke_coating?: string | null
+        }
+        Update: {
+          belang_van_krokantheid?: string | null
+          belangrijkst_aankoopbariere?: string | null
+          bereidingsvoorkeur?: string | null
+          branding?: string | null
+          eerste_reactie?: string | null
+          eiwitgehalte?: string | null
+          frituurbezoek_frequentie?: string
+          hogere_prijs?: boolean | null
+          hogere_prijs_factoren?: string | null
+          id?: string
+          marketing_1?: string | null
+          marketing_2?: string | null
+          motivatie_frituur?: string | null
+          populaire_snack_1?: string | null
+          populaire_snack_2?: string | null
+          prijs?: string | null
+          ruimte_voor_innovatie?: boolean | null
+          smaakvoorkeuren?: string | null
+          verkoopskanalen?: string | null
+          vervangen_traditionele_snack?: boolean | null
+          welke_coating?: string | null
+        }
+        Relationships: []
+      }
+      Team14buyingpersonasforwebsite: {
+        Row: {
+          buying_persona: string
+          consumptie_situatie: string | null
+          frequentie_frituurbezoek: string | null
+          geslacht: string | null
+          id: string
+          leeftijd: string | null
+          marketing: string | null
+          motivatie_kiezen_proteine_snack: string | null
+          openheid_nieuwe_snack: boolean | null
+        }
+        Insert: {
+          buying_persona: string
+          consumptie_situatie?: string | null
+          frequentie_frituurbezoek?: string | null
+          geslacht?: string | null
+          id?: string
+          leeftijd?: string | null
+          marketing?: string | null
+          motivatie_kiezen_proteine_snack?: string | null
+          openheid_nieuwe_snack?: boolean | null
+        }
+        Update: {
+          buying_persona?: string
+          consumptie_situatie?: string | null
+          frequentie_frituurbezoek?: string | null
+          geslacht?: string | null
+          id?: string
+          leeftijd?: string | null
+          marketing?: string | null
+          motivatie_kiezen_proteine_snack?: string | null
+          openheid_nieuwe_snack?: boolean | null
+        }
+        Relationships: []
+      }
+      Team14friturenforwebsite: {
+        Row: {
+          aankoopprijs: string | null
+          aankoopprijs_proteine_snacks: string | null
+          absolute_marges: string | null
+          belangrijke_factor_1: string | null
+          belangrijke_factor_2: string | null
+          bereidheid_aanbieden: string | null
+          bestseller_1: string
+          bestseller_2: string | null
+          bestseller_3: string | null
+          extra_groothandel: string | null
+          gemiddlede_marges: string | null
+          groothandel: string | null
+          id: string
+          marketing_1: string | null
+          marketing_2: string | null
+          trends_1: string | null
+          trends_2: string | null
+          waarom_niet_verkopen: string | null
+          waarom_niet_verkopen_2: string | null
+        }
+        Insert: {
+          aankoopprijs?: string | null
+          aankoopprijs_proteine_snacks?: string | null
+          absolute_marges?: string | null
+          belangrijke_factor_1?: string | null
+          belangrijke_factor_2?: string | null
+          bereidheid_aanbieden?: string | null
+          bestseller_1: string
+          bestseller_2?: string | null
+          bestseller_3?: string | null
+          extra_groothandel?: string | null
+          gemiddlede_marges?: string | null
+          groothandel?: string | null
+          id?: string
+          marketing_1?: string | null
+          marketing_2?: string | null
+          trends_1?: string | null
+          trends_2?: string | null
+          waarom_niet_verkopen?: string | null
+          waarom_niet_verkopen_2?: string | null
+        }
+        Update: {
+          aankoopprijs?: string | null
+          aankoopprijs_proteine_snacks?: string | null
+          absolute_marges?: string | null
+          belangrijke_factor_1?: string | null
+          belangrijke_factor_2?: string | null
+          bereidheid_aanbieden?: string | null
+          bestseller_1?: string
+          bestseller_2?: string | null
+          bestseller_3?: string | null
+          extra_groothandel?: string | null
+          gemiddlede_marges?: string | null
+          groothandel?: string | null
+          id?: string
+          marketing_1?: string | null
+          marketing_2?: string | null
+          trends_1?: string | null
+          trends_2?: string | null
+          waarom_niet_verkopen?: string | null
+          waarom_niet_verkopen_2?: string | null
+        }
+        Relationships: []
+      }
+      Team14streetinterviewsforwebsite: {
+        Row: {
+          belang_van_krokantheid: string | null
+          belangrijkst_aankoopbariere: string | null
+          bereidingsvoorkeur: string | null
+          branding: string | null
+          eerste_reactie: string | null
+          eiwitgehalte: string | null
+          frituurbezoek_frequentie: string
+          hogere_prijs: boolean | null
+          hogere_prijs_factoren: string | null
+          id: string
+          marketing_1: string | null
+          marketing_2: string | null
+          motivatie_frituur: string | null
+          populaire_snack_1: string | null
+          populaire_snack_2: string | null
+          prijs: string | null
+          ruimte_voor_innovatie: boolean | null
+          smaakvoorkeuren: string | null
+          verkoopskanalen: string | null
+          vervangen_traditionele_snack: boolean | null
+          welke_coating: string | null
+        }
+        Insert: {
+          belang_van_krokantheid?: string | null
+          belangrijkst_aankoopbariere?: string | null
+          bereidingsvoorkeur?: string | null
+          branding?: string | null
+          eerste_reactie?: string | null
+          eiwitgehalte?: string | null
+          frituurbezoek_frequentie: string
+          hogere_prijs?: boolean | null
+          hogere_prijs_factoren?: string | null
+          id?: string
+          marketing_1?: string | null
+          marketing_2?: string | null
+          motivatie_frituur?: string | null
+          populaire_snack_1?: string | null
+          populaire_snack_2?: string | null
+          prijs?: string | null
+          ruimte_voor_innovatie?: boolean | null
+          smaakvoorkeuren?: string | null
+          verkoopskanalen?: string | null
+          vervangen_traditionele_snack?: boolean | null
+          welke_coating?: string | null
+        }
+        Update: {
+          belang_van_krokantheid?: string | null
+          belangrijkst_aankoopbariere?: string | null
+          bereidingsvoorkeur?: string | null
+          branding?: string | null
+          eerste_reactie?: string | null
+          eiwitgehalte?: string | null
+          frituurbezoek_frequentie?: string
+          hogere_prijs?: boolean | null
+          hogere_prijs_factoren?: string | null
+          id?: string
+          marketing_1?: string | null
+          marketing_2?: string | null
+          motivatie_frituur?: string | null
+          populaire_snack_1?: string | null
+          populaire_snack_2?: string | null
+          prijs?: string | null
+          ruimte_voor_innovatie?: boolean | null
+          smaakvoorkeuren?: string | null
+          verkoopskanalen?: string | null
+          vervangen_traditionele_snack?: boolean | null
+          welke_coating?: string | null
+        }
+        Relationships: []
+      }
+      Team38buyingpersonasforwebsite: {
+        Row: {
+          buying_persona: string
+          consumptie_situatie: string | null
+          frequentie_frituurbezoek: string | null
+          geslacht: string | null
+          id: string
+          leeftijd: string | null
+          marketing: string | null
+          motivatie_kiezen_proteine_snack: string | null
+          openheid_nieuwe_snack: boolean | null
+        }
+        Insert: {
+          buying_persona: string
+          consumptie_situatie?: string | null
+          frequentie_frituurbezoek?: string | null
+          geslacht?: string | null
+          id?: string
+          leeftijd?: string | null
+          marketing?: string | null
+          motivatie_kiezen_proteine_snack?: string | null
+          openheid_nieuwe_snack?: boolean | null
+        }
+        Update: {
+          buying_persona?: string
+          consumptie_situatie?: string | null
+          frequentie_frituurbezoek?: string | null
+          geslacht?: string | null
+          id?: string
+          leeftijd?: string | null
+          marketing?: string | null
+          motivatie_kiezen_proteine_snack?: string | null
+          openheid_nieuwe_snack?: boolean | null
+        }
+        Relationships: []
+      }
+      Team38friturenforwebsite: {
+        Row: {
+          aankoopprijs: string | null
+          aankoopprijs_proteine_snacks: string | null
+          absolute_marges: string | null
+          belangrijke_factor_1: string | null
+          belangrijke_factor_2: string | null
+          bereidheid_aanbieden: string | null
+          bestseller_1: string
+          bestseller_2: string | null
+          bestseller_3: string | null
+          extra_groothandel: string | null
+          gemiddlede_marges: string | null
+          groothandel: string | null
+          id: string
+          marketing_1: string | null
+          marketing_2: string | null
+          trends_1: string | null
+          trends_2: string | null
+          waarom_niet_verkopen: string | null
+          waarom_niet_verkopen_2: string | null
+        }
+        Insert: {
+          aankoopprijs?: string | null
+          aankoopprijs_proteine_snacks?: string | null
+          absolute_marges?: string | null
+          belangrijke_factor_1?: string | null
+          belangrijke_factor_2?: string | null
+          bereidheid_aanbieden?: string | null
+          bestseller_1: string
+          bestseller_2?: string | null
+          bestseller_3?: string | null
+          extra_groothandel?: string | null
+          gemiddlede_marges?: string | null
+          groothandel?: string | null
+          id?: string
+          marketing_1?: string | null
+          marketing_2?: string | null
+          trends_1?: string | null
+          trends_2?: string | null
+          waarom_niet_verkopen?: string | null
+          waarom_niet_verkopen_2?: string | null
+        }
+        Update: {
+          aankoopprijs?: string | null
+          aankoopprijs_proteine_snacks?: string | null
+          absolute_marges?: string | null
+          belangrijke_factor_1?: string | null
+          belangrijke_factor_2?: string | null
+          bereidheid_aanbieden?: string | null
+          bestseller_1?: string
+          bestseller_2?: string | null
+          bestseller_3?: string | null
+          extra_groothandel?: string | null
+          gemiddlede_marges?: string | null
+          groothandel?: string | null
+          id?: string
+          marketing_1?: string | null
+          marketing_2?: string | null
+          trends_1?: string | null
+          trends_2?: string | null
+          waarom_niet_verkopen?: string | null
+          waarom_niet_verkopen_2?: string | null
+        }
+        Relationships: []
+      }
+      Team38streetinterviewsforwebsite: {
+        Row: {
+          belang_van_krokantheid: string | null
+          belangrijkst_aankoopbariere: string | null
+          bereidingsvoorkeur: string | null
+          branding: string | null
+          eerste_reactie: string | null
+          eiwitgehalte: string | null
+          frituurbezoek_frequentie: string
+          hogere_prijs: boolean | null
+          hogere_prijs_factoren: string | null
+          id: string
+          marketing_1: string | null
+          marketing_2: string | null
+          motivatie_frituur: string | null
+          populaire_snack_1: string | null
+          populaire_snack_2: string | null
+          prijs: string | null
+          ruimte_voor_innovatie: boolean | null
+          smaakvoorkeuren: string | null
+          verkoopskanalen: string | null
+          vervangen_traditionele_snack: boolean | null
+          welke_coating: string | null
+        }
+        Insert: {
+          belang_van_krokantheid?: string | null
+          belangrijkst_aankoopbariere?: string | null
+          bereidingsvoorkeur?: string | null
+          branding?: string | null
+          eerste_reactie?: string | null
+          eiwitgehalte?: string | null
+          frituurbezoek_frequentie: string
+          hogere_prijs?: boolean | null
+          hogere_prijs_factoren?: string | null
+          id?: string
+          marketing_1?: string | null
+          marketing_2?: string | null
+          motivatie_frituur?: string | null
+          populaire_snack_1?: string | null
+          populaire_snack_2?: string | null
+          prijs?: string | null
+          ruimte_voor_innovatie?: boolean | null
+          smaakvoorkeuren?: string | null
+          verkoopskanalen?: string | null
+          vervangen_traditionele_snack?: boolean | null
+          welke_coating?: string | null
+        }
+        Update: {
+          belang_van_krokantheid?: string | null
+          belangrijkst_aankoopbariere?: string | null
+          bereidingsvoorkeur?: string | null
+          branding?: string | null
+          eerste_reactie?: string | null
+          eiwitgehalte?: string | null
+          frituurbezoek_frequentie?: string
+          hogere_prijs?: boolean | null
+          hogere_prijs_factoren?: string | null
+          id?: string
+          marketing_1?: string | null
+          marketing_2?: string | null
+          motivatie_frituur?: string | null
+          populaire_snack_1?: string | null
+          populaire_snack_2?: string | null
+          prijs?: string | null
+          ruimte_voor_innovatie?: boolean | null
+          smaakvoorkeuren?: string | null
+          verkoopskanalen?: string | null
+          vervangen_traditionele_snack?: boolean | null
+          welke_coating?: string | null
+        }
+        Relationships: []
+      }
+      Team3buyingpersonasforwebsite: {
+        Row: {
+          buying_persona: string
+          consumptie_situatie: string | null
+          frequentie_frituurbezoek: string | null
+          geslacht: string | null
+          id: string
+          leeftijd: string | null
+          marketing: string | null
+          motivatie_kiezen_proteine_snack: string | null
+          openheid_nieuwe_snack: boolean | null
+        }
+        Insert: {
+          buying_persona: string
+          consumptie_situatie?: string | null
+          frequentie_frituurbezoek?: string | null
+          geslacht?: string | null
+          id?: string
+          leeftijd?: string | null
+          marketing?: string | null
+          motivatie_kiezen_proteine_snack?: string | null
+          openheid_nieuwe_snack?: boolean | null
+        }
+        Update: {
+          buying_persona?: string
+          consumptie_situatie?: string | null
+          frequentie_frituurbezoek?: string | null
+          geslacht?: string | null
+          id?: string
+          leeftijd?: string | null
+          marketing?: string | null
+          motivatie_kiezen_proteine_snack?: string | null
+          openheid_nieuwe_snack?: boolean | null
+        }
+        Relationships: []
+      }
+      Team3friturenforwebsite: {
+        Row: {
+          aankoopprijs: string | null
+          aankoopprijs_proteine_snacks: string | null
+          absolute_marges: string | null
+          belangrijke_factor_1: string | null
+          belangrijke_factor_2: string | null
+          bereidheid_aanbieden: string | null
+          bestseller_1: string
+          bestseller_2: string | null
+          bestseller_3: string | null
+          extra_groothandel: string | null
+          gemiddlede_marges: string | null
+          groothandel: string | null
+          id: string
+          marketing_1: string | null
+          marketing_2: string | null
+          trends_1: string | null
+          trends_2: string | null
+          waarom_niet_verkopen: string | null
+          waarom_niet_verkopen_2: string | null
+        }
+        Insert: {
+          aankoopprijs?: string | null
+          aankoopprijs_proteine_snacks?: string | null
+          absolute_marges?: string | null
+          belangrijke_factor_1?: string | null
+          belangrijke_factor_2?: string | null
+          bereidheid_aanbieden?: string | null
+          bestseller_1: string
+          bestseller_2?: string | null
+          bestseller_3?: string | null
+          extra_groothandel?: string | null
+          gemiddlede_marges?: string | null
+          groothandel?: string | null
+          id?: string
+          marketing_1?: string | null
+          marketing_2?: string | null
+          trends_1?: string | null
+          trends_2?: string | null
+          waarom_niet_verkopen?: string | null
+          waarom_niet_verkopen_2?: string | null
+        }
+        Update: {
+          aankoopprijs?: string | null
+          aankoopprijs_proteine_snacks?: string | null
+          absolute_marges?: string | null
+          belangrijke_factor_1?: string | null
+          belangrijke_factor_2?: string | null
+          bereidheid_aanbieden?: string | null
+          bestseller_1?: string
+          bestseller_2?: string | null
+          bestseller_3?: string | null
+          extra_groothandel?: string | null
+          gemiddlede_marges?: string | null
+          groothandel?: string | null
+          id?: string
+          marketing_1?: string | null
+          marketing_2?: string | null
+          trends_1?: string | null
+          trends_2?: string | null
+          waarom_niet_verkopen?: string | null
+          waarom_niet_verkopen_2?: string | null
+        }
+        Relationships: []
+      }
+      Team3streetinterviewsforwebsite: {
+        Row: {
+          belang_van_krokantheid: string | null
+          belangrijkst_aankoopbariere: string | null
+          bereidingsvoorkeur: string | null
+          branding: string | null
+          eerste_reactie: string | null
+          eiwitgehalte: string | null
+          frituurbezoek_frequentie: string
+          hogere_prijs: boolean | null
+          hogere_prijs_factoren: string | null
+          id: string
+          marketing_1: string | null
+          marketing_2: string | null
+          motivatie_frituur: string | null
+          populaire_snack_1: string | null
+          populaire_snack_2: string | null
+          prijs: string | null
+          ruimte_voor_innovatie: boolean | null
+          smaakvoorkeuren: string | null
+          verkoopskanalen: string | null
+          vervangen_traditionele_snack: boolean | null
+          welke_coating: string | null
+        }
+        Insert: {
+          belang_van_krokantheid?: string | null
+          belangrijkst_aankoopbariere?: string | null
+          bereidingsvoorkeur?: string | null
+          branding?: string | null
+          eerste_reactie?: string | null
+          eiwitgehalte?: string | null
+          frituurbezoek_frequentie: string
+          hogere_prijs?: boolean | null
+          hogere_prijs_factoren?: string | null
+          id?: string
+          marketing_1?: string | null
+          marketing_2?: string | null
+          motivatie_frituur?: string | null
+          populaire_snack_1?: string | null
+          populaire_snack_2?: string | null
+          prijs?: string | null
+          ruimte_voor_innovatie?: boolean | null
+          smaakvoorkeuren?: string | null
+          verkoopskanalen?: string | null
+          vervangen_traditionele_snack?: boolean | null
+          welke_coating?: string | null
+        }
+        Update: {
+          belang_van_krokantheid?: string | null
+          belangrijkst_aankoopbariere?: string | null
+          bereidingsvoorkeur?: string | null
+          branding?: string | null
+          eerste_reactie?: string | null
+          eiwitgehalte?: string | null
+          frituurbezoek_frequentie?: string
+          hogere_prijs?: boolean | null
+          hogere_prijs_factoren?: string | null
+          id?: string
+          marketing_1?: string | null
+          marketing_2?: string | null
+          motivatie_frituur?: string | null
+          populaire_snack_1?: string | null
+          populaire_snack_2?: string | null
+          prijs?: string | null
+          ruimte_voor_innovatie?: boolean | null
+          smaakvoorkeuren?: string | null
+          verkoopskanalen?: string | null
+          vervangen_traditionele_snack?: boolean | null
+          welke_coating?: string | null
         }
         Relationships: []
       }
