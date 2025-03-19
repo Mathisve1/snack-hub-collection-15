@@ -79,6 +79,19 @@ export const PersonaCardItem = ({ personaType, personaCount, personas, index }: 
 
   // Calculate total count for percentage calculations
   const totalGenderCount = Object.values(genders).reduce((sum, count) => sum + count, 0);
+  const totalFrequencyCount = Object.values(frequencyData).reduce((sum, count) => sum + count, 0);
+  const totalConsumptionCount = Object.values(consumptionData).reduce((sum, count) => sum + count, 0);
+  const totalMotivationCount = Object.values(motivationData).reduce((sum, count) => sum + count, 0);
+  
+  // Find the most common values
+  const getMostCommonValue = (data: Record<string, number>) => {
+    if (Object.keys(data).length === 0) return '';
+    return Object.entries(data).reduce((a, b) => a[1] > b[1] ? a : b)[0];
+  };
+  
+  const mostCommonFrequency = getMostCommonValue(frequencyData);
+  const mostCommonConsumption = getMostCommonValue(consumptionData);
+  const mostCommonMotivation = getMostCommonValue(motivationData);
   
   return (
     <Card 
@@ -145,9 +158,14 @@ export const PersonaCardItem = ({ personaType, personaCount, personas, index }: 
         <div>
           <h4 className="font-medium text-gray-700 mb-1">Frequentie Frituurbezoek</h4>
           <div className="text-gray-600">
-            {Object.entries(frequencyData).map(([freq, count], i) => (
-              <div key={freq}>{freq}: {count}</div>
-            ))}
+            {Object.entries(frequencyData).map(([freq, count], i) => {
+              const percentage = Math.round((count / totalFrequencyCount) * 100);
+              return (
+                <div key={freq} className={freq === mostCommonFrequency ? "font-bold" : ""}>
+                  {freq}: {count} ({percentage}%)
+                </div>
+              );
+            })}
           </div>
         </div>
         
@@ -155,9 +173,14 @@ export const PersonaCardItem = ({ personaType, personaCount, personas, index }: 
         <div>
           <h4 className="font-medium text-gray-700 mb-1">Consumptie Situatie</h4>
           <div className="text-gray-600">
-            {Object.entries(consumptionData).map(([situation, count], i) => (
-              <div key={situation}>{situation}: {count}</div>
-            ))}
+            {Object.entries(consumptionData).map(([situation, count], i) => {
+              const percentage = Math.round((count / totalConsumptionCount) * 100);
+              return (
+                <div key={situation} className={situation === mostCommonConsumption ? "font-bold" : ""}>
+                  {situation !== 'onbekend' ? situation : 'Onbekend'}: {count} ({percentage}%)
+                </div>
+              );
+            })}
           </div>
         </div>
         
@@ -165,9 +188,14 @@ export const PersonaCardItem = ({ personaType, personaCount, personas, index }: 
         <div>
           <h4 className="font-medium text-gray-700 mb-1">Motivatie voor Proteïne Snack</h4>
           <div className="text-gray-600">
-            {Object.entries(motivationData).map(([motivation, count], i) => (
-              <div key={motivation}>{motivation !== 'onbekend' ? motivation : 'Onbekend'}: {count}</div>
-            ))}
+            {Object.entries(motivationData).map(([motivation, count], i) => {
+              const percentage = Math.round((count / totalMotivationCount) * 100);
+              return (
+                <div key={motivation} className={motivation === mostCommonMotivation ? "font-bold" : ""}>
+                  {motivation !== 'onbekend' ? motivation : 'Onbekend'}: {count} ({percentage}%)
+                </div>
+              );
+            })}
           </div>
         </div>
         
@@ -183,4 +211,3 @@ export const PersonaCardItem = ({ personaType, personaCount, personas, index }: 
     </Card>
   );
 };
-
