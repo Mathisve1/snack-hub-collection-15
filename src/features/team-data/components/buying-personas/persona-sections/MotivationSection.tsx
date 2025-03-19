@@ -1,23 +1,28 @@
 
 import { Target } from "lucide-react";
-import { getMotivationInfo } from "../utils/personaDisplayUtils";
+import { getMostCommonValue } from "../utils/personaDataUtils";
 
 type MotivationSectionProps = {
   motivation: Record<string, number>;
 };
 
 export const MotivationSection = ({ motivation }: MotivationSectionProps) => {
-  const motivationInfo = getMotivationInfo(motivation);
+  // Calculate total count for percentage calculations
+  const totalMotivationCount = Object.values(motivation).reduce((sum, count) => sum + count, 0);
+  const mostCommonMotivation = getMostCommonValue(motivation);
   
   return (
-    <div className="flex items-start">
-      <Target className="h-5 w-5 mr-2 text-indigo-500 shrink-0 mt-0.5" />
-      <div>
-        <p className="font-semibold">Motivatie</p>
-        <p className="font-medium">Meest voorkomend: {motivationInfo.mostCommon}</p>
-        {motivationInfo.breakdown && (
-          <p className="text-xs text-gray-600 mt-1">{motivationInfo.breakdown}</p>
-        )}
+    <div>
+      <h4 className="font-medium text-gray-700 mb-1">Motivatie voor Proteïne Snack</h4>
+      <div className="text-gray-600">
+        {Object.entries(motivation).map(([motivation, count], i) => {
+          const percentage = Math.round((count / totalMotivationCount) * 100);
+          return (
+            <div key={motivation} className={motivation === mostCommonMotivation ? "font-bold" : ""}>
+              {motivation !== 'onbekend' ? motivation : 'Onbekend'}: {count} ({percentage}%)
+            </div>
+          );
+        })}
       </div>
     </div>
   );

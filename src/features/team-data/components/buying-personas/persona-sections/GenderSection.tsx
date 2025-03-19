@@ -1,23 +1,26 @@
 
 import { Users } from "lucide-react";
-import { getGenderDistribution, getMostCommon } from "../utils/personaDisplayUtils";
 
 type GenderSectionProps = {
   genders: Record<string, number>;
 };
 
 export const GenderSection = ({ genders }: GenderSectionProps) => {
-  const geslacht = getMostCommon(genders);
-  const genderDistribution = getGenderDistribution(genders);
+  // Calculate total count for percentage calculations
+  const totalGenderCount = Object.values(genders).reduce((sum, count) => sum + count, 0);
   
   return (
-    <div className="flex items-start">
-      <Users className="h-5 w-5 mr-2 text-blue-500 shrink-0 mt-0.5" />
-      <div>
-        <p className="font-semibold">Geslacht</p>
-        <p>
-          {geslacht.value} ({geslacht.percentage}%) | Vrouw: {genderDistribution.vrouw}%
-        </p>
+    <div>
+      <h4 className="font-medium text-gray-700 mb-1">Geslacht</h4>
+      <div className="text-gray-600">
+        {Object.entries(genders).map(([gender, count], i) => {
+          const percentage = Math.round((count / totalGenderCount) * 100);
+          return (
+            <div key={gender}>
+              {gender.charAt(0).toUpperCase() + gender.slice(1)}: {count} ({percentage}%)
+            </div>
+          );
+        })}
       </div>
     </div>
   );
