@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Calendar, Repeat, ShoppingBag, Heart, Target } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
@@ -71,6 +72,17 @@ export const PersonaCardItem = ({ persona, index }: PersonaCardItemProps) => {
     return `${percentage}% (${data.ja}/${data.total})`;
   };
 
+  // Get gender distribution
+  const getGenderDistribution = (genders: Record<string, number>) => {
+    if (Object.keys(genders).length === 0) return { vrouw: 0 };
+    
+    const total = Object.values(genders).reduce((sum, count) => sum + count, 0);
+    const vrouwCount = genders["vrouw"] || 0;
+    const vrouwPercentage = Math.round((vrouwCount / total) * 100);
+    
+    return { vrouw: vrouwPercentage };
+  };
+
   // Card background colors based on persona types
   const getCardColor = (cardIndex: number) => {
     const colors = [
@@ -88,6 +100,7 @@ export const PersonaCardItem = ({ persona, index }: PersonaCardItemProps) => {
   const frequentie = getMostCommon(persona.frequentie_frituurbezoek);
   const consumptie = getMostCommon(persona.consumptie_situatie);
   const motivatie = getMostCommon(persona.motivatie_kiezen_proteine_snack);
+  const genderDistribution = getGenderDistribution(persona.geslacht);
 
   return (
     <Card 
@@ -107,7 +120,9 @@ export const PersonaCardItem = ({ persona, index }: PersonaCardItemProps) => {
           <Users className="h-5 w-5 mr-2 text-blue-500 shrink-0 mt-0.5" />
           <div>
             <p className="font-semibold">Geslacht</p>
-            <p>{geslacht.value} ({geslacht.percentage}%)</p>
+            <p>
+              {geslacht.value} ({geslacht.percentage}%) | Vrouw: {genderDistribution.vrouw}%
+            </p>
           </div>
         </div>
         
