@@ -11,7 +11,7 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
     const fetchRecordings = async () => {
       setLoading(true);
       try {
-        let tableName: string;
+        let tableName = "";
         
         // Determine the correct table name based on type
         if (type === 'frituren') {
@@ -38,8 +38,21 @@ export const useRecordings = (team: string, type: VoiceAnalysisType) => {
           throw error;
         }
 
-        // Type assertion to ensure the data conforms to VoiceAnalysis[]
-        setRecordings((data || []) as unknown as VoiceAnalysis[]);
+        // Explicitly cast the data to match VoiceAnalysis type
+        const typedData = (data || []).map(item => ({
+          id: item.id,
+          team: item.team,
+          recording_url: item.recording_url,
+          transcript: item.transcript,
+          analysis: item.analysis,
+          status: item.status,
+          created_at: item.created_at,
+          duration_seconds: item.duration_seconds,
+          file_path: item.file_name, // Map file_name to file_path
+          bucket_id: item.bucket_id
+        })) as VoiceAnalysis[];
+
+        setRecordings(typedData);
       } catch (error) {
         console.error("Error in useRecordings:", error);
         setRecordings([]);

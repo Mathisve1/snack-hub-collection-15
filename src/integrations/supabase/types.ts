@@ -326,11 +326,11 @@ export type Database = {
           bucket_id: string | null
           created_at: string | null
           duration_seconds: number | null
-          file_name: string
+          file_name: string | null
           id: string
           recording_url: string | null
           status: string
-          team: string
+          team: string | null
           transcript: string | null
         }
         Insert: {
@@ -338,11 +338,11 @@ export type Database = {
           bucket_id?: string | null
           created_at?: string | null
           duration_seconds?: number | null
-          file_name: string
+          file_name?: string | null
           id?: string
           recording_url?: string | null
           status?: string
-          team: string
+          team?: string | null
           transcript?: string | null
         }
         Update: {
@@ -350,11 +350,11 @@ export type Database = {
           bucket_id?: string | null
           created_at?: string | null
           duration_seconds?: number | null
-          file_name?: string
+          file_name?: string | null
           id?: string
           recording_url?: string | null
           status?: string
-          team?: string
+          team?: string | null
           transcript?: string | null
         }
         Relationships: []
@@ -443,11 +443,11 @@ export type Database = {
           bucket_id: string | null
           created_at: string | null
           duration_seconds: number | null
-          file_name: string
+          file_name: string | null
           id: string
           recording_url: string | null
           status: string
-          team: string
+          team: string | null
           transcript: string | null
         }
         Insert: {
@@ -455,11 +455,11 @@ export type Database = {
           bucket_id?: string | null
           created_at?: string | null
           duration_seconds?: number | null
-          file_name: string
+          file_name?: string | null
           id?: string
           recording_url?: string | null
           status?: string
-          team: string
+          team?: string | null
           transcript?: string | null
         }
         Update: {
@@ -467,11 +467,11 @@ export type Database = {
           bucket_id?: string | null
           created_at?: string | null
           duration_seconds?: number | null
-          file_name?: string
+          file_name?: string | null
           id?: string
           recording_url?: string | null
           status?: string
-          team?: string
+          team?: string | null
           transcript?: string | null
         }
         Relationships: []
@@ -560,11 +560,11 @@ export type Database = {
           bucket_id: string | null
           created_at: string | null
           duration_seconds: number | null
-          file_name: string
+          file_name: string | null
           id: string
           recording_url: string | null
           status: string
-          team: string
+          team: string | null
           transcript: string | null
         }
         Insert: {
@@ -572,11 +572,11 @@ export type Database = {
           bucket_id?: string | null
           created_at?: string | null
           duration_seconds?: number | null
-          file_name: string
+          file_name?: string | null
           id?: string
           recording_url?: string | null
           status?: string
-          team: string
+          team?: string | null
           transcript?: string | null
         }
         Update: {
@@ -584,11 +584,11 @@ export type Database = {
           bucket_id?: string | null
           created_at?: string | null
           duration_seconds?: number | null
-          file_name?: string
+          file_name?: string | null
           id?: string
           recording_url?: string | null
           status?: string
-          team?: string
+          team?: string | null
           transcript?: string | null
         }
         Relationships: []
@@ -677,11 +677,11 @@ export type Database = {
           bucket_id: string | null
           created_at: string | null
           duration_seconds: number | null
-          file_name: string
+          file_name: string | null
           id: string
           recording_url: string | null
           status: string
-          team: string
+          team: string | null
           transcript: string | null
         }
         Insert: {
@@ -689,11 +689,11 @@ export type Database = {
           bucket_id?: string | null
           created_at?: string | null
           duration_seconds?: number | null
-          file_name: string
+          file_name?: string | null
           id?: string
           recording_url?: string | null
           status?: string
-          team: string
+          team?: string | null
           transcript?: string | null
         }
         Update: {
@@ -701,11 +701,11 @@ export type Database = {
           bucket_id?: string | null
           created_at?: string | null
           duration_seconds?: number | null
-          file_name?: string
+          file_name?: string | null
           id?: string
           recording_url?: string | null
           status?: string
-          team?: string
+          team?: string | null
           transcript?: string | null
         }
         Relationships: []
@@ -766,6 +766,7 @@ export type Database = {
           marketing: string | null
           motivatie_kiezen_proteine_snack: string | null
           openheid_nieuwe_snack: boolean | null
+          prijs: string | null
         }
         Insert: {
           buying_persona: string
@@ -777,6 +778,7 @@ export type Database = {
           marketing?: string | null
           motivatie_kiezen_proteine_snack?: string | null
           openheid_nieuwe_snack?: boolean | null
+          prijs?: string | null
         }
         Update: {
           buying_persona?: string
@@ -788,6 +790,7 @@ export type Database = {
           marketing?: string | null
           motivatie_kiezen_proteine_snack?: string | null
           openheid_nieuwe_snack?: boolean | null
+          prijs?: string | null
         }
         Relationships: []
       }
@@ -865,7 +868,7 @@ export type Database = {
           branding: string | null
           eerste_reactie: string | null
           eiwitgehalte: string | null
-          frituurbezoek_frequentie: string
+          frituurbezoek_frequentie: string | null
           hogere_prijs: boolean | null
           hogere_prijs_factoren: string | null
           id: string
@@ -888,7 +891,7 @@ export type Database = {
           branding?: string | null
           eerste_reactie?: string | null
           eiwitgehalte?: string | null
-          frituurbezoek_frequentie: string
+          frituurbezoek_frequentie?: string | null
           hogere_prijs?: boolean | null
           hogere_prijs_factoren?: string | null
           id?: string
@@ -911,7 +914,7 @@ export type Database = {
           branding?: string | null
           eerste_reactie?: string | null
           eiwitgehalte?: string | null
-          frituurbezoek_frequentie?: string
+          frituurbezoek_frequentie?: string | null
           hogere_prijs?: boolean | null
           hogere_prijs_factoren?: string | null
           id?: string
@@ -940,6 +943,7 @@ export type Database = {
           marketing: string | null
           motivatie_kiezen_proteine_snack: string | null
           openheid_nieuwe_snack: boolean | null
+          prijs: string | null
         }
         Insert: {
           buying_persona: string
@@ -951,6 +955,7 @@ export type Database = {
           marketing?: string | null
           motivatie_kiezen_proteine_snack?: string | null
           openheid_nieuwe_snack?: boolean | null
+          prijs?: string | null
         }
         Update: {
           buying_persona?: string
@@ -962,6 +967,7 @@ export type Database = {
           marketing?: string | null
           motivatie_kiezen_proteine_snack?: string | null
           openheid_nieuwe_snack?: boolean | null
+          prijs?: string | null
         }
         Relationships: []
       }
@@ -1039,7 +1045,7 @@ export type Database = {
           branding: string | null
           eerste_reactie: string | null
           eiwitgehalte: string | null
-          frituurbezoek_frequentie: string
+          frituurbezoek_frequentie: string | null
           hogere_prijs: boolean | null
           hogere_prijs_factoren: string | null
           id: string
@@ -1062,7 +1068,7 @@ export type Database = {
           branding?: string | null
           eerste_reactie?: string | null
           eiwitgehalte?: string | null
-          frituurbezoek_frequentie: string
+          frituurbezoek_frequentie?: string | null
           hogere_prijs?: boolean | null
           hogere_prijs_factoren?: string | null
           id?: string
@@ -1085,7 +1091,7 @@ export type Database = {
           branding?: string | null
           eerste_reactie?: string | null
           eiwitgehalte?: string | null
-          frituurbezoek_frequentie?: string
+          frituurbezoek_frequentie?: string | null
           hogere_prijs?: boolean | null
           hogere_prijs_factoren?: string | null
           id?: string
@@ -1114,6 +1120,7 @@ export type Database = {
           marketing: string | null
           motivatie_kiezen_proteine_snack: string | null
           openheid_nieuwe_snack: boolean | null
+          prijs: string | null
         }
         Insert: {
           buying_persona: string
@@ -1125,6 +1132,7 @@ export type Database = {
           marketing?: string | null
           motivatie_kiezen_proteine_snack?: string | null
           openheid_nieuwe_snack?: boolean | null
+          prijs?: string | null
         }
         Update: {
           buying_persona?: string
@@ -1136,6 +1144,7 @@ export type Database = {
           marketing?: string | null
           motivatie_kiezen_proteine_snack?: string | null
           openheid_nieuwe_snack?: boolean | null
+          prijs?: string | null
         }
         Relationships: []
       }
@@ -1213,7 +1222,7 @@ export type Database = {
           branding: string | null
           eerste_reactie: string | null
           eiwitgehalte: string | null
-          frituurbezoek_frequentie: string
+          frituurbezoek_frequentie: string | null
           hogere_prijs: boolean | null
           hogere_prijs_factoren: string | null
           id: string
@@ -1236,7 +1245,7 @@ export type Database = {
           branding?: string | null
           eerste_reactie?: string | null
           eiwitgehalte?: string | null
-          frituurbezoek_frequentie: string
+          frituurbezoek_frequentie?: string | null
           hogere_prijs?: boolean | null
           hogere_prijs_factoren?: string | null
           id?: string
@@ -1259,7 +1268,7 @@ export type Database = {
           branding?: string | null
           eerste_reactie?: string | null
           eiwitgehalte?: string | null
-          frituurbezoek_frequentie?: string
+          frituurbezoek_frequentie?: string | null
           hogere_prijs?: boolean | null
           hogere_prijs_factoren?: string | null
           id?: string
@@ -1288,6 +1297,7 @@ export type Database = {
           marketing: string | null
           motivatie_kiezen_proteine_snack: string | null
           openheid_nieuwe_snack: boolean | null
+          prijs: string | null
         }
         Insert: {
           buying_persona: string
@@ -1299,6 +1309,7 @@ export type Database = {
           marketing?: string | null
           motivatie_kiezen_proteine_snack?: string | null
           openheid_nieuwe_snack?: boolean | null
+          prijs?: string | null
         }
         Update: {
           buying_persona?: string
@@ -1310,6 +1321,7 @@ export type Database = {
           marketing?: string | null
           motivatie_kiezen_proteine_snack?: string | null
           openheid_nieuwe_snack?: boolean | null
+          prijs?: string | null
         }
         Relationships: []
       }
@@ -1387,7 +1399,7 @@ export type Database = {
           branding: string | null
           eerste_reactie: string | null
           eiwitgehalte: string | null
-          frituurbezoek_frequentie: string
+          frituurbezoek_frequentie: string | null
           hogere_prijs: boolean | null
           hogere_prijs_factoren: string | null
           id: string
@@ -1410,7 +1422,7 @@ export type Database = {
           branding?: string | null
           eerste_reactie?: string | null
           eiwitgehalte?: string | null
-          frituurbezoek_frequentie: string
+          frituurbezoek_frequentie?: string | null
           hogere_prijs?: boolean | null
           hogere_prijs_factoren?: string | null
           id?: string
@@ -1433,7 +1445,7 @@ export type Database = {
           branding?: string | null
           eerste_reactie?: string | null
           eiwitgehalte?: string | null
-          frituurbezoek_frequentie?: string
+          frituurbezoek_frequentie?: string | null
           hogere_prijs?: boolean | null
           hogere_prijs_factoren?: string | null
           id?: string
