@@ -133,7 +133,7 @@ const BuyingPersonasCards = () => {
     };
   };
 
-  // Get average age from age ranges
+  // Calculate average age from age ranges or get description
   const getAgeInfo = (ages: string[]): string => {
     if (ages.length === 0) return "Niet beschikbaar";
     
@@ -199,39 +199,36 @@ const BuyingPersonasCards = () => {
             </CardHeader>
             
             <CardContent className="space-y-4 text-sm">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-start">
-                  <Users className="h-5 w-5 mr-2 text-blue-500 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="font-semibold">Geslacht</p>
-                    <p>{geslacht.value} ({geslacht.percentage}%)</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <Calendar className="h-5 w-5 mr-2 text-green-500 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="font-semibold">Leeftijd</p>
-                    <p>{getAgeInfo(persona.leeftijd)}</p>
-                  </div>
+              {/* Changed layout to vertical for better readability */}
+              <div className="flex items-start">
+                <Users className="h-5 w-5 mr-2 text-blue-500 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-semibold">Geslacht</p>
+                  <p>{geslacht.value} ({geslacht.percentage}%)</p>
                 </div>
               </div>
               
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-start">
-                  <ShoppingBag className="h-5 w-5 mr-2 text-purple-500 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="font-semibold">Prijsgevoeligheid</p>
-                    <p>{prijs.value}</p>
-                  </div>
+              <div className="flex items-start">
+                <Calendar className="h-5 w-5 mr-2 text-green-500 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-semibold">Leeftijd</p>
+                  <p>{getAgeInfo(persona.leeftijd)}</p>
                 </div>
-                
-                <div className="flex items-start">
-                  <Repeat className="h-5 w-5 mr-2 text-orange-500 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="font-semibold">Frituurbezoek</p>
-                    <p>{frequentie.value}</p>
-                  </div>
+              </div>
+              
+              <div className="flex items-start">
+                <ShoppingBag className="h-5 w-5 mr-2 text-purple-500 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-semibold">Prijsgevoeligheid</p>
+                  <p>{prijs.value}</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <Repeat className="h-5 w-5 mr-2 text-orange-500 shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-semibold">Frituurbezoek</p>
+                  <p>{frequentie.value}</p>
                 </div>
               </div>
               
