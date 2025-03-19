@@ -4,16 +4,19 @@ import React from "react";
 type DataPointProps = {
   label: string;
   value: string;
+  unit?: string;
   breakdown?: string;
   valueClassName?: string;
   secondaryInfo?: string;
 };
 
-const DataPoint = ({ label, value, breakdown, valueClassName, secondaryInfo }: DataPointProps) => {
+const DataPoint = ({ label, value, unit, breakdown, valueClassName, secondaryInfo }: DataPointProps) => {
   return (
     <div>
       <p className="font-semibold">{label}</p>
-      <p className={valueClassName || ""}>{value}</p>
+      <p className={valueClassName || ""}>
+        {value}{unit && ` ${unit}`}
+      </p>
       {secondaryInfo && (
         <p className="text-sm text-muted-foreground mt-1">{secondaryInfo}</p>
       )}

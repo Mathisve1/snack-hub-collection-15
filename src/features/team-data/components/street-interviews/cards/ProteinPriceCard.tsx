@@ -32,7 +32,8 @@ const ProteinPriceCard = ({
       <div className="space-y-4">
         <DataPoint
           label="Gewenst eiwitgehalte:"
-          value={`Gemiddeld: ${gemiddeldeEiwitgehalte}%`}
+          value={`Gemiddeld: ${gemiddeldeEiwitgehalte}`}
+          unit="gram"
           valueClassName="text-xl font-medium"
           secondaryInfo={`Meest voorkomend: ${eiwitgehalteInfo.value} (${eiwitgehalteInfo.percentage}%)`}
           breakdown={formatBreakdown(eiwitgehalte)}
