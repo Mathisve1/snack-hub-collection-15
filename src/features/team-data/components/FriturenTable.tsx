@@ -1,13 +1,23 @@
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useTeam38Frituren } from "../hooks/useTeam38Data";
+import { useTeam3Frituren } from "../hooks/useTeam3Data";
 import { Loader2, LayoutGrid, Table as TableIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import FriturenSummary from "./frituren/FriturenSummary";
+import { useLocation } from "react-router-dom";
 
 const FriturenTable = () => {
-  const { data, loading, error } = useTeam38Frituren();
+  const location = useLocation();
+  const isTeam3 = location.pathname.includes("team-3");
+  
+  // Use the appropriate hook based on the current path
+  const team38Data = useTeam38Frituren();
+  const team3Data = useTeam3Frituren();
+  
+  const { data, loading, error } = isTeam3 ? team3Data : team38Data;
+  
   const [viewMode, setViewMode] = useState<"summary" | "table">("summary");
 
   if (loading) {

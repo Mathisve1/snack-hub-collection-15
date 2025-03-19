@@ -1,13 +1,23 @@
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useTeam38StreetInterviews } from "../hooks/useTeam38Data";
+import { useTeam3StreetInterviews } from "../hooks/useTeam3Data";
 import { Loader2, LayoutGrid, Table as TableIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import StreetInterviewsSummary from "./street-interviews/StreetInterviewsSummary";
+import { useLocation } from "react-router-dom";
 
 const StreetInterviewsTable = () => {
-  const { data, loading, error } = useTeam38StreetInterviews();
+  const location = useLocation();
+  const isTeam3 = location.pathname.includes("team-3");
+  
+  // Use the appropriate hook based on the current path
+  const team38Data = useTeam38StreetInterviews();
+  const team3Data = useTeam3StreetInterviews();
+  
+  const { data, loading, error } = isTeam3 ? team3Data : team38Data;
+  
   const [viewMode, setViewMode] = useState<"summary" | "table">("summary");
 
   if (loading) {
