@@ -12,17 +12,20 @@ export const FrequencySection = ({ frequency }: FrequencySectionProps) => {
   const mostCommonFrequency = getMostCommonValue(frequency);
   
   return (
-    <div>
-      <h4 className="font-medium text-gray-700 mb-1">Frequentie Frituurbezoek</h4>
-      <div className="text-gray-600">
-        {Object.entries(frequency).map(([freq, count], i) => {
-          const percentage = Math.round((count / totalFrequencyCount) * 100);
-          return (
-            <div key={freq} className={freq === mostCommonFrequency ? "font-bold" : ""}>
-              {freq}: {count} ({percentage}%)
-            </div>
-          );
-        })}
+    <div className="flex items-start">
+      <Repeat className="h-5 w-5 mr-2 text-blue-500 shrink-0 mt-0.5" />
+      <div>
+        <h4 className="font-medium text-gray-700 mb-1">Frequentie Frituurbezoek</h4>
+        <div className="text-gray-600">
+          {Object.entries(frequency).map(([freq, count], i) => {
+            const percentage = Math.round((count / totalFrequencyCount) * 100);
+            return (
+              <div key={freq} className={freq === mostCommonFrequency ? "font-bold" : ""}>
+                {freq}: {count} ({percentage}%)
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

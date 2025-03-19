@@ -21,8 +21,13 @@ export const GenderChart = ({ genders }: GenderChartProps) => {
     };
   });
 
-  // Define colors for different genders
-  const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#0088fe"];
+  // Define gender-specific colors
+  const getGenderColor = (gender: string) => {
+    const lowerGender = gender.toLowerCase();
+    if (lowerGender === "vrouw" || lowerGender === "vrouwen") return "#D946EF"; // Pink for women
+    if (lowerGender === "man" || lowerGender === "mannen") return "#0EA5E9"; // Blue for men
+    return "#8884d8"; // Default purple for other genders
+  };
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }: any) => {
     const RADIAN = Math.PI / 180;
@@ -63,9 +68,10 @@ export const GenderChart = ({ genders }: GenderChartProps) => {
               fill="#8884d8"
               dataKey="value"
             >
-              {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
+              {data.map((entry, index) => {
+                const color = getGenderColor(entry.name);
+                return <Cell key={`cell-${index}`} fill={color} />;
+              })}
             </Pie>
             <Tooltip 
               formatter={(value: number, name: string) => [`${value} (${Math.round((value / totalGenderCount) * 100)}%)`, name]}

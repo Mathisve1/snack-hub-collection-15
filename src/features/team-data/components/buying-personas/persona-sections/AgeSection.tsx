@@ -1,4 +1,3 @@
-
 import { Calendar } from "lucide-react";
 
 type AgeSectionProps = {
@@ -30,7 +29,8 @@ export const AgeSection = ({ ages }: AgeSectionProps) => {
   });
   
   return (
-    <div>
+    <div className="flex items-start">
+      <Calendar className="h-5 w-5 mr-2 text-green-500 shrink-0 mt-0.5" />
       <h4 className="font-medium text-gray-700 mb-1">Leeftijd</h4>
       <div className="text-gray-600">
         <div>Gemiddeld: {averageAge}</div>
