@@ -45,7 +45,7 @@ export const PersonaCardItem = ({ personaType, personaCount, personas, index }: 
   
   // Calculate average age
   const averageAge = ages.length > 0 
-    ? Math.round(ages.reduce((sum, age) => sum + (age as number), 0) / ages.length) 
+    ? Math.round(ages.reduce((sum, age) => sum + Number(age), 0) / ages.length) 
     : 'N/A';
   
   // Count individual ages and their occurrences
@@ -62,6 +62,20 @@ export const PersonaCardItem = ({ personaType, personaCount, personas, index }: 
   const minPrice = prices.length > 0 ? Math.min(...prices as number[]) : 'N/A';
   const maxPrice = prices.length > 0 ? Math.max(...prices as number[]) : 'N/A';
   const priceRange = prices.length > 0 ? `€${minPrice} - €${maxPrice}` : 'N/A';
+  
+  // Calculate average price
+  const averagePrice = prices.length > 0 
+    ? Math.round(prices.reduce((sum, price) => sum + Number(price), 0) / prices.length * 100) / 100
+    : 'N/A';
+    
+  // Count individual prices and their occurrences
+  const priceOccurrences: Record<string, number> = {};
+  prices.forEach(price => {
+    if (price !== null && price !== undefined) {
+      const priceKey = price.toString();
+      priceOccurrences[priceKey] = (priceOccurrences[priceKey] || 0) + 1;
+    }
+  });
 
   // Calculate total count for percentage calculations
   const totalGenderCount = Object.values(genders).reduce((sum, count) => sum + count, 0);
@@ -114,7 +128,17 @@ export const PersonaCardItem = ({ personaType, personaCount, personas, index }: 
         {/* Price Section */}
         <div>
           <h4 className="font-medium text-gray-700 mb-1">Prijs</h4>
-          <div className="text-gray-600">{priceRange}</div>
+          <div className="text-gray-600">
+            <div>Gemiddeld: €{typeof averagePrice === 'number' ? averagePrice.toFixed(2) : averagePrice}</div>
+            <div>Bereik: {priceRange}</div>
+            <div className="text-xs mt-1">
+              {Object.entries(priceOccurrences).map(([price, count], i) => (
+                <span key={price} className="mr-2">
+                  €{price} ({count}x)
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
         
         {/* Frequency Section */}
@@ -159,3 +183,4 @@ export const PersonaCardItem = ({ personaType, personaCount, personas, index }: 
     </Card>
   );
 };
+
