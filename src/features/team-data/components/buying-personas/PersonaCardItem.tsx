@@ -45,24 +45,34 @@ export const PersonaCardItem = ({ persona, index }: PersonaCardItemProps) => {
     };
   };
 
-  // Calculate average age from age ranges or get description
-  const getAgeInfo = (ages: string[]): string => {
-    if (ages.length === 0) return "Niet beschikbaar";
+  // Calculate average age and count occurrences
+  const getAgeInfo = (ages: string[]): { average: string; breakdown: string } => {
+    if (ages.length === 0) return { average: "Niet beschikbaar", breakdown: "" };
     
-    // If all values are the same, return that value
-    if (new Set(ages).size === 1) {
-      return ages[0];
-    }
-    
-    // Otherwise, show all values with their count
+    // Count occurrences of each age
     const ageCounts = ages.reduce((acc: Record<string, number>, age) => {
       acc[age] = (acc[age] || 0) + 1;
       return acc;
     }, {});
     
-    return Object.entries(ageCounts)
+    // Calculate average if ages are numeric
+    let average = "Niet beschikbaar";
+    try {
+      const numericAges = ages.map(age => parseInt(age, 10)).filter(age => !isNaN(age));
+      if (numericAges.length > 0) {
+        const sum = numericAges.reduce((total, age) => total + age, 0);
+        average = (sum / numericAges.length).toFixed(0);
+      }
+    } catch (e) {
+      console.error("Error calculating average age:", e);
+    }
+    
+    // Format the breakdown string
+    const breakdown = Object.entries(ageCounts)
       .map(([age, count]) => `${age} (${count}x)`)
       .join(", ");
+    
+    return { average, breakdown };
   };
 
   // Get percentage for boolean values
@@ -101,6 +111,7 @@ export const PersonaCardItem = ({ persona, index }: PersonaCardItemProps) => {
   const consumptie = getMostCommon(persona.consumptie_situatie);
   const motivatie = getMostCommon(persona.motivatie_kiezen_proteine_snack);
   const genderDistribution = getGenderDistribution(persona.geslacht);
+  const ageInfo = getAgeInfo(persona.leeftijd);
 
   return (
     <Card 
@@ -130,7 +141,10 @@ export const PersonaCardItem = ({ persona, index }: PersonaCardItemProps) => {
           <Calendar className="h-5 w-5 mr-2 text-green-500 shrink-0 mt-0.5" />
           <div>
             <p className="font-semibold">Leeftijd</p>
-            <p>{getAgeInfo(persona.leeftijd)}</p>
+            <p className="font-medium">Gemiddeld: {ageInfo.average}</p>
+            {ageInfo.breakdown && (
+              <p className="text-xs text-gray-600 mt-1">{ageInfo.breakdown}</p>
+            )}
           </div>
         </div>
         

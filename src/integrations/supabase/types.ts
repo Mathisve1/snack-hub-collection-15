@@ -1116,11 +1116,11 @@ export type Database = {
           frequentie_frituurbezoek: string | null
           geslacht: string | null
           id: string
-          leeftijd: string | null
+          leeftijd: number | null
           marketing: string | null
           motivatie_kiezen_proteine_snack: string | null
           openheid_nieuwe_snack: boolean | null
-          prijs: string | null
+          prijs: number | null
         }
         Insert: {
           buying_persona: string
@@ -1128,11 +1128,11 @@ export type Database = {
           frequentie_frituurbezoek?: string | null
           geslacht?: string | null
           id?: string
-          leeftijd?: string | null
+          leeftijd?: number | null
           marketing?: string | null
           motivatie_kiezen_proteine_snack?: string | null
           openheid_nieuwe_snack?: boolean | null
-          prijs?: string | null
+          prijs?: number | null
         }
         Update: {
           buying_persona?: string
@@ -1140,11 +1140,11 @@ export type Database = {
           frequentie_frituurbezoek?: string | null
           geslacht?: string | null
           id?: string
-          leeftijd?: string | null
+          leeftijd?: number | null
           marketing?: string | null
           motivatie_kiezen_proteine_snack?: string | null
           openheid_nieuwe_snack?: boolean | null
-          prijs?: string | null
+          prijs?: number | null
         }
         Relationships: []
       }
