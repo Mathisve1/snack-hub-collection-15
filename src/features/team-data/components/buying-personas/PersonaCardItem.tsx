@@ -8,23 +8,11 @@ import { FrequencySection } from "./persona-sections/FrequencySection";
 import { ConsumptionSection } from "./persona-sections/ConsumptionSection";
 import { MotivationSection } from "./persona-sections/MotivationSection";
 import { OpenToNewSection } from "./persona-sections/OpenToNewSection";
+import { GroupedPersona } from "./PersonaDataUtils";
 
 type PersonaCardItemProps = {
   persona: GroupedPersona;
   index: number;
-};
-
-export type GroupedPersona = {
-  name: string;
-  count: number;
-  leeftijd: (string | number)[];
-  geslacht: Record<string, number>;
-  prijs: Record<string, number>;
-  frequentie_frituurbezoek: Record<string, number>;
-  consumptie_situatie: Record<string, number>;
-  motivatie_kiezen_proteine_snack: Record<string, number>;
-  marketing: Record<string, number>;
-  openheid_nieuwe_snack: { ja: number; nee: number; total: number };
 };
 
 export const PersonaCardItem = ({ persona, index }: PersonaCardItemProps) => {

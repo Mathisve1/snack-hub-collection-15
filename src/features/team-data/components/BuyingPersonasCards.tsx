@@ -1,12 +1,13 @@
 
 import { useTeam38BuyingPersonas } from "../hooks/useTeam38Data";
 import { useTeam3BuyingPersonas } from "../hooks/useTeam3Data";
-import { Loader2 } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { PersonaCardItem } from "./buying-personas/PersonaCardItem";
 import { EmptyPersonasState } from "./buying-personas/EmptyPersonasState";
 import { PersonasErrorState } from "./buying-personas/PersonasErrorState";
 import { PersonasLoadingState } from "./buying-personas/PersonasLoadingState";
+import { groupPersonasByName } from "./buying-personas/PersonaDataUtils";
+import { BuyingPersona } from "../types";
 
 const BuyingPersonasCards = () => {
   const location = useLocation();
@@ -30,10 +31,13 @@ const BuyingPersonasCards = () => {
     return <EmptyPersonasState />;
   }
 
+  // Process the raw data to match the GroupedPersona format expected by PersonaCardItem
+  const groupedPersonas = groupPersonasByName(data);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {data.map((persona) => (
-        <PersonaCardItem key={persona.id} persona={persona} />
+      {groupedPersonas.map((persona, index) => (
+        <PersonaCardItem key={persona.name} persona={persona} index={index} />
       ))}
     </div>
   );
