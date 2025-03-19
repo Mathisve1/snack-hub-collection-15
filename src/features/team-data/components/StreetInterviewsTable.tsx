@@ -1,10 +1,14 @@
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useTeam38StreetInterviews } from "../hooks/useTeam38Data";
-import { Loader2 } from "lucide-react";
+import { Loader2, LayoutGrid, Table as TableIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import StreetInterviewsSummary from "./street-interviews/StreetInterviewsSummary";
 
 const StreetInterviewsTable = () => {
   const { data, loading, error } = useTeam38StreetInterviews();
+  const [viewMode, setViewMode] = useState<"summary" | "table">("summary");
 
   if (loading) {
     return (
@@ -33,38 +37,64 @@ const StreetInterviewsTable = () => {
   // Get all unique column keys excluding 'id'
   const columnKeys = Object.keys(data[0]).filter(key => key !== 'id');
   
-  console.log("Street interviews data columns:", columnKeys);
-  console.log("Street interviews data sample:", data[0]);
-
   return (
-    <div className="rounded-md border overflow-hidden">
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {columnKeys.map((key) => (
-                <TableHead key={key} className="font-semibold">
-                  {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.map((interview) => (
-              <TableRow key={interview.id}>
-                {columnKeys.map((key) => (
-                  <TableCell key={`${interview.id}-${key}`}>
-                    {typeof interview[key] === 'boolean' 
-                      ? interview[key] ? 'Yes' : 'No'
-                      : interview[key] || '—'}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+    <>
+      <div className="flex justify-end mb-4">
+        <div className="bg-gray-100 rounded-md p-1 inline-flex">
+          <Button
+            variant={viewMode === "summary" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setViewMode("summary")}
+            className="rounded-md"
+          >
+            <LayoutGrid className="h-4 w-4 mr-1" />
+            Samenvatting
+          </Button>
+          <Button
+            variant={viewMode === "table" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setViewMode("table")}
+            className="rounded-md"
+          >
+            <TableIcon className="h-4 w-4 mr-1" />
+            Tabel
+          </Button>
+        </div>
       </div>
-    </div>
+
+      {viewMode === "summary" ? (
+        <StreetInterviewsSummary data={data} />
+      ) : (
+        <div className="rounded-md border overflow-hidden">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  {columnKeys.map((key) => (
+                    <TableHead key={key} className="font-semibold">
+                      {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {data.map((interview) => (
+                  <TableRow key={interview.id}>
+                    {columnKeys.map((key) => (
+                      <TableCell key={`${interview.id}-${key}`}>
+                        {typeof interview[key] === 'boolean' 
+                          ? interview[key] ? 'Yes' : 'No'
+                          : interview[key] || '—'}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
