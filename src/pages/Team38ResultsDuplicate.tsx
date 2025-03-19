@@ -18,9 +18,9 @@ import { useState } from "react";
 
 const Team38ResultsDuplicate = () => {
   const navigate = useNavigate();
-  const { data: personas, loading: personasLoading, error: personasError } = useTeam3BuyingPersonas();
-  const { data: frituren, loading: friturenLoading, error: friturenError } = useTeam3Frituren();
-  const { data: interviews, loading: interviewsLoading, error: interviewsError } = useTeam3StreetInterviews();
+  const { data: personas, loading: personasLoading, error: personasError } = useTeam38BuyingPersonas();
+  const { data: frituren, loading: friturenLoading, error: friturenError } = useTeam38Frituren();
+  const { data: interviews, loading: interviewsLoading, error: interviewsError } = useTeam38StreetInterviews();
   
   // State to toggle between table and card view for buying personas
   const [personasViewMode, setPersonasViewMode] = useState<"table" | "cards">("cards");

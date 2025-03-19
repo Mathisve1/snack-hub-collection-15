@@ -9,18 +9,18 @@ import FriturenTable from "@/features/team-data/components/FriturenTable";
 import StreetInterviewsTable from "@/features/team-data/components/StreetInterviewsTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  useTeam38BuyingPersonas, 
-  useTeam38Frituren, 
-  useTeam38StreetInterviews 
-} from "@/features/team-data/hooks/useTeam38Data";
+  useTeam3BuyingPersonas, 
+  useTeam3Frituren, 
+  useTeam3StreetInterviews 
+} from "@/features/team-data/hooks/useTeam3Data";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 
 const Team38ResultsQuadruplicate = () => {
   const navigate = useNavigate();
-  const { data: personas, loading: personasLoading, error: personasError } = useTeam38BuyingPersonas();
-  const { data: frituren, loading: friturenLoading, error: friturenError } = useTeam38Frituren();
-  const { data: interviews, loading: interviewsLoading, error: interviewsError } = useTeam38StreetInterviews();
+  const { data: personas, loading: personasLoading, error: personasError } = useTeam3BuyingPersonas();
+  const { data: frituren, loading: friturenLoading, error: friturenError } = useTeam3Frituren();
+  const { data: interviews, loading: interviewsLoading, error: interviewsError } = useTeam3StreetInterviews();
   
   // State to toggle between table and card view for buying personas
   const [personasViewMode, setPersonasViewMode] = useState<"table" | "cards">("cards");
@@ -47,7 +47,7 @@ const Team38ResultsQuadruplicate = () => {
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
-              <h1 className="text-xl font-semibold">Team 38 Research Results (Quadruplicate)</h1>
+              <h1 className="text-xl font-semibold">Team 38 Research Results (Quadruplicate - Team 3 Data)</h1>
             </div>
             <div className="flex gap-2">
               <Button asChild variant="outline" size="sm">
@@ -69,10 +69,10 @@ const Team38ResultsQuadruplicate = () => {
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="bg-white rounded-lg shadow">
             <div className="p-6">
-              <h2 className="text-2xl font-bold mb-6">Team 38 Market Research Data (Quadruplicate)</h2>
+              <h2 className="text-2xl font-bold mb-6">Team 38 Market Research Data (Team 3 Data)</h2>
               
               <p className="text-gray-600 mb-8">
-                This page presents the complete market research findings from Team 38's research on 
+                This page presents the complete market research findings from Team 3's research on 
                 protein-based snack innovation in frituren. Use these insights to inform your 
                 product development and marketing strategies.
               </p>
