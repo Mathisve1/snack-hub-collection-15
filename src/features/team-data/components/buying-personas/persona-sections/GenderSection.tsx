@@ -1,5 +1,6 @@
 
 import { Users } from "lucide-react";
+import { GenderChart } from "./GenderChart";
 
 type GenderSectionProps = {
   genders: Record<string, number>;
@@ -11,13 +12,14 @@ export const GenderSection = ({ genders }: GenderSectionProps) => {
   
   return (
     <div>
-      <h4 className="font-medium text-gray-700 mb-1">Geslacht</h4>
-      <div className="text-gray-600">
+      <GenderChart genders={genders} />
+      <div className="text-gray-600 text-xs mt-2">
         {Object.entries(genders).map(([gender, count], i) => {
           const percentage = Math.round((count / totalGenderCount) * 100);
           return (
-            <div key={gender}>
-              {gender.charAt(0).toUpperCase() + gender.slice(1)}: {count} ({percentage}%)
+            <div key={gender} className="flex justify-between">
+              <span>{gender.charAt(0).toUpperCase() + gender.slice(1)}</span>
+              <span>{count} ({percentage}%)</span>
             </div>
           );
         })}
