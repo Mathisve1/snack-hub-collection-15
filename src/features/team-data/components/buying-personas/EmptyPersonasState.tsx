@@ -7,6 +7,9 @@ type EmptyPersonasStateProps = {
     dataExists?: boolean;
     isLoading?: boolean;
     error?: string | null;
+    currentPath?: string;
+    isTeam3?: boolean;
+    isTeam38?: boolean;
   };
 };
 
@@ -28,6 +31,9 @@ export const EmptyPersonasState = ({ debug }: EmptyPersonasStateProps) => {
           <p>Data Length: {debug.dataLength !== undefined ? debug.dataLength : 'unknown'}</p>
           <p>Data Exists: {debug.dataExists !== undefined ? String(debug.dataExists) : 'unknown'}</p>
           <p>Is Loading: {debug.isLoading !== undefined ? String(debug.isLoading) : 'unknown'}</p>
+          {debug.currentPath && <p>Current Path: {debug.currentPath}</p>}
+          {debug.isTeam3 !== undefined && <p>Is Team 3: {String(debug.isTeam3)}</p>}
+          {debug.isTeam38 !== undefined && <p>Is Team 38: {String(debug.isTeam38)}</p>}
           {debug.error && <p>Error: {debug.error}</p>}
         </div>
       )}

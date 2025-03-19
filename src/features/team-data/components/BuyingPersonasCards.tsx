@@ -10,7 +10,12 @@ import { BuyingPersona } from "../types";
 
 const BuyingPersonasCards = () => {
   const location = useLocation();
-  const isTeam3 = location.pathname.includes("team-3");
+  // Fix the path checking logic with exact path matching
+  const isTeam3 = location.pathname === "/team-3-results";
+  const isTeam38 = location.pathname === "/team-38-results";
+  
+  // Log the current path and which team was detected
+  console.log(`Current path: ${location.pathname}, isTeam3: ${isTeam3}, isTeam38: ${isTeam38}`);
   
   // Use the appropriate hook based on the current path
   const team38Data = useTeam38BuyingPersonas();
@@ -19,7 +24,15 @@ const BuyingPersonasCards = () => {
   const { data, loading, error } = isTeam3 ? team3Data : team38Data;
 
   // Always log the current state for debugging
-  console.log("BuyingPersonasCards state:", { data, loading, error, isTeam3, path: location.pathname });
+  console.log("BuyingPersonasCards state:", { 
+    data, 
+    loading, 
+    error, 
+    isTeam3, 
+    isTeam38,
+    path: location.pathname,
+    dataSource: isTeam3 ? "team3Data" : "team38Data" 
+  });
 
   if (loading) {
     return <PersonasLoadingState />;
@@ -37,7 +50,10 @@ const BuyingPersonasCards = () => {
           dataLength: data?.length,
           dataExists: !!data && Array.isArray(data) && data.length > 0,
           isLoading: loading,
-          error: error
+          error: error,
+          currentPath: location.pathname,
+          isTeam3: isTeam3,
+          isTeam38: isTeam38
         }}
       />
     );
@@ -71,7 +87,10 @@ const BuyingPersonasCards = () => {
           dataLength: data?.length,
           dataExists: true,
           isLoading: false,
-          error: "No valid persona types found in data"
+          error: "No valid persona types found in data",
+          currentPath: location.pathname,
+          isTeam3: isTeam3,
+          isTeam38: isTeam38
         }}
       />
     );
