@@ -1,3 +1,4 @@
+
 import { Lightbulb } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 type OpenToNewSectionProps = {
