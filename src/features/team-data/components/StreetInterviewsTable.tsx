@@ -10,18 +10,17 @@ import { useLocation } from "react-router-dom";
 
 const StreetInterviewsTable = () => {
   const location = useLocation();
-  // Fix the path checking logic with exact path matching
-  const isTeam3 = location.pathname === "/team-3-results";
-  const isTeam38 = location.pathname === "/team-38-results";
+  // Check if the current path includes team-3 or team-38-results-quadruplicate
+  const isTeam3Data = location.pathname === "/team-3-results" || location.pathname === "/team-38-results-quadruplicate";
   
   // Log the current path and which team was detected
-  console.log(`StreetInterviewsTable - Current path: ${location.pathname}, isTeam3: ${isTeam3}, isTeam38: ${isTeam38}`);
+  console.log(`StreetInterviewsTable - Current path: ${location.pathname}, isTeam3Data: ${isTeam3Data}`);
   
   // Use the appropriate hook based on the current path
   const team38Data = useTeam38StreetInterviews();
   const team3Data = useTeam3StreetInterviews();
   
-  const { data, loading, error } = isTeam3 ? team3Data : team38Data;
+  const { data, loading, error } = isTeam3Data ? team3Data : team38Data;
   
   const [viewMode, setViewMode] = useState<"summary" | "table">("summary");
 
