@@ -72,6 +72,56 @@ export const getFrequencyInfo = (frequency: Record<string, number>): { mostCommo
   return { mostCommon, breakdown };
 };
 
+// Format consumption information with counts
+export const getConsumptionInfo = (consumption: Record<string, number>): { mostCommon: string; breakdown: string } => {
+  if (Object.keys(consumption).length === 0) return { mostCommon: "Niet beschikbaar", breakdown: "" };
+  
+  // Find most common consumption situation
+  const entries = Object.entries(consumption);
+  const total = entries.reduce((sum, [_, count]) => sum + count, 0);
+  const [mostCommonValue, mostCommonCount] = entries.reduce((max, current) => 
+    (current[1] > max[1] ? current : max));
+  
+  // Format the most common value with percentage
+  const percentage = Math.round((mostCommonCount / total) * 100);
+  const mostCommon = `${mostCommonValue} (${percentage}%)`;
+  
+  // Format breakdown string with counts and percentages
+  const breakdown = entries
+    .map(([value, count]) => {
+      const pct = Math.round((count / total) * 100);
+      return `${value} (${count}x, ${pct}%)`;
+    })
+    .join(", ");
+  
+  return { mostCommon, breakdown };
+};
+
+// Format motivation information with counts
+export const getMotivationInfo = (motivation: Record<string, number>): { mostCommon: string; breakdown: string } => {
+  if (Object.keys(motivation).length === 0) return { mostCommon: "Niet beschikbaar", breakdown: "" };
+  
+  // Find most common motivation
+  const entries = Object.entries(motivation);
+  const total = entries.reduce((sum, [_, count]) => sum + count, 0);
+  const [mostCommonValue, mostCommonCount] = entries.reduce((max, current) => 
+    (current[1] > max[1] ? current : max));
+  
+  // Format the most common value with percentage
+  const percentage = Math.round((mostCommonCount / total) * 100);
+  const mostCommon = `${mostCommonValue} (${percentage}%)`;
+  
+  // Format breakdown string with counts and percentages
+  const breakdown = entries
+    .map(([value, count]) => {
+      const pct = Math.round((count / total) * 100);
+      return `${value} (${count}x, ${pct}%)`;
+    })
+    .join(", ");
+  
+  return { mostCommon, breakdown };
+};
+
 // Calculate average age and count occurrences
 export const getAgeInfo = (ages: (string | number)[]): { average: string; breakdown: string } => {
   if (ages.length === 0) return { average: "Niet beschikbaar", breakdown: "" };
