@@ -33,6 +33,13 @@ const BuyingPersonasCards = () => {
 
   // Process the raw data to match the GroupedPersona format expected by PersonaCardItem
   const groupedPersonas = groupPersonasByName(data);
+  
+  // Make sure we have processed data correctly
+  console.log("Grouped personas:", groupedPersonas);
+  
+  if (groupedPersonas.length === 0) {
+    return <EmptyPersonasState />;
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

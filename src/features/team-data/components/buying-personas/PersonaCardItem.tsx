@@ -16,6 +16,7 @@ type PersonaCardItemProps = {
 };
 
 export const PersonaCardItem = ({ persona, index }: PersonaCardItemProps) => {
+  console.log("Rendering PersonaCardItem:", persona, index);
   return (
     <Card 
       className={`overflow-hidden border shadow-md hover:shadow-lg transition-shadow ${getCardColor(index)}`}
