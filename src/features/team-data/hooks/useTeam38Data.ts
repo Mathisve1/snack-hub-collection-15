@@ -12,11 +12,19 @@ export function useTeam38BuyingPersonas() {
     async function fetchData() {
       try {
         setLoading(true);
+        console.log("Fetching buying personas data...");
+        
+        // Get all data without any filtering
         const { data: personasData, error } = await supabase
           .from("Team38buyingpersonasforwebsite")
           .select("*");
 
-        if (error) throw error;
+        if (error) {
+          console.error("Error fetching data:", error);
+          throw error;
+        }
+        
+        console.log("Fetched buying personas data:", personasData);
         setData(personasData as BuyingPersona[]);
       } catch (err) {
         console.error("Error fetching Team 38 buying personas:", err);
@@ -41,11 +49,19 @@ export function useTeam38Frituren() {
     async function fetchData() {
       try {
         setLoading(true);
+        console.log("Fetching frituren data...");
+        
+        // Get all data without any filtering
         const { data: friturenData, error } = await supabase
           .from("Team38friturenforwebsite")
           .select("*");
 
-        if (error) throw error;
+        if (error) {
+          console.error("Error fetching data:", error);
+          throw error;
+        }
+        
+        console.log("Fetched frituren data:", friturenData);
         setData(friturenData as Frituur[]);
       } catch (err) {
         console.error("Error fetching Team 38 frituren data:", err);
@@ -70,11 +86,19 @@ export function useTeam38StreetInterviews() {
     async function fetchData() {
       try {
         setLoading(true);
+        console.log("Fetching street interviews data...");
+        
+        // Get all data without any filtering
         const { data: interviewsData, error } = await supabase
           .from("Team38streetinterviewsforwebsite")
           .select("*");
 
-        if (error) throw error;
+        if (error) {
+          console.error("Error fetching data:", error);
+          throw error;
+        }
+        
+        console.log("Fetched street interviews data:", interviewsData);
         setData(interviewsData as StreetInterview[]);
       } catch (err) {
         console.error("Error fetching Team 38 street interviews:", err);

@@ -32,6 +32,9 @@ const StreetInterviewsTable = () => {
 
   // Get all unique column keys excluding 'id'
   const columnKeys = Object.keys(data[0]).filter(key => key !== 'id');
+  
+  console.log("Street interviews data columns:", columnKeys);
+  console.log("Street interviews data sample:", data[0]);
 
   return (
     <div className="rounded-md border overflow-hidden">

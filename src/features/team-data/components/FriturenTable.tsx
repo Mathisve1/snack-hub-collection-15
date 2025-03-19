@@ -33,6 +33,9 @@ const FriturenTable = () => {
   // Get all unique column keys excluding 'id'
   const columnKeys = Object.keys(data[0]).filter(key => key !== 'id');
 
+  console.log("Frituren data columns:", columnKeys);
+  console.log("Frituren data sample:", data[0]);
+
   return (
     <div className="rounded-md border overflow-hidden">
       <div className="overflow-x-auto">
