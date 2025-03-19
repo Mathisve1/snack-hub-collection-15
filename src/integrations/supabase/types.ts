@@ -1150,9 +1150,9 @@ export type Database = {
       }
       Team38friturenforwebsite: {
         Row: {
-          aankoopprijs: string | null
-          aankoopprijs_proteine_snacks: string | null
-          absolute_marges: string | null
+          aankoopprijs: number | null
+          aankoopprijs_proteine_snacks: number | null
+          absolute_marges: number | null
           belangrijke_factor_1: string | null
           belangrijke_factor_2: string | null
           bereidheid_aanbieden: string | null
@@ -1160,7 +1160,7 @@ export type Database = {
           bestseller_2: string | null
           bestseller_3: string | null
           extra_groothandel: string | null
-          gemiddlede_marges: string | null
+          gemiddlede_marges: number | null
           groothandel: string | null
           id: string
           marketing_1: string | null
@@ -1171,9 +1171,9 @@ export type Database = {
           waarom_niet_verkopen_2: string | null
         }
         Insert: {
-          aankoopprijs?: string | null
-          aankoopprijs_proteine_snacks?: string | null
-          absolute_marges?: string | null
+          aankoopprijs?: number | null
+          aankoopprijs_proteine_snacks?: number | null
+          absolute_marges?: number | null
           belangrijke_factor_1?: string | null
           belangrijke_factor_2?: string | null
           bereidheid_aanbieden?: string | null
@@ -1181,7 +1181,7 @@ export type Database = {
           bestseller_2?: string | null
           bestseller_3?: string | null
           extra_groothandel?: string | null
-          gemiddlede_marges?: string | null
+          gemiddlede_marges?: number | null
           groothandel?: string | null
           id?: string
           marketing_1?: string | null
@@ -1192,9 +1192,9 @@ export type Database = {
           waarom_niet_verkopen_2?: string | null
         }
         Update: {
-          aankoopprijs?: string | null
-          aankoopprijs_proteine_snacks?: string | null
-          absolute_marges?: string | null
+          aankoopprijs?: number | null
+          aankoopprijs_proteine_snacks?: number | null
+          absolute_marges?: number | null
           belangrijke_factor_1?: string | null
           belangrijke_factor_2?: string | null
           bereidheid_aanbieden?: string | null
@@ -1202,7 +1202,7 @@ export type Database = {
           bestseller_2?: string | null
           bestseller_3?: string | null
           extra_groothandel?: string | null
-          gemiddlede_marges?: string | null
+          gemiddlede_marges?: number | null
           groothandel?: string | null
           id?: string
           marketing_1?: string | null
