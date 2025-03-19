@@ -6,7 +6,6 @@ import { PersonaCardItem } from "./buying-personas/PersonaCardItem";
 import { EmptyPersonasState } from "./buying-personas/EmptyPersonasState";
 import { PersonasErrorState } from "./buying-personas/PersonasErrorState";
 import { PersonasLoadingState } from "./buying-personas/PersonasLoadingState";
-import { groupPersonasByName } from "./buying-personas/PersonaDataUtils";
 import { BuyingPersona } from "../types";
 
 const BuyingPersonasCards = () => {
@@ -32,24 +31,40 @@ const BuyingPersonasCards = () => {
     return <EmptyPersonasState />;
   }
 
-  console.log("Raw buying personas data:", data);
+  // Debug log to see what data we're getting
+  console.log("Rendering personas data:", data);
   
-  // Process the raw data to match the GroupedPersona format expected by PersonaCardItem
-  const groupedPersonas = groupPersonasByName(data);
+  // Create a set of unique persona types
+  const uniquePersonaTypes = [...new Set(data.map(p => p.buying_persona?.toLowerCase() || ''))];
   
-  // Additional debug logging
-  console.log("Grouped personas result:", groupedPersonas);
-  
-  if (!groupedPersonas || groupedPersonas.length === 0) {
-    console.log("No grouped personas were created");
-    return <EmptyPersonasState />;
-  }
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {groupedPersonas.map((persona, index) => (
-        <PersonaCardItem key={persona.name} persona={persona} index={index} />
-      ))}
+      {uniquePersonaTypes.map((personaType, index) => {
+        // Filter personas by type
+        const personasOfType = data.filter(
+          p => p.buying_persona?.toLowerCase() === personaType
+        );
+        
+        // Skip empty persona types
+        if (!personaType || personasOfType.length === 0) return null;
+        
+        // Create a simplified persona object with the data needed for the card
+        const persona = {
+          name: personaType.charAt(0).toUpperCase() + personaType.slice(1),
+          count: personasOfType.length,
+          personas: personasOfType
+        };
+        
+        return (
+          <PersonaCardItem 
+            key={personaType} 
+            personaType={persona.name}
+            personaCount={persona.count}
+            personas={persona.personas}
+            index={index} 
+          />
+        );
+      })}
     </div>
   );
 };
