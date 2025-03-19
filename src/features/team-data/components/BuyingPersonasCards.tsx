@@ -18,6 +18,9 @@ const BuyingPersonasCards = () => {
   
   const { data, loading, error } = isTeam3 ? team3Data : team38Data;
 
+  // Always log the current state for debugging
+  console.log("BuyingPersonasCards state:", { data, loading, error, isTeam3, path: location.pathname });
+
   if (loading) {
     return <PersonasLoadingState />;
   }
@@ -26,41 +29,65 @@ const BuyingPersonasCards = () => {
     return <PersonasErrorState error={error} />;
   }
 
-  if (!data || data.length === 0) {
-    console.log("No data available for buying personas");
-    return <EmptyPersonasState />;
+  // Extra check to ensure we truly have no data
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    return (
+      <EmptyPersonasState 
+        debug={{
+          dataLength: data?.length,
+          dataExists: !!data && Array.isArray(data) && data.length > 0,
+          isLoading: loading,
+          error: error
+        }}
+      />
+    );
   }
 
-  // Debug log to see what data we're getting
+  // Log what we're about to render
   console.log("Rendering personas data:", data);
   
-  // Create a set of unique persona types
-  const uniquePersonaTypes = [...new Set(data.map(p => p.buying_persona?.toLowerCase() || ''))];
+  // Create a mapping of persona types to arrays of personas
+  const personasByType: Record<string, BuyingPersona[]> = {};
+  
+  // Group personas by type, handling case insensitivity
+  data.forEach(persona => {
+    if (!persona.buying_persona) return;
+    
+    const personaType = persona.buying_persona.toLowerCase();
+    if (!personasByType[personaType]) {
+      personasByType[personaType] = [];
+    }
+    personasByType[personaType].push(persona);
+  });
+  
+  // Convert to array for rendering
+  const personaTypes = Object.keys(personasByType);
+  
+  // Ensure we actually have personas to display
+  if (personaTypes.length === 0) {
+    return (
+      <EmptyPersonasState 
+        debug={{
+          dataLength: data?.length,
+          dataExists: true,
+          isLoading: false,
+          error: "No valid persona types found in data"
+        }}
+      />
+    );
+  }
   
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {uniquePersonaTypes.map((personaType, index) => {
-        // Filter personas by type
-        const personasOfType = data.filter(
-          p => p.buying_persona?.toLowerCase() === personaType
-        );
-        
-        // Skip empty persona types
-        if (!personaType || personasOfType.length === 0) return null;
-        
-        // Create a simplified persona object with the data needed for the card
-        const persona = {
-          name: personaType.charAt(0).toUpperCase() + personaType.slice(1),
-          count: personasOfType.length,
-          personas: personasOfType
-        };
+      {personaTypes.map((personaType, index) => {
+        const personasOfThisType = personasByType[personaType];
         
         return (
           <PersonaCardItem 
             key={personaType} 
-            personaType={persona.name}
-            personaCount={persona.count}
-            personas={persona.personas}
+            personaType={personaType.charAt(0).toUpperCase() + personaType.slice(1)}
+            personaCount={personasOfThisType.length}
+            personas={personasOfThisType}
             index={index} 
           />
         );
