@@ -1,5 +1,6 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { getCardColor } from "./utils/personaDisplayUtils";
 import { BuyingPersona } from "../../types";
 
@@ -43,9 +44,9 @@ export const PersonaCardItem = ({ personaType, personaCount, personas, index }: 
   const maxAge = ages.length > 0 ? Math.max(...ages as number[]) : 'N/A';
   const ageRange = ages.length > 0 ? `${minAge} - ${maxAge}` : 'N/A';
   
-  // Calculate average age
+  // Calculate average age - Fix for type error
   const averageAge = ages.length > 0 
-    ? Math.round(ages.reduce((sum, age) => sum + Number(age), 0) / ages.length) 
+    ? Math.round(ages.reduce((sum, age) => sum + (typeof age === 'number' ? age : 0), 0) / ages.length) 
     : 'N/A';
   
   // Count individual ages and their occurrences
@@ -63,9 +64,9 @@ export const PersonaCardItem = ({ personaType, personaCount, personas, index }: 
   const maxPrice = prices.length > 0 ? Math.max(...prices as number[]) : 'N/A';
   const priceRange = prices.length > 0 ? `€${minPrice} - €${maxPrice}` : 'N/A';
   
-  // Calculate average price
+  // Calculate average price - Fix for type error
   const averagePrice = prices.length > 0 
-    ? Math.round(prices.reduce((sum, price) => sum + Number(price), 0) / prices.length * 100) / 100
+    ? Math.round(prices.reduce((sum, price) => sum + (typeof price === 'number' ? price : 0), 0) / prices.length * 100) / 100
     : 'N/A';
     
   // Count individual prices and their occurrences
@@ -199,12 +200,15 @@ export const PersonaCardItem = ({ personaType, personaCount, personas, index }: 
           </div>
         </div>
         
-        {/* Openness Section */}
+        {/* Openness Section with Progress Bar */}
         <div>
           <h4 className="font-medium text-gray-700 mb-1">Open voor Nieuwe Snack</h4>
-          <div className="text-gray-600">
-            {openness.percentage}% is open voor nieuwe snacks
-            ({openness.open} van {openness.total})
+          <div className="mt-2">
+            <Progress value={openness.percentage} className="h-2.5" />
+            <div className="flex justify-between text-xs text-gray-600 mt-1">
+              <span>{openness.percentage}% is open</span>
+              <span>({openness.open}/{openness.total})</span>
+            </div>
           </div>
         </div>
       </CardContent>
