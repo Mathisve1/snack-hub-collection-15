@@ -7,7 +7,7 @@ import {
   formatBreakdown,
   calculateAverageResponse,
   calculateAverageFromRecord
-} from "./StreetInterviewsDataUtils";
+} from "./utils";
 
 // Import the card components
 import ReactionsChannelsCard from "./cards/ReactionsChannelsCard";
