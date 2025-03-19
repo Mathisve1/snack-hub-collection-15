@@ -11,7 +11,7 @@ type PersonaCardItemProps = {
 export type GroupedPersona = {
   name: string;
   count: number;
-  leeftijd: string[];
+  leeftijd: (string | number)[];
   geslacht: Record<string, number>;
   prijs: Record<string, number>;
   frequentie_frituurbezoek: Record<string, number>;
@@ -46,11 +46,14 @@ export const PersonaCardItem = ({ persona, index }: PersonaCardItemProps) => {
   };
 
   // Calculate average age and count occurrences
-  const getAgeInfo = (ages: string[]): { average: string; breakdown: string } => {
+  const getAgeInfo = (ages: (string | number)[]): { average: string; breakdown: string } => {
     if (ages.length === 0) return { average: "Niet beschikbaar", breakdown: "" };
     
+    // Convert all values to strings for consistent handling
+    const ageStrings = ages.map(age => String(age));
+    
     // Count occurrences of each age
-    const ageCounts = ages.reduce((acc: Record<string, number>, age) => {
+    const ageCounts = ageStrings.reduce((acc: Record<string, number>, age) => {
       acc[age] = (acc[age] || 0) + 1;
       return acc;
     }, {});
@@ -58,7 +61,8 @@ export const PersonaCardItem = ({ persona, index }: PersonaCardItemProps) => {
     // Calculate average if ages are numeric
     let average = "Niet beschikbaar";
     try {
-      const numericAges = ages.map(age => parseInt(age, 10)).filter(age => !isNaN(age));
+      const numericAges = ages.map(age => typeof age === 'number' ? age : parseInt(String(age), 10))
+                             .filter(age => !isNaN(age));
       if (numericAges.length > 0) {
         const sum = numericAges.reduce((total, age) => total + age, 0);
         average = (sum / numericAges.length).toFixed(0);

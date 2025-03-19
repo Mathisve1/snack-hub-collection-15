@@ -2,7 +2,7 @@
 export type GroupedPersona = {
   name: string;
   count: number;
-  leeftijd: string[];
+  leeftijd: (string | number)[];
   geslacht: Record<string, number>;
   prijs: Record<string, number>;
   frequentie_frituurbezoek: Record<string, number>;
@@ -38,7 +38,7 @@ export const groupPersonasByName = (data: BuyingPersona[]): GroupedPersona[] => 
     acc[name].count++;
 
     // Collect leeftijd (for averaging later)
-    if (persona.leeftijd) {
+    if (persona.leeftijd !== null && persona.leeftijd !== undefined) {
       acc[name].leeftijd.push(persona.leeftijd);
     }
 
@@ -48,8 +48,9 @@ export const groupPersonasByName = (data: BuyingPersona[]): GroupedPersona[] => 
     }
 
     // Count prijs occurrences
-    if (persona.prijs) {
-      acc[name].prijs[persona.prijs] = (acc[name].prijs[persona.prijs] || 0) + 1;
+    if (persona.prijs !== null && persona.prijs !== undefined) {
+      const prijsKey = String(persona.prijs);
+      acc[name].prijs[prijsKey] = (acc[name].prijs[prijsKey] || 0) + 1;
     }
 
     // Count frequentie_frituurbezoek occurrences

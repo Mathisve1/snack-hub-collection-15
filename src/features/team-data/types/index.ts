@@ -3,9 +3,9 @@
 export interface BuyingPersona {
   id: string;
   buying_persona: string;
-  leeftijd?: string;
+  leeftijd?: string | number;
   geslacht?: string;
-  prijs?: string;
+  prijs?: string | number;
   marketing?: string;
   consumptie_situatie?: string;
   frequentie_frituurbezoek?: string;
