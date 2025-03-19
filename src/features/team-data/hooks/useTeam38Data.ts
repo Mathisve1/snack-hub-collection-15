@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { BuyingPersona, Frituur, StreetInterview } from "../types";
 
-export function useBuyingPersonas() {
+export function useTeam38BuyingPersonas() {
   const [data, setData] = useState<BuyingPersona[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +19,7 @@ export function useBuyingPersonas() {
         if (error) throw error;
         setData(personasData as BuyingPersona[]);
       } catch (err) {
-        console.error("Error fetching buying personas:", err);
+        console.error("Error fetching Team 38 buying personas:", err);
         setError(err instanceof Error ? err.message : "Unknown error");
       } finally {
         setLoading(false);
@@ -32,7 +32,7 @@ export function useBuyingPersonas() {
   return { data, loading, error };
 }
 
-export function useFrituren() {
+export function useTeam38Frituren() {
   const [data, setData] = useState<Frituur[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -48,7 +48,7 @@ export function useFrituren() {
         if (error) throw error;
         setData(friturenData as Frituur[]);
       } catch (err) {
-        console.error("Error fetching frituren data:", err);
+        console.error("Error fetching Team 38 frituren data:", err);
         setError(err instanceof Error ? err.message : "Unknown error");
       } finally {
         setLoading(false);
@@ -61,7 +61,7 @@ export function useFrituren() {
   return { data, loading, error };
 }
 
-export function useStreetInterviews() {
+export function useTeam38StreetInterviews() {
   const [data, setData] = useState<StreetInterview[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -77,7 +77,7 @@ export function useStreetInterviews() {
         if (error) throw error;
         setData(interviewsData as StreetInterview[]);
       } catch (err) {
-        console.error("Error fetching street interviews:", err);
+        console.error("Error fetching Team 38 street interviews:", err);
         setError(err instanceof Error ? err.message : "Unknown error");
       } finally {
         setLoading(false);
