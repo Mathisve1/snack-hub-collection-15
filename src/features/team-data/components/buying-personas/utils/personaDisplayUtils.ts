@@ -18,6 +18,36 @@ export const getMostCommon = (record: Record<string, number>): { value: string; 
   };
 };
 
+// Calculate price information and format with € symbol
+export const getPriceInfo = (prices: Record<string, number>): { average: string; breakdown: string } => {
+  if (Object.keys(prices).length === 0) return { average: "Niet beschikbaar", breakdown: "" };
+  
+  // Count occurrences of each price
+  const priceEntries = Object.entries(prices);
+  const total = priceEntries.reduce((sum, [_, count]) => sum + count, 0);
+  
+  // Calculate average price
+  let average = "Niet beschikbaar";
+  try {
+    const weightedSum = priceEntries.reduce((sum, [price, count]) => {
+      return sum + (parseFloat(price) * count);
+    }, 0);
+    
+    if (total > 0) {
+      average = (weightedSum / total).toFixed(2);
+    }
+  } catch (e) {
+    console.error("Error calculating average price:", e);
+  }
+  
+  // Format breakdown string with € symbol
+  const breakdown = priceEntries
+    .map(([price, count]) => `${price}€ (${count}x)`)
+    .join(", ");
+  
+  return { average, breakdown };
+};
+
 // Calculate average age and count occurrences
 export const getAgeInfo = (ages: (string | number)[]): { average: string; breakdown: string } => {
   if (ages.length === 0) return { average: "Niet beschikbaar", breakdown: "" };
