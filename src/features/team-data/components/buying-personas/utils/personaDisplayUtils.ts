@@ -1,4 +1,3 @@
-
 import { GroupedPersona } from "../PersonaDataUtils";
 
 // Get most common value from a record of counts
@@ -46,6 +45,31 @@ export const getPriceInfo = (prices: Record<string, number>): { average: string;
     .join(", ");
   
   return { average, breakdown };
+};
+
+// Format frequency information with counts
+export const getFrequencyInfo = (frequency: Record<string, number>): { mostCommon: string; breakdown: string } => {
+  if (Object.keys(frequency).length === 0) return { mostCommon: "Niet beschikbaar", breakdown: "" };
+  
+  // Find most common frequency
+  const entries = Object.entries(frequency);
+  const total = entries.reduce((sum, [_, count]) => sum + count, 0);
+  const [mostCommonValue, mostCommonCount] = entries.reduce((max, current) => 
+    (current[1] > max[1] ? current : max));
+  
+  // Format the most common value with percentage
+  const percentage = Math.round((mostCommonCount / total) * 100);
+  const mostCommon = `${mostCommonValue} (${percentage}%)`;
+  
+  // Format breakdown string with counts and percentages
+  const breakdown = entries
+    .map(([value, count]) => {
+      const pct = Math.round((count / total) * 100);
+      return `${value} (${count}x, ${pct}%)`;
+    })
+    .join(", ");
+  
+  return { mostCommon, breakdown };
 };
 
 // Calculate average age and count occurrences
