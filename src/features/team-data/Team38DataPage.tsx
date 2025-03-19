@@ -10,12 +10,20 @@ export const Team38DataPage = () => {
     <div className="container mx-auto py-6 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Team 38 Data Overview</h1>
-        <Button asChild variant="outline" size="sm">
-          <Link to="/team-38-results-duplicate">
-            <Copy className="h-4 w-4 mr-2" />
-            View Duplicate Page
-          </Link>
-        </Button>
+        <div className="flex gap-2">
+          <Button asChild variant="outline" size="sm">
+            <Link to="/team-38-results-duplicate">
+              <Copy className="h-4 w-4 mr-2" />
+              View Duplicate
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link to="/team-38-results-triplicate">
+              <Copy className="h-4 w-4 mr-2" />
+              View Triplicate
+            </Link>
+          </Button>
+        </div>
       </div>
       
       <Team38DataDisplay />

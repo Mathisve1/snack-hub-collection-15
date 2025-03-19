@@ -16,7 +16,7 @@ import {
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 
-const Team38Results = () => {
+const Team38ResultsTriplicate = () => {
   const navigate = useNavigate();
   const { data: personas, loading: personasLoading, error: personasError } = useTeam38BuyingPersonas();
   const { data: frituren, loading: friturenLoading, error: friturenError } = useTeam38Frituren();
@@ -32,7 +32,7 @@ const Team38Results = () => {
   return (
     <>
       <Helmet>
-        <title>Team 38 Research Results | Snack Innovation</title>
+        <title>Team 38 Research Results (Triplicate) | Snack Innovation</title>
       </Helmet>
       
       <div className="min-h-screen bg-gray-50">
@@ -47,19 +47,19 @@ const Team38Results = () => {
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
-              <h1 className="text-xl font-semibold">Team 38 Research Results</h1>
+              <h1 className="text-xl font-semibold">Team 38 Research Results (Triplicate)</h1>
             </div>
             <div className="flex gap-2">
+              <Button asChild variant="outline" size="sm">
+                <Link to="/team-38-results">
+                  <Copy className="h-4 w-4 mr-2" />
+                  View Original
+                </Link>
+              </Button>
               <Button asChild variant="outline" size="sm">
                 <Link to="/team-38-results-duplicate">
                   <Copy className="h-4 w-4 mr-2" />
                   View Duplicate
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="sm">
-                <Link to="/team-38-results-triplicate">
-                  <Copy className="h-4 w-4 mr-2" />
-                  View Triplicate
                 </Link>
               </Button>
             </div>
@@ -69,7 +69,7 @@ const Team38Results = () => {
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="bg-white rounded-lg shadow">
             <div className="p-6">
-              <h2 className="text-2xl font-bold mb-6">Team 38 Market Research Data</h2>
+              <h2 className="text-2xl font-bold mb-6">Team 38 Market Research Data (Triplicate)</h2>
               
               <p className="text-gray-600 mb-8">
                 This page presents the complete market research findings from Team 38's research on 
@@ -151,4 +151,4 @@ const Team38Results = () => {
   );
 };
 
-export default Team38Results;
+export default Team38ResultsTriplicate;
