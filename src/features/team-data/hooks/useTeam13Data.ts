@@ -104,7 +104,16 @@ export function useTeam13StreetInterviews() {
         }
         
         console.log(`Data from Team 13 street interviews:`, result.data);
-        setData(result.data as StreetInterview[] || []);
+        // Convert the result to the expected type with type assertion
+        const transformedData = result.data?.map(item => ({
+          ...item,
+          // Ensure eiwitgehalte is treated as a string in our app
+          eiwitgehalte: item.eiwitgehalte?.toString() || "",
+          // Ensure prijs is treated as a string in our app
+          prijs: item.prijs?.toString() || ""
+        })) || [];
+        
+        setData(transformedData as unknown as StreetInterview[]);
         
       } catch (err) {
         console.error("Error fetching Team 13 street interviews:", err);

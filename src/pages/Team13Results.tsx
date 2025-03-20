@@ -170,18 +170,18 @@ const Team13Results = () => {
                     </div>
                     
                     {personasViewMode === "table" ? (
-                      <BuyingPersonasTable data={personas} />
+                      <BuyingPersonasTable personas={personas} />
                     ) : (
-                      <BuyingPersonasCards data={personas} />
+                      <BuyingPersonasCards personas={personas} />
                     )}
                   </TabsContent>
                   
                   <TabsContent value="frituren">
-                    <FriturenTable data={frituren} />
+                    <FriturenTable frituren={frituren} />
                   </TabsContent>
                   
                   <TabsContent value="streetInterviews">
-                    <StreetInterviewsTable data={interviews} />
+                    <StreetInterviewsTable interviews={interviews} />
                   </TabsContent>
                 </Tabs>
               )}
