@@ -45,3 +45,53 @@ export const normalizeToPercentage = (record: Record<string, number>): Record<st
     return result;
   }, {} as Record<string, number>);
 };
+
+// Extract numeric values from a record of string to number
+export const extractNumericValues = (record: Record<string, number>): number[] => {
+  const values: number[] = [];
+  
+  for (const [valueStr, count] of Object.entries(record)) {
+    const value = parseFloat(valueStr);
+    if (!isNaN(value)) {
+      // Add the value to the array 'count' times
+      for (let i = 0; i < count; i++) {
+        values.push(value);
+      }
+    }
+  }
+  
+  return values;
+};
+
+// Count boolean values and return percentage of true values
+export const countBooleanValues = (values: (boolean | number)[]): { trueCount: number; falseCount: number; truePercentage: number } => {
+  if (values.length === 0) {
+    return { trueCount: 0, falseCount: 0, truePercentage: 0 };
+  }
+  
+  const trueCount = values.reduce((count, value) => {
+    // Handle both boolean and numeric (0/1) values
+    const isTrue = typeof value === 'boolean' ? value : value === 1;
+    return count + (isTrue ? 1 : 0);
+  }, 0);
+  
+  const falseCount = values.length - trueCount;
+  const truePercentage = Math.round((trueCount / values.length) * 100);
+  
+  return { trueCount, falseCount, truePercentage };
+};
+
+// Get top N values from a record
+export const getTopNValues = (record: Record<string, number>, n: number = 3): Array<{ name: string; count: number; percentage: number }> => {
+  const total = Object.values(record).reduce((sum, count) => sum + count, 0);
+  if (total === 0) return [];
+  
+  return Object.entries(record)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, n)
+    .map(([name, count]) => ({
+      name,
+      count,
+      percentage: Math.round((count / total) * 100)
+    }));
+};

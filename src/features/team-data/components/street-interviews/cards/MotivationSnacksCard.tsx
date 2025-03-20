@@ -1,60 +1,69 @@
 
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GroupedStreetInterviewData } from "../utils/types";
-import { getMostCommon, formatBreakdown, getTopValues } from "../utils/calculationUtils";
-import DataPoint from "./DataPoint";
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import DataPoint from './DataPoint';
+import { MotivationSnacksCardProps, TopValue } from '../types';
 
-interface MotivationSnacksCardProps {
-  groupedData: GroupedStreetInterviewData;
-}
-
-const MotivationSnacksCard: React.FC<MotivationSnacksCardProps> = ({ groupedData }) => {
-  const motivationData = getMostCommon(groupedData.motivatie_frituur);
-  const topSnacks = getTopValues(groupedData.populaire_snacks, 3);
-
+const MotivationSnacksCard: React.FC<MotivationSnacksCardProps> = ({
+  title = "Motivatie & Populaire Snacks",
+  icon: Icon,
+  topMotivations,
+  topSnacks,
+  motivationTotal,
+  snacksTotal
+}) => {
   return (
-    <Card className="shadow-md h-full">
+    <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-medium">Motivatie & Populaire Snacks</CardTitle>
+        <CardTitle className="text-lg flex items-center">
+          {Icon && <Icon className="h-5 w-5 mr-2 text-green-500" />}
+          {title}
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="space-y-6">
           <DataPoint
-            label="Belangrijkste Motivatie voor Frituurbezoek"
-            value={motivationData.value}
-            subValue={`${motivationData.percentage}% van alle respondenten`}
+            label="Motivatie om frituur te bezoeken"
+            value={topMotivations[0]?.name || "Geen gegevens"}
+            secondaryInfo={`${topMotivations[0]?.percentage || 0}% van de respondenten`}
+            breakdown={formatTopValuesToString(topMotivations)}
           />
           
-          <div className="mt-2">
-            <h4 className="text-sm font-medium text-gray-500">Alle Motivaties:</h4>
-            <p className="text-sm text-gray-700 mt-1">
-              {formatBreakdown(groupedData.motivatie_frituur)}
-            </p>
+          <div className="mt-1 text-xs text-gray-500">
+            Gebaseerd op {motivationTotal} antwoorden
           </div>
           
-          <div className="border-t pt-4 mt-4">
-            <h4 className="text-sm font-medium text-gray-500 mb-2">Top Populaire Snacks:</h4>
-            
-            {topSnacks.length > 0 ? (
-              <div className="space-y-3">
-                {topSnacks.map((snack, index) => (
+          <div className="mt-4">
+            <h4 className="font-medium mb-2">Populaire snacks</h4>
+            <ul className="space-y-2">
+              {topSnacks.map((snack, index) => (
+                <li key={index} className="flex justify-between items-center">
                   <DataPoint
-                    key={index}
-                    label={`#${index + 1}`}
-                    value={snack.value}
-                    subValue={`${snack.percentage}% van alle vermeldingen`}
+                    label={`${index + 1}. ${snack.name}`}
+                    value={`${snack.percentage}%`}
+                    secondaryInfo={`${snack.count} vermeldingen`}
                   />
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm text-gray-500">Geen snackgegevens beschikbaar</p>
-            )}
+                </li>
+              ))}
+            </ul>
+            
+            <div className="mt-2 text-xs text-gray-500">
+              Gebaseerd op {snacksTotal} antwoorden
+            </div>
           </div>
         </div>
       </CardContent>
     </Card>
   );
+};
+
+// Helper function to format TopValues array to string
+const formatTopValuesToString = (values: TopValue[]): string => {
+  if (!values || values.length === 0) return "Geen gegevens beschikbaar";
+  
+  return values
+    .map(item => `${item.name} (${item.percentage}%)`)
+    .join(", ");
 };
 
 export default MotivationSnacksCard;

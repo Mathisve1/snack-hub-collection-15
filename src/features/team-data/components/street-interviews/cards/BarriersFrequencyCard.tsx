@@ -1,86 +1,65 @@
 
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GroupedStreetInterviewData } from "../utils/types";
-import { getMostCommon, formatBreakdown, getTopValues } from "../utils/calculationUtils";
-import DataPoint from "./DataPoint";
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import DataPoint from './DataPoint';
+import { BarriersFrequencyCardProps, TopValue } from '../types';
 
-interface BarriersFrequencyCardProps {
-  groupedData: GroupedStreetInterviewData;
-}
-
-const BarriersFrequencyCard: React.FC<BarriersFrequencyCardProps> = ({ groupedData }) => {
-  const barriersData = getMostCommon(groupedData.aankoopbarrieres);
-  const frequencyData = getMostCommon(groupedData.frituurbezoek_frequentie);
-  
-  // Marketing preferences
-  const marketingPreferences = getTopValues(groupedData.marketing, 3);
-
+const BarriersFrequencyCard: React.FC<BarriersFrequencyCardProps> = ({
+  title = "Aankoopbarrières & Bezoekfrequentie",
+  icon: Icon,
+  topBarriers,
+  topFrequencies,
+  barriersTotal,
+  frequenciesTotal
+}) => {
   return (
-    <Card className="shadow-md h-full">
+    <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-medium">Aankoopbarrières, Frequentie & Marketing</CardTitle>
+        <CardTitle className="text-lg flex items-center">
+          {Icon && <Icon className="h-5 w-5 mr-2 text-violet-500" />}
+          {title}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-4">
+          <div>
             <DataPoint
-              label="Belangrijkste Aankoopbarrière"
-              value={barriersData.value}
-              subValue={`${barriersData.percentage}% van alle respondenten`}
+              label="Belangrijkste aankoopbarrières"
+              value={topBarriers[0]?.name || "Geen gegevens"}
+              secondaryInfo={`${topBarriers[0]?.percentage || 0}% van de respondenten`}
+              breakdown={formatTopValuesToString(topBarriers)}
             />
             
-            <div className="mt-2">
-              <h4 className="text-sm font-medium text-gray-500">Alle Aankoopbarrières:</h4>
-              <p className="text-sm text-gray-700 mt-1">
-                {formatBreakdown(groupedData.aankoopbarrieres)}
-              </p>
-            </div>
-            
-            <div className="mt-3 bg-red-50 p-3 rounded-md">
-              <h4 className="text-sm font-medium text-red-700 mb-1">Aandachtspunt:</h4>
-              <p className="text-sm text-red-600">
-                De identificatie van aankoopbarrières kan helpen bij het ontwikkelen van 
-                strategieën om deze obstakels te overwinnen in de productintroductie.
-              </p>
+            <div className="mt-2 text-xs text-gray-500">
+              Gebaseerd op {barriersTotal} antwoorden
             </div>
           </div>
           
-          <div className="space-y-4">
+          <div>
             <DataPoint
-              label="Meest Voorkomende Bezoekfrequentie"
-              value={frequencyData.value}
-              subValue={`${frequencyData.percentage}% van alle respondenten`}
+              label="Frequentie frituurbezoek"
+              value={topFrequencies[0]?.name || "Geen gegevens"}
+              secondaryInfo={`${topFrequencies[0]?.percentage || 0}% van de respondenten`}
+              breakdown={formatTopValuesToString(topFrequencies)}
             />
             
-            <div className="mt-2">
-              <h4 className="text-sm font-medium text-gray-500">Verdeling Bezoekfrequentie:</h4>
-              <p className="text-sm text-gray-700 mt-1">
-                {formatBreakdown(groupedData.frituurbezoek_frequentie)}
-              </p>
-            </div>
-            
-            <div className="border-t pt-4 mt-4">
-              <h4 className="text-sm font-medium text-gray-500 mb-2">Top Marketing Voorkeuren:</h4>
-              
-              {marketingPreferences.length > 0 ? (
-                <div className="space-y-2">
-                  {marketingPreferences.map((pref, index) => (
-                    <div key={index} className="flex justify-between bg-gray-50 p-2 rounded">
-                      <span className="text-gray-700">{pref.value}</span>
-                      <span className="font-medium">{pref.percentage}%</span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-gray-500">Geen marketing gegevens beschikbaar</p>
-              )}
+            <div className="mt-2 text-xs text-gray-500">
+              Gebaseerd op {frequenciesTotal} antwoorden
             </div>
           </div>
         </div>
       </CardContent>
     </Card>
   );
+};
+
+// Helper function to format TopValues array to string
+const formatTopValuesToString = (values: TopValue[]): string => {
+  if (!values || values.length === 0) return "Geen gegevens beschikbaar";
+  
+  return values
+    .map(item => `${item.name} (${item.percentage}%)`)
+    .join(", ");
 };
 
 export default BarriersFrequencyCard;

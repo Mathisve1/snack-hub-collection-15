@@ -1,80 +1,120 @@
 
-import React from "react";
-import { StreetInterview } from "../types";
-import { processStreetInterviewsData } from "./street-interviews/utils/dataProcessing";
-import { GroupedStreetInterviewData } from "./street-interviews/utils/types";
-import ReactionsChannelsCard from "./street-interviews/cards/ReactionsChannelsCard";
-import MotivationSnacksCard from "./street-interviews/cards/MotivationSnacksCard";
-import ProteinPriceCard from "./street-interviews/cards/ProteinPriceCard";
-import TasteCoatingCard from "./street-interviews/cards/TasteCoatingCard";
-import PreparationCrunchCard from "./street-interviews/cards/PreparationCrunchCard";
-import InnovationPriceCard from "./street-interviews/cards/InnovationPriceCard";
-import BarriersFrequencyCard from "./street-interviews/cards/BarriersFrequencyCard";
-import SummaryCard from "./street-interviews/cards/SummaryCard";
-import { calculateBooleanPercentage } from "./street-interviews/utils/calculationUtils";
+import React from 'react';
+import { StreetInterview } from '../types';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { processStreetInterviewsData, extractStreetInterviewMetrics } from './street-interviews/utils/dataProcessing';
+import { 
+  MessageSquare, 
+  ShoppingBag, 
+  Utensils, 
+  DollarSign, 
+  Coffee, 
+  Cpu, 
+  BarChart 
+} from 'lucide-react';
+import ReactionsChannelsCard from './street-interviews/cards/ReactionsChannelsCard';
+import MotivationSnacksCard from './street-interviews/cards/MotivationSnacksCard';
+import ProteinPriceCard from './street-interviews/cards/ProteinPriceCard';
+import TasteCoatingCard from './street-interviews/cards/TasteCoatingCard';
+import PreparationCrunchCard from './street-interviews/cards/PreparationCrunchCard';
+import BarriersFrequencyCard from './street-interviews/cards/BarriersFrequencyCard';
+import InnovationPriceCard from './street-interviews/cards/InnovationPriceCard';
+import SummaryCard from './street-interviews/cards/SummaryCard';
 
 interface Team13StreetInterviewsSummaryProps {
-  interviews: StreetInterview[];
+  data: StreetInterview[];
 }
 
-const Team13StreetInterviewsSummary: React.FC<Team13StreetInterviewsSummaryProps> = ({ interviews }) => {
-  // Process the data into a grouped format
-  const groupedData: GroupedStreetInterviewData = processStreetInterviewsData(interviews);
-
-  // Calculate key metrics for the summary card
-  const interviewCount = groupedData.count;
-  const innovationPercentage = calculateBooleanPercentage(groupedData.innovatie_ruimte);
-  const higherPricePercentage = calculateBooleanPercentage(groupedData.hogere_prijs_bereidheid);
-  const replaceTraditionalPercentage = calculateBooleanPercentage(groupedData.vervangen_traditionele_snack);
-
+const Team13StreetInterviewsSummary: React.FC<Team13StreetInterviewsSummaryProps> = ({ data }) => {
+  const processedData = processStreetInterviewsData(data);
+  const metrics = extractStreetInterviewMetrics(processedData);
+  
   return (
     <div className="space-y-6">
-      {/* Summary Card - Top Level Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <SummaryCard
-          title="Aantal Interviews"
-          value={interviewCount.toString()}
-          icon="clipboard-list"
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <SummaryCard 
+          title="Eerste reacties & verkoopskanalen" 
+          icon={MessageSquare} 
+          count={metrics.eersteReactiesTotal + metrics.verkoopskanalenTotal} 
         />
-        <SummaryCard
-          title="Ruimte voor Innovatie"
-          value={`${innovationPercentage}%`}
-          icon="lightbulb"
+        <SummaryCard 
+          title="Motivatie & populaire snacks" 
+          icon={ShoppingBag} 
+          count={metrics.motivationTotal + metrics.snacksTotal} 
         />
-        <SummaryCard
-          title="Bereid Hogere Prijs te Betalen"
-          value={`${higherPricePercentage}%`}
-          icon="euro"
-        />
-        <SummaryCard
-          title="Kan Traditionele Snack Vervangen"
-          value={`${replaceTraditionalPercentage}%`}
-          icon="refresh-cw"
+        <SummaryCard 
+          title="Smaakvoorkeuren & coating" 
+          icon={Coffee} 
+          count={metrics.tastesTotal + metrics.coatingsTotal} 
         />
       </div>
 
-      {/* First Row of Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ReactionsChannelsCard groupedData={groupedData} />
-        <MotivationSnacksCard groupedData={groupedData} />
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <ReactionsChannelsCard 
+          icon={MessageSquare}
+          topFirstReactions={metrics.topFirstReactions}
+          topSalesChannels={metrics.topSalesChannels}
+          eersteReactiesTotal={metrics.eersteReactiesTotal}
+          verkoopskanalenTotal={metrics.verkoopskanalenTotal}
+        />
+        
+        <MotivationSnacksCard 
+          icon={ShoppingBag}
+          topMotivations={metrics.topMotivations}
+          topSnacks={metrics.topSnacks}
+          motivationTotal={metrics.motivationTotal}
+          snacksTotal={metrics.snacksTotal}
+        />
+        
+        <ProteinPriceCard 
+          icon={DollarSign}
+          avgProtein={metrics.avgProtein}
+          avgPrice={metrics.avgPrice}
+          proteinRanges={metrics.proteinRanges}
+          priceRanges={metrics.priceRanges}
+        />
+        
+        <TasteCoatingCard 
+          icon={Coffee}
+          topTastes={metrics.topTastes}
+          topCoatings={metrics.topCoatings}
+          tastesTotal={metrics.tastesTotal}
+          coatingsTotal={metrics.coatingsTotal}
+        />
+        
+        <PreparationCrunchCard 
+          icon={Utensils}
+          topPreparations={metrics.topPreparations}
+          topImportanceCrunch={metrics.topCrunchImportance}
+          preparationsTotal={metrics.preparationsTotal}
+          crunchImportanceTotal={metrics.crunchImportanceTotal}
+        />
+        
+        <BarriersFrequencyCard 
+          icon={BarChart}
+          topBarriers={metrics.topBarriers}
+          topFrequencies={metrics.topFrequencies}
+          barriersTotal={metrics.barriersTotal}
+          frequenciesTotal={metrics.frequenciesTotal}
+        />
       </div>
-
-      {/* Second Row of Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <ProteinPriceCard groupedData={groupedData} />
-        <TasteCoatingCard groupedData={groupedData} />
-      </div>
-
-      {/* Third Row of Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <PreparationCrunchCard groupedData={groupedData} />
-        <InnovationPriceCard groupedData={groupedData} />
-      </div>
-
-      {/* Fourth Row - Single Full Width Card */}
-      <div className="grid grid-cols-1 gap-6">
-        <BarriersFrequencyCard groupedData={groupedData} />
-      </div>
+      
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center">
+            <Cpu className="h-5 w-5 mr-2 text-blue-500" />
+            Innovatie & Prijsperceptie
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <InnovationPriceCard 
+            innovationPercentage={metrics.innovationPercentage}
+            higherPricePercentage={metrics.higherPricePercentage}
+            replaceTradSnackPercentage={metrics.replaceTradSnackPercentage}
+            highPriceFactors={metrics.topPriceFactors}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 };

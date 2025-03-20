@@ -1,70 +1,99 @@
 
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GroupedStreetInterviewData } from "../utils/types";
-import { calculateBooleanPercentage, getMostCommon, formatBreakdown } from "../utils/calculationUtils";
-import DataPoint from "./DataPoint";
+import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import DataPoint from './DataPoint';
+import { InnovationPriceCardProps, TopValue } from '../types';
 
-interface InnovationPriceCardProps {
-  groupedData: GroupedStreetInterviewData;
-}
-
-const InnovationPriceCard: React.FC<InnovationPriceCardProps> = ({ groupedData }) => {
-  const innovationPercentage = calculateBooleanPercentage(groupedData.innovatie_ruimte);
-  const higherPricePercentage = calculateBooleanPercentage(groupedData.hogere_prijs_bereidheid);
-  const replaceTraditionalPercentage = calculateBooleanPercentage(groupedData.vervangen_traditionele_snack);
-  const priceFactorsData = getMostCommon(groupedData.hogere_prijs_factoren);
-
+const InnovationPriceCard: React.FC<InnovationPriceCardProps> = ({
+  innovationPercentage,
+  higherPricePercentage,
+  replaceTradSnackPercentage,
+  highPriceFactors
+}) => {
   return (
-    <Card className="shadow-md h-full">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-medium">Innovatie & Prijsbereidheid</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div className="grid grid-cols-3 gap-2">
-            <div className="bg-green-50 p-3 rounded-md text-center">
-              <div className="text-xl font-bold text-green-600">{innovationPercentage}%</div>
-              <div className="text-xs text-green-700 mt-1">Ziet ruimte voor innovatie</div>
-            </div>
-            
-            <div className="bg-blue-50 p-3 rounded-md text-center">
-              <div className="text-xl font-bold text-blue-600">{higherPricePercentage}%</div>
-              <div className="text-xs text-blue-700 mt-1">Bereid hogere prijs te betalen</div>
-            </div>
-            
-            <div className="bg-purple-50 p-3 rounded-md text-center">
-              <div className="text-xl font-bold text-purple-600">{replaceTraditionalPercentage}%</div>
-              <div className="text-xs text-purple-700 mt-1">Kan traditionele snack vervangen</div>
-            </div>
-          </div>
-          
-          <div className="border-t pt-4 mt-4">
-            <DataPoint
-              label="Belangrijkste Factor voor Hogere Prijsbereidheid"
-              value={priceFactorsData.value}
-              subValue={`${priceFactorsData.percentage}% van alle respondenten`}
-            />
-            
-            <div className="mt-2">
-              <h4 className="text-sm font-medium text-gray-500">Alle Factoren voor Hogere Prijs:</h4>
-              <p className="text-sm text-gray-700 mt-1">
-                {formatBreakdown(groupedData.hogere_prijs_factoren)}
-              </p>
-            </div>
-          </div>
-          
-          <div className="mt-3 bg-amber-50 p-3 rounded-md">
-            <h4 className="text-sm font-medium text-amber-700 mb-1">Analyse:</h4>
-            <p className="text-sm text-amber-600">
-              De bereidheid om een hogere prijs te betalen hangt sterk samen met specifieke 
-              factoren zoals kwaliteit en gezondheidsvoordelen. Dit biedt kansen voor premium positionering.
-            </p>
-          </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div>
+        <div className="mb-2">
+          <DataPoint
+            label="Ruimte voor innovatie"
+            value={`${innovationPercentage}%`}
+            secondaryInfo="Van de respondenten"
+            valueClassName="text-2xl font-bold text-green-600"
+          />
         </div>
-      </CardContent>
-    </Card>
+        <p className="text-sm text-gray-600">
+          {getInnovationInsight(innovationPercentage)}
+        </p>
+      </div>
+      
+      <div>
+        <div className="mb-2">
+          <DataPoint
+            label="Bereid hogere prijs te betalen"
+            value={`${higherPricePercentage}%`}
+            secondaryInfo="Van de respondenten"
+            valueClassName="text-2xl font-bold text-amber-600"
+          />
+        </div>
+        <p className="text-sm text-gray-600">
+          {getPriceInsight(higherPricePercentage)}
+        </p>
+      </div>
+      
+      <div>
+        <div className="mb-2">
+          <DataPoint
+            label="Bereid traditionele snack te vervangen"
+            value={`${replaceTradSnackPercentage}%`}
+            secondaryInfo="Van de respondenten"
+            valueClassName="text-2xl font-bold text-blue-600"
+          />
+        </div>
+        <p className="text-sm text-gray-600">
+          {getReplacementInsight(replaceTradSnackPercentage)}
+        </p>
+      </div>
+      
+      {highPriceFactors && highPriceFactors.length > 0 && (
+        <div className="md:col-span-3">
+          <Card className="mt-4 bg-gray-50">
+            <CardContent className="pt-4">
+              <h4 className="font-semibold mb-2">Factoren voor hogere prijsbereidheid:</h4>
+              <p className="text-sm text-gray-700">{formatTopValuesToString(highPriceFactors)}</p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+    </div>
   );
+};
+
+// Helper functions to generate insights based on percentages
+const getInnovationInsight = (percentage: number): string => {
+  if (percentage >= 70) return "Er is sterk draagvlak voor innovatie in het frituur-aanbod.";
+  if (percentage >= 50) return "Er is redelijk draagvlak voor innovatie in het frituur-aanbod.";
+  return "Er is beperkt draagvlak voor innovatie in het frituur-aanbod.";
+};
+
+const getPriceInsight = (percentage: number): string => {
+  if (percentage >= 70) return "Sterke bereidheid om meer te betalen voor proteïne snacks.";
+  if (percentage >= 50) return "Redelijke bereidheid om meer te betalen voor proteïne snacks.";
+  return "Beperkte bereidheid om meer te betalen voor proteïne snacks.";
+};
+
+const getReplacementInsight = (percentage: number): string => {
+  if (percentage >= 70) return "Sterke bereidheid om traditionele snacks te vervangen door proteïne-alternatieven.";
+  if (percentage >= 50) return "Redelijke bereidheid om traditionele snacks te vervangen door proteïne-alternatieven.";
+  return "Beperkte bereidheid om traditionele snacks te vervangen door proteïne-alternatieven.";
+};
+
+// Helper function to format TopValues array to string
+const formatTopValuesToString = (values: TopValue[]): string => {
+  if (!values || values.length === 0) return "Geen gegevens beschikbaar";
+  
+  return values
+    .map(item => `${item.name} (${item.percentage}%)`)
+    .join(", ");
 };
 
 export default InnovationPriceCard;

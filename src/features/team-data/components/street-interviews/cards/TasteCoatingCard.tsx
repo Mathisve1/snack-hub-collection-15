@@ -1,72 +1,69 @@
 
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GroupedStreetInterviewData } from "../utils/types";
-import { getMostCommon, formatBreakdown } from "../utils/calculationUtils";
-import DataPoint from "./DataPoint";
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import DataPoint from './DataPoint';
+import { TasteCoatingCardProps, TopValue } from '../types';
 
-interface TasteCoatingCardProps {
-  groupedData: GroupedStreetInterviewData;
-}
-
-const TasteCoatingCard: React.FC<TasteCoatingCardProps> = ({ groupedData }) => {
-  const tasteData = getMostCommon(groupedData.smaakvoorkeuren);
-  const coatingData = getMostCommon(groupedData.coating);
-  const brandingData = getMostCommon(groupedData.branding);
-
+const TasteCoatingCard: React.FC<TasteCoatingCardProps> = ({
+  title = "Smaakvoorkeuren & Coating",
+  icon: Icon,
+  topTastes,
+  topCoatings,
+  tastesTotal,
+  coatingsTotal
+}) => {
   return (
-    <Card className="shadow-md h-full">
+    <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-medium">Smaak, Coating & Branding</CardTitle>
+        <CardTitle className="text-lg flex items-center">
+          {Icon && <Icon className="h-5 w-5 mr-2 text-amber-500" />}
+          {title}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           <DataPoint
-            label="Belangrijkste Smaakvoorkeur"
-            value={tasteData.value}
-            subValue={`${tasteData.percentage}% van alle respondenten`}
+            label="Meest populaire smaakvoorkeuren"
+            value={topTastes[0]?.name || "Geen gegevens"}
+            secondaryInfo={`${topTastes[0]?.percentage || 0}% van de respondenten`}
+            breakdown={formatTopValuesToString(topTastes)}
           />
           
-          <div className="mt-2">
-            <h4 className="text-sm font-medium text-gray-500">Alle Smaakvoorkeuren:</h4>
-            <p className="text-sm text-gray-700 mt-1">
-              {formatBreakdown(groupedData.smaakvoorkeuren)}
-            </p>
+          <div className="mt-1 text-xs text-gray-500">
+            Gebaseerd op {tastesTotal} antwoorden
           </div>
           
-          <div className="border-t pt-4 mt-4">
-            <DataPoint
-              label="Voorkeur Coating Type"
-              value={coatingData.value}
-              subValue={`${coatingData.percentage}% van alle respondenten`}
-            />
-            
-            <div className="mt-2">
-              <h4 className="text-sm font-medium text-gray-500">Alle Coating Voorkeuren:</h4>
-              <p className="text-sm text-gray-700 mt-1">
-                {formatBreakdown(groupedData.coating)}
-              </p>
-            </div>
+          <DataPoint
+            label="Voorkeur coating"
+            value={topCoatings[0]?.name || "Geen gegevens"}
+            secondaryInfo={`${topCoatings[0]?.percentage || 0}% van de respondenten`}
+            breakdown={formatTopValuesToString(topCoatings)}
+          />
+          
+          <div className="mt-1 text-xs text-gray-500">
+            Gebaseerd op {coatingsTotal} antwoorden
           </div>
           
-          <div className="border-t pt-4 mt-4">
+          <div className="mt-4">
             <DataPoint
-              label="Voorkeur Branding"
-              value={brandingData.value}
-              subValue={`${brandingData.percentage}% van alle respondenten`}
+              label="Notitie"
+              value="De coating is een belangrijk onderdeel van de smaakbeleving"
+              secondaryInfo="Textuur en krokante buitenkant worden vaak genoemd"
             />
-            
-            <div className="mt-2">
-              <h4 className="text-sm font-medium text-gray-500">Alle Branding Voorkeuren:</h4>
-              <p className="text-sm text-gray-700 mt-1">
-                {formatBreakdown(groupedData.branding)}
-              </p>
-            </div>
           </div>
         </div>
       </CardContent>
     </Card>
   );
+};
+
+// Helper function to format TopValues array to string
+const formatTopValuesToString = (values: TopValue[]): string => {
+  if (!values || values.length === 0) return "Geen gegevens beschikbaar";
+  
+  return values
+    .map(item => `${item.name} (${item.percentage}%)`)
+    .join(", ");
 };
 
 export default TasteCoatingCard;

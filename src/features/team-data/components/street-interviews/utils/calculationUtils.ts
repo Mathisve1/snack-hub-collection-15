@@ -1,91 +1,68 @@
 
-export type CommonValueInfo = {
-  value: string;
-  count: number;
-  percentage: number;
-};
-
-export type TopValue = {
-  value: string;
-  count: number;
-  percentage: number;
-};
-
-// Get the most common value from a record of counts
-export const getMostCommon = (record: Record<string, number>): CommonValueInfo => {
+// Calculate the most common value from a record of counts
+export const getMostCommonValue = (record: Record<string, number>): { value: string; count: number; percentage: number } => {
   if (Object.keys(record).length === 0) {
-    return { value: "No data", count: 0, percentage: 0 };
+    return { value: "Geen gegevens", count: 0, percentage: 0 };
   }
   
-  const entries = Object.entries(record);
-  const total = entries.reduce((sum, [_, count]) => sum + count, 0);
-  const [value, count] = entries.reduce((max, current) => 
-    current[1] > max[1] ? current : max
-  );
+  const sortedEntries = Object.entries(record).sort((a, b) => b[1] - a[1]);
+  const [value, count] = sortedEntries[0];
+  const total = Object.values(record).reduce((sum, c) => sum + c, 0);
+  const percentage = Math.round((count / total) * 100);
   
-  return {
-    value,
-    count,
-    percentage: Math.round((count / total) * 100)
-  };
+  return { value, count, percentage };
 };
 
-// Format breakdown of values with percentages
-export const formatBreakdown = (data: Record<string, number>): string => {
-  if (Object.keys(data).length === 0) return "No data available";
-  
-  const entries = Object.entries(data);
-  const total = entries.reduce((sum, [_, count]) => sum + count, 0);
-  
-  return entries
-    .sort((a, b) => b[1] - a[1])
-    .map(([value, count]) => {
-      const percentage = Math.round((count / total) * 100);
-      return `${value}: ${count} (${percentage}%)`;
-    })
-    .join(", ");
-};
-
-// Calculate percentage of true values in boolean array
+// Calculate average from boolean values (0/1)
 export const calculateBooleanPercentage = (values: number[]): number => {
   if (values.length === 0) return 0;
   
-  const trueCount = values.reduce((sum, val) => sum + val, 0);
+  const trueCount = values.reduce((count, value) => count + value, 0);
   return Math.round((trueCount / values.length) * 100);
 };
 
-// Get top N values from a record
-export const getTopValues = (record: Record<string, number>, limit: number = 3): TopValue[] => {
-  if (Object.keys(record).length === 0) return [];
+// Calculate average from values
+export const calculateAverage = (values: number[]): number => {
+  if (values.length === 0) return 0;
   
-  const entries = Object.entries(record);
-  const total = entries.reduce((sum, [_, count]) => sum + count, 0);
-  
-  return entries
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, limit)
-    .map(([value, count]) => ({
-      value,
-      count,
-      percentage: Math.round((count / total) * 100)
-    }));
+  const sum = values.reduce((total, val) => total + val, 0);
+  return parseFloat((sum / values.length).toFixed(1));
 };
 
-// Get the average price value
-export const getAveragePrice = (priceRecord: Record<string, number>): number => {
-  const priceEntries = Object.entries(priceRecord);
-  if (priceEntries.length === 0) return 0;
+// Format a record to display as a breakdown string
+export const formatBreakdownString = (record: Record<string, number>): string => {
+  if (Object.keys(record).length === 0) return "Geen gegevens beschikbaar";
   
-  let totalWeight = 0;
-  let weightedSum = 0;
+  return Object.entries(record)
+    .sort((a, b) => b[1] - a[1])
+    .map(([key, count]) => `${key} (${count}x)`)
+    .join(", ");
+};
+
+// Convert a number to string with percentage
+export const formatPercentage = (value: number): string => {
+  return `${value}%`;
+};
+
+// Convert numeric record to categorical record with ranges
+export const categorizeNumericValues = (record: Record<string, number>): Record<string, number> => {
+  const result: Record<string, number> = {};
   
-  for (const [priceStr, count] of priceEntries) {
-    const price = parseFloat(priceStr);
-    if (!isNaN(price)) {
-      weightedSum += price * count;
-      totalWeight += count;
-    }
+  for (const [valueStr, count] of Object.entries(record)) {
+    const value = parseFloat(valueStr);
+    if (isNaN(value)) continue;
+    
+    // Create categories (change these ranges as needed)
+    let category: string;
+    if (value < 5) category = "< 5";
+    else if (value < 10) category = "5-10";
+    else if (value < 15) category = "10-15";
+    else if (value < 20) category = "15-20";
+    else category = "20+";
+    
+    result[category] = (result[category] || 0) + count;
   }
   
-  return totalWeight > 0 ? parseFloat((weightedSum / totalWeight).toFixed(2)) : 0;
+  return result;
 };
+

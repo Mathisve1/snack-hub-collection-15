@@ -1,56 +1,65 @@
 
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GroupedStreetInterviewData } from "../utils/types";
-import { getMostCommon, formatBreakdown } from "../utils/calculationUtils";
-import DataPoint from "./DataPoint";
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import DataPoint from './DataPoint';
+import { TopValue, ReactionsChannelsCardProps } from '../types';
 
-interface ReactionsChannelsCardProps {
-  groupedData: GroupedStreetInterviewData;
-}
-
-const ReactionsChannelsCard: React.FC<ReactionsChannelsCardProps> = ({ groupedData }) => {
-  const firstReactionData = getMostCommon(groupedData.eerste_reacties);
-  const salesChannelsData = getMostCommon(groupedData.verkoopskanalen);
-
+const ReactionsChannelsCard: React.FC<ReactionsChannelsCardProps> = ({
+  title = "Eerste Reacties & Verkoopskanalen",
+  icon: Icon,
+  topFirstReactions,
+  topSalesChannels,
+  eersteReactiesTotal,
+  verkoopskanalenTotal
+}) => {
   return (
-    <Card className="shadow-md h-full">
+    <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-medium">Eerste Reacties & Verkoopskanalen</CardTitle>
+        <CardTitle className="text-lg flex items-center">
+          {Icon && <Icon className="h-5 w-5 mr-2 text-blue-500" />}
+          {title}
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          <DataPoint
-            label="Meest Voorkomende Eerste Reactie"
-            value={firstReactionData.value}
-            subValue={`${firstReactionData.percentage}% van de reacties`}
-          />
-          
-          <div className="mt-2">
-            <h4 className="text-sm font-medium text-gray-500">Alle Eerste Reacties:</h4>
-            <p className="text-sm text-gray-700 mt-1">
-              {formatBreakdown(groupedData.eerste_reacties)}
-            </p>
-          </div>
-          
-          <div className="border-t pt-4 mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
             <DataPoint
-              label="Favoriete Verkoopskanaal"
-              value={salesChannelsData.value}
-              subValue={`${salesChannelsData.percentage}% van alle respondenten`}
+              label="Eerste reacties op proteïne snacks"
+              value={topFirstReactions[0]?.name || "Geen gegevens"}
+              secondaryInfo={`${topFirstReactions[0]?.percentage || 0}% van de respondenten`}
+              breakdown={formatTopValuesToString(topFirstReactions)}
             />
             
-            <div className="mt-2">
-              <h4 className="text-sm font-medium text-gray-500">Alle Verkoopskanalen:</h4>
-              <p className="text-sm text-gray-700 mt-1">
-                {formatBreakdown(groupedData.verkoopskanalen)}
-              </p>
+            <div className="mt-2 text-xs text-gray-500">
+              Gebaseerd op {eersteReactiesTotal} antwoorden
+            </div>
+          </div>
+          
+          <div>
+            <DataPoint
+              label="Voorkeur verkoopskanalen"
+              value={topSalesChannels[0]?.name || "Geen gegevens"}
+              secondaryInfo={`${topSalesChannels[0]?.percentage || 0}% van de respondenten`}
+              breakdown={formatTopValuesToString(topSalesChannels)}
+            />
+            
+            <div className="mt-2 text-xs text-gray-500">
+              Gebaseerd op {verkoopskanalenTotal} antwoorden
             </div>
           </div>
         </div>
       </CardContent>
     </Card>
   );
+};
+
+// Helper function to format TopValues array to string
+const formatTopValuesToString = (values: TopValue[]): string => {
+  if (!values || values.length === 0) return "Geen gegevens beschikbaar";
+  
+  return values
+    .map(item => `${item.name} (${item.percentage}%)`)
+    .join(", ");
 };
 
 export default ReactionsChannelsCard;

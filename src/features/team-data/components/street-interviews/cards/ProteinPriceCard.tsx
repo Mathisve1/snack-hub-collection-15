@@ -1,73 +1,94 @@
 
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GroupedStreetInterviewData } from "../utils/types";
-import { calculateAverageFromRecord } from "../utils/responseUtils";
-import { getAveragePrice } from "../utils/calculationUtils";
-import DataPoint from "./DataPoint";
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import DataPoint from './DataPoint';
+import { ProteinPriceCardProps } from '../types';
 
-interface ProteinPriceCardProps {
-  groupedData: GroupedStreetInterviewData;
-}
-
-const ProteinPriceCard: React.FC<ProteinPriceCardProps> = ({ groupedData }) => {
-  const averageProtein = calculateAverageFromRecord(groupedData.eiwitgehalte);
-  const averagePrice = getAveragePrice(groupedData.prijzen);
-
+const ProteinPriceCard: React.FC<ProteinPriceCardProps> = ({
+  title = "Eiwitgehalte & Prijs",
+  icon: Icon,
+  avgProtein,
+  avgPrice,
+  proteinRanges,
+  priceRanges
+}) => {
   return (
-    <Card className="shadow-md h-full">
+    <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-medium">Eiwitgehalte & Prijs</CardTitle>
+        <CardTitle className="text-lg flex items-center">
+          {Icon && <Icon className="h-5 w-5 mr-2 text-yellow-500" />}
+          {title}
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <DataPoint
-              label="Gemiddeld Gewenst Eiwitgehalte"
-              value={`${averageProtein}g`}
-              subValue="per 100g product"
+              label="Gemiddeld eiwitgehalte voorkeur"
+              value={avgProtein.toString()}
+              unit="g"
+              valueClassName="text-xl font-bold"
+              secondaryInfo="Gram proteïne per portie"
+              breakdown={formatRangesToString(proteinRanges)}
             />
             
-            <div className="mt-3 bg-gray-50 p-3 rounded-md">
-              <h4 className="text-sm font-medium text-gray-600 mb-2">Verdeling Eiwitgehalte Voorkeuren:</h4>
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                {Object.entries(groupedData.eiwitgehalte)
-                  .sort(([a], [b]) => parseFloat(a) - parseFloat(b))
-                  .map(([amount, count]) => (
-                    <div key={amount} className="flex justify-between">
-                      <span className="text-gray-600">{amount}g:</span>
-                      <span className="font-medium">{count}x</span>
-                    </div>
-                  ))}
-              </div>
+            <div className="mt-2 text-xs text-gray-500">
+              De meeste consumenten verkiezen {getMostCommonRange(proteinRanges)} gram proteïne
             </div>
           </div>
           
-          <div className="border-t pt-4">
+          <div>
             <DataPoint
-              label="Gemiddelde Prijsverwachting"
-              value={`€${averagePrice.toFixed(2)}`}
-              subValue="per portie"
+              label="Gemiddelde prijsbereidheid"
+              value={avgPrice.toString()}
+              unit="€"
+              valueClassName="text-xl font-bold"
+              secondaryInfo="Prijs per portie"
+              breakdown={formatRangesToString(priceRanges)}
             />
             
-            <div className="mt-3 bg-gray-50 p-3 rounded-md">
-              <h4 className="text-sm font-medium text-gray-600 mb-2">Verdeling Prijsverwachtingen:</h4>
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                {Object.entries(groupedData.prijzen)
-                  .sort(([a], [b]) => parseFloat(a) - parseFloat(b))
-                  .map(([price, count]) => (
-                    <div key={price} className="flex justify-between">
-                      <span className="text-gray-600">€{price}:</span>
-                      <span className="font-medium">{count}x</span>
-                    </div>
-                  ))}
-              </div>
+            <div className="mt-2 text-xs text-gray-500">
+              De meeste consumenten zijn bereid {getMostCommonRange(priceRanges)}€ te betalen
             </div>
           </div>
         </div>
       </CardContent>
     </Card>
   );
+};
+
+// Helper function to format ranges to string
+const formatRangesToString = (ranges: Record<string, number>): string => {
+  if (!ranges || Object.keys(ranges).length === 0) return "Geen gegevens beschikbaar";
+  
+  const total = Object.values(ranges).reduce((sum, count) => sum + count, 0);
+  
+  return Object.entries(ranges)
+    .sort((a, b) => {
+      // Sort by numeric value of range start (e.g., "5-10" starts with 5)
+      const aStart = parseInt(a[0].split('-')[0].replace('<', '').replace('+', '').trim());
+      const bStart = parseInt(b[0].split('-')[0].replace('<', '').replace('+', '').trim());
+      return aStart - bStart;
+    })
+    .map(([range, count]) => {
+      const percentage = Math.round((count / total) * 100);
+      return `${range}: ${percentage}%`;
+    })
+    .join(", ");
+};
+
+// Helper function to get most common range
+const getMostCommonRange = (ranges: Record<string, number>): string => {
+  if (!ranges || Object.keys(ranges).length === 0) return "geen";
+  
+  const entries = Object.entries(ranges);
+  if (entries.length === 0) return "geen";
+  
+  const [mostCommonRange] = entries.reduce((max, current) => 
+    current[1] > max[1] ? current : max
+  );
+  
+  return mostCommonRange;
 };
 
 export default ProteinPriceCard;
