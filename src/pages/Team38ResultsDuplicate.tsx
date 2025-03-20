@@ -29,6 +29,14 @@ const Team38ResultsDuplicate = () => {
   const isLoading = personasLoading || friturenLoading || interviewsLoading;
   const hasErrors = personasError || friturenError || interviewsError;
 
+  // Log the loading status and data for debugging
+  console.log("Team38ResultsDuplicate - Personas data:", {
+    loading: personasLoading,
+    error: personasError,
+    dataLength: personas?.length || 0,
+    sampleData: personas && personas.length > 0 ? personas[0] : null
+  });
+
   return (
     <>
       <Helmet>
