@@ -10,6 +10,8 @@ interface DebugInfo {
   currentPath?: string;
   isTeam38?: boolean;
   team38DataLength?: number;
+  team3DataLength?: number;
+  team13DataLength?: number;
   personasLength?: number;
 }
 

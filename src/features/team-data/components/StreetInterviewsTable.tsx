@@ -15,8 +15,8 @@ interface StreetInterviewsTableProps {
 
 const StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps) => {
   const location = useLocation();
-  // Check if the current path includes team-3 or team-38-results-quadruplicate
-  const isTeam3Data = location.pathname === "/team-3-results" || location.pathname === "/team-38-results-quadruplicate";
+  // Check if the current path includes team-3
+  const isTeam3Data = location.pathname === "/team-3-results";
   const isTeam13Data = location.pathname === "/team-13-results";
   
   // Log the current path and which team was detected

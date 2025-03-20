@@ -23,12 +23,6 @@ export const Team38DataPage = () => {
               View Triplicate
             </Link>
           </Button>
-          <Button asChild variant="outline" size="sm">
-            <Link to="/team-38-results-quadruplicate">
-              <Copy className="h-4 w-4 mr-2" />
-              View Quadruplicate
-            </Link>
-          </Button>
         </div>
       </div>
       
