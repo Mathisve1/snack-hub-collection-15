@@ -1,7 +1,5 @@
 
 import { useTeam38BuyingPersonas } from "../hooks/useTeam38Data";
-import { useTeam3BuyingPersonas } from "../hooks/useTeam3Data";
-import { useTeam13BuyingPersonas } from "../hooks/useTeam13Data";
 import { useLocation } from "react-router-dom";
 import { PersonaCardItem } from "./buying-personas/PersonaCardItem";
 import { EmptyPersonasState } from "./buying-personas/EmptyPersonasState";
@@ -15,43 +13,28 @@ interface BuyingPersonasCardsProps {
 
 const BuyingPersonasCards = ({ personas }: BuyingPersonasCardsProps) => {
   const location = useLocation();
-  // Check if the current path includes team-3 or team-38-results-quadruplicate
-  const isTeam3Data = location.pathname === "/team-3-results" || location.pathname === "/team-38-results-quadruplicate";
-  const isTeam13Data = location.pathname === "/team-13-results";
+  // Check if we're on a team-38 path
+  const isTeam38Path = location.pathname.includes("team-38");
   
-  // Log the current path and which team was detected
-  console.log(`Current path: ${location.pathname}, isTeam3Data: ${isTeam3Data}, isTeam13Data: ${isTeam13Data}`);
+  // Log the current path
+  console.log(`Current path: ${location.pathname}, isTeam38Path: ${isTeam38Path}`);
   
-  // Use the appropriate hook based on the current path
+  // Use the team38 hook
   const team38Data = useTeam38BuyingPersonas();
-  const team3Data = useTeam3BuyingPersonas();
-  const team13Data = useTeam13BuyingPersonas();
   
   // Use passed personas if available, otherwise use the data from hooks
-  const data = personas || 
-    (isTeam13Data ? team13Data.data : 
-     (isTeam3Data ? team3Data.data : team38Data.data));
-
-  const loading = !personas && 
-    (isTeam13Data ? team13Data.loading : 
-     (isTeam3Data ? team3Data.loading : team38Data.loading));
-
-  const error = !personas && 
-    (isTeam13Data ? team13Data.error : 
-     (isTeam3Data ? team3Data.error : team38Data.error));
+  const data = personas || team38Data.data;
+  const loading = !personas && team38Data.loading;
+  const error = !personas && team38Data.error;
 
   // Always log the current state for debugging
   console.log("BuyingPersonasCards state:", { 
     data, 
     loading, 
     error, 
-    isTeam3Data,
-    isTeam13Data,
     path: location.pathname,
-    dataSource: personas ? "props" : (isTeam13Data ? "team13Data" : (isTeam3Data ? "team3Data" : "team38Data")),
-    team3DataLength: team3Data.data?.length,
+    dataSource: personas ? "props" : "team38Data",
     team38DataLength: team38Data.data?.length,
-    team13DataLength: team13Data.data?.length,
     personasLength: personas?.length
   });
 
@@ -73,11 +56,7 @@ const BuyingPersonasCards = ({ personas }: BuyingPersonasCardsProps) => {
           isLoading: loading,
           error: error,
           currentPath: location.pathname,
-          isTeam3Data: isTeam3Data,
-          isTeam13Data: isTeam13Data,
-          team3DataLength: team3Data.data?.length,
           team38DataLength: team38Data.data?.length,
-          team13DataLength: team13Data.data?.length,
           personasLength: personas?.length
         }}
       />
@@ -113,9 +92,7 @@ const BuyingPersonasCards = ({ personas }: BuyingPersonasCardsProps) => {
           dataExists: true,
           isLoading: false,
           error: "No valid persona types found in data",
-          currentPath: location.pathname,
-          isTeam3Data: isTeam3Data,
-          isTeam13Data: isTeam13Data
+          currentPath: location.pathname
         }}
       />
     );

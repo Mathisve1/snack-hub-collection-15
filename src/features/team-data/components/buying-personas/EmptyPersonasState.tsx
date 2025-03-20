@@ -8,13 +8,8 @@ interface DebugInfo {
   isLoading?: boolean;
   error?: string;
   currentPath?: string;
-  isTeam3?: boolean;
   isTeam38?: boolean;
-  isTeam3Data?: boolean;
-  isTeam13Data?: boolean;
-  team3DataLength?: number;
   team38DataLength?: number;
-  team13DataLength?: number; // Add this property
   personasLength?: number;
 }
 
