@@ -11,10 +11,13 @@ interface BuyingPersonasTableProps {
 
 const BuyingPersonasTable = ({ personas }: BuyingPersonasTableProps) => {
   const location = useLocation();
-  // Log the current path
-  console.log(`BuyingPersonasTable - Current path: ${location.pathname}`);
+  // Check for team-38 path
+  const isTeam38Path = location.pathname.includes("team-38");
   
-  // Use the team38Data hook only if personas are not passed as props
+  // Log the current path
+  console.log(`BuyingPersonasTable - Current path: ${location.pathname}, isTeam38Path: ${isTeam38Path}`);
+  
+  // Use the team38Data hook
   const team38Data = useTeam38BuyingPersonas();
 
   // Use passed personas if available, otherwise use the data from hooks
@@ -26,9 +29,7 @@ const BuyingPersonasTable = ({ personas }: BuyingPersonasTableProps) => {
   console.log("BuyingPersonasTable using data:", { 
     teamSource: personas ? "passed directly" : "team38",
     dataLength: data?.length || 0,
-    isLoading: loading,
-    hasData: data && data.length > 0,
-    firstItem: data && data.length > 0 ? data[0].buying_persona : null
+    isLoading: loading
   });
 
   if (loading) {

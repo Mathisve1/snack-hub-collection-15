@@ -9,34 +9,18 @@ import FriturenTable from "@/features/team-data/components/FriturenTable";
 import StreetInterviewsTable from "@/features/team-data/components/StreetInterviewsTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  useTeam13BuyingPersonas, 
-  useTeam13Frituren, 
-  useTeam13StreetInterviews 
-} from "@/features/team-data/hooks/useTeam13Data";
+  useTeam38BuyingPersonas, 
+  useTeam38Frituren, 
+  useTeam38StreetInterviews 
+} from "@/features/team-data/hooks/useTeam38Data";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 
 const Team38ResultsDuplicate = () => {
   const navigate = useNavigate();
-  
-  // Fetch Team 13 data
-  const { 
-    data: personas, 
-    loading: personasLoading, 
-    error: personasError 
-  } = useTeam13BuyingPersonas();
-  
-  const { 
-    data: frituren, 
-    loading: friturenLoading, 
-    error: friturenError 
-  } = useTeam13Frituren();
-  
-  const { 
-    data: interviews, 
-    loading: interviewsLoading, 
-    error: interviewsError 
-  } = useTeam13StreetInterviews();
+  const { data: personas, loading: personasLoading, error: personasError } = useTeam38BuyingPersonas();
+  const { data: frituren, loading: friturenLoading, error: friturenError } = useTeam38Frituren();
+  const { data: interviews, loading: interviewsLoading, error: interviewsError } = useTeam38StreetInterviews();
   
   // State to toggle between table and card view for buying personas
   const [personasViewMode, setPersonasViewMode] = useState<"table" | "cards">("cards");
@@ -45,38 +29,10 @@ const Team38ResultsDuplicate = () => {
   const isLoading = personasLoading || friturenLoading || interviewsLoading;
   const hasErrors = personasError || friturenError || interviewsError;
 
-  // Log the loading status and data for debugging
-  console.log("Team13ResultsDuplicate - Debug Data:", {
-    personasLoading,
-    personasError,
-    personasLength: personas?.length || 0,
-    frituren: {
-      loading: friturenLoading,
-      error: friturenError,
-      dataLength: frituren?.length || 0
-    },
-    interviews: {
-      loading: interviewsLoading,
-      error: interviewsError,
-      dataLength: interviews?.length || 0
-    }
-  });
-
-  // Log sample data if available
-  if (personas && personas.length > 0) {
-    console.log("Team13 Personas - First record:", personas[0]);
-  }
-  if (frituren && frituren.length > 0) {
-    console.log("Team13 Frituren - First record:", frituren[0]);
-  }
-  if (interviews && interviews.length > 0) {
-    console.log("Team13 Street Interviews - First record:", interviews[0]);
-  }
-
   return (
     <>
       <Helmet>
-        <title>Team 13 Research Results | Snack Innovation</title>
+        <title>Team 38 Research Results (Duplicate) | Snack Innovation</title>
       </Helmet>
       
       <div className="min-h-screen bg-gray-50">
@@ -91,13 +47,13 @@ const Team38ResultsDuplicate = () => {
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
-              <h1 className="text-xl font-semibold">Team 13 Research Results</h1>
+              <h1 className="text-xl font-semibold">Team 38 Research Results (Duplicate)</h1>
             </div>
             <div className="flex gap-2">
               <Button asChild variant="outline" size="sm">
                 <Link to="/team-38-results">
                   <Copy className="h-4 w-4 mr-2" />
-                  View Team 38
+                  View Original
                 </Link>
               </Button>
               <Button asChild variant="outline" size="sm">
@@ -119,10 +75,10 @@ const Team38ResultsDuplicate = () => {
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="bg-white rounded-lg shadow">
             <div className="p-6">
-              <h2 className="text-2xl font-bold mb-6">Team 13 Market Research Data</h2>
+              <h2 className="text-2xl font-bold mb-6">Team 38 Market Research Data (Duplicate)</h2>
               
               <p className="text-gray-600 mb-8">
-                This page presents the complete market research findings from Team 13's research on 
+                This page presents the complete market research findings from Team 38's research on 
                 protein-based snack innovation in frituren. Use these insights to inform your 
                 product development and marketing strategies.
               </p>
@@ -178,18 +134,18 @@ const Team38ResultsDuplicate = () => {
                     </div>
                     
                     {personasViewMode === "table" ? (
-                      <BuyingPersonasTable personas={personas} />
+                      <BuyingPersonasTable />
                     ) : (
-                      <BuyingPersonasCards personas={personas} />
+                      <BuyingPersonasCards />
                     )}
                   </TabsContent>
                   
                   <TabsContent value="frituren">
-                    <FriturenTable frituren={frituren} />
+                    <FriturenTable />
                   </TabsContent>
                   
                   <TabsContent value="streetInterviews">
-                    <StreetInterviewsTable interviews={interviews} />
+                    <StreetInterviewsTable />
                   </TabsContent>
                 </Tabs>
               )}
