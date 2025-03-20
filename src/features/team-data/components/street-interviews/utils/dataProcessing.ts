@@ -2,14 +2,12 @@
 import { StreetInterview } from "../../../types";
 import { GroupedStreetInterviewData } from "./types";
 
-/**
- * Processes raw street interview data and groups it into a structured format
- */
-export const processStreetInterviewsData = (data: StreetInterview[]): GroupedStreetInterviewData => {
-  console.log("Processing street interviews data:", data);
+export const processStreetInterviewsData = (interviews: StreetInterview[]): GroupedStreetInterviewData => {
+  console.log("Processing street interviews data:", interviews);
   
-  const result: GroupedStreetInterviewData = {
-    count: data.length,
+  // Initialize the grouped data structure
+  const groupedData: GroupedStreetInterviewData = {
+    count: interviews.length,
     eerste_reacties: {},
     verkoopskanalen: {},
     motivatie_frituur: {},
@@ -30,102 +28,109 @@ export const processStreetInterviewsData = (data: StreetInterview[]): GroupedStr
     belang_krokantheid: {},
   };
 
-  data.forEach((interview) => {
-    // Process eerste_reactie
+  // Process each interview
+  interviews.forEach(interview => {
+    // Process text fields with multiple responses
     if (interview.eerste_reactie) {
-      result.eerste_reacties[interview.eerste_reactie] = (result.eerste_reacties[interview.eerste_reactie] || 0) + 1;
+      addToCounter(groupedData.eerste_reacties, interview.eerste_reactie);
     }
 
-    // Process verkoopskanalen
     if (interview.verkoopskanalen) {
-      result.verkoopskanalen[interview.verkoopskanalen] = (result.verkoopskanalen[interview.verkoopskanalen] || 0) + 1;
+      addToCounter(groupedData.verkoopskanalen, interview.verkoopskanalen);
     }
 
-    // Process motivatie_frituur
     if (interview.motivatie_frituur) {
-      result.motivatie_frituur[interview.motivatie_frituur] = (result.motivatie_frituur[interview.motivatie_frituur] || 0) + 1;
+      addToCounter(groupedData.motivatie_frituur, interview.motivatie_frituur);
     }
 
-    // Process populaire snacks
+    // Process multiple snack preferences
     if (interview.populaire_snack_1) {
-      result.populaire_snacks[interview.populaire_snack_1] = (result.populaire_snacks[interview.populaire_snack_1] || 0) + 1;
+      addToCounter(groupedData.populaire_snacks, interview.populaire_snack_1);
     }
     if (interview.populaire_snack_2) {
-      result.populaire_snacks[interview.populaire_snack_2] = (result.populaire_snacks[interview.populaire_snack_2] || 0) + 1;
+      addToCounter(groupedData.populaire_snacks, interview.populaire_snack_2);
     }
 
-    // Process eiwitgehalte
+    // Process protein content
     if (interview.eiwitgehalte !== undefined && interview.eiwitgehalte !== null) {
-      const key = String(interview.eiwitgehalte);
-      result.eiwitgehalte[key] = (result.eiwitgehalte[key] || 0) + 1;
+      const value = String(interview.eiwitgehalte);
+      addToCounter(groupedData.eiwitgehalte, value);
     }
 
-    // Process prijs
+    // Process price
     if (interview.prijs !== undefined && interview.prijs !== null) {
-      const key = String(interview.prijs);
-      result.prijzen[key] = (result.prijzen[key] || 0) + 1;
+      const value = String(interview.prijs);
+      addToCounter(groupedData.prijzen, value);
     }
 
     // Process branding
     if (interview.branding) {
-      result.branding[interview.branding] = (result.branding[interview.branding] || 0) + 1;
+      addToCounter(groupedData.branding, interview.branding);
     }
 
-    // Process marketing
+    // Process marketing methods
     if (interview.marketing_1) {
-      result.marketing[interview.marketing_1] = (result.marketing[interview.marketing_1] || 0) + 1;
+      addToCounter(groupedData.marketing, interview.marketing_1);
     }
     if (interview.marketing_2) {
-      result.marketing[interview.marketing_2] = (result.marketing[interview.marketing_2] || 0) + 1;
+      addToCounter(groupedData.marketing, interview.marketing_2);
     }
 
-    // Process smaakvoorkeuren
+    // Process taste preferences
     if (interview.smaakvoorkeuren) {
-      result.smaakvoorkeuren[interview.smaakvoorkeuren] = (result.smaakvoorkeuren[interview.smaakvoorkeuren] || 0) + 1;
+      addToCounter(groupedData.smaakvoorkeuren, interview.smaakvoorkeuren);
     }
 
-    // Process coating
+    // Process coating preferences
     if (interview.welke_coating) {
-      result.coating[interview.welke_coating] = (result.coating[interview.welke_coating] || 0) + 1;
+      addToCounter(groupedData.coating, interview.welke_coating);
     }
 
-    // Process bereidingsvoorkeur
+    // Process preparation preferences
     if (interview.bereidingsvoorkeur) {
-      result.bereidingsvoorkeur[interview.bereidingsvoorkeur] = (result.bereidingsvoorkeur[interview.bereidingsvoorkeur] || 0) + 1;
+      addToCounter(groupedData.bereidingsvoorkeur, interview.bereidingsvoorkeur);
     }
 
-    // Process hogere_prijs_factoren
+    // Process higher price factors
     if (interview.hogere_prijs_factoren) {
-      result.hogere_prijs_factoren[interview.hogere_prijs_factoren] = (result.hogere_prijs_factoren[interview.hogere_prijs_factoren] || 0) + 1;
+      addToCounter(groupedData.hogere_prijs_factoren, interview.hogere_prijs_factoren);
     }
 
-    // Process aankoopbarrieres
+    // Process purchase barriers
     if (interview.belangrijkst_aankoopbariere) {
-      result.aankoopbarrieres[interview.belangrijkst_aankoopbariere] = (result.aankoopbarrieres[interview.belangrijkst_aankoopbariere] || 0) + 1;
+      addToCounter(groupedData.aankoopbarrieres, interview.belangrijkst_aankoopbariere);
     }
 
-    // Process frituurbezoek_frequentie
+    // Process frequency
     if (interview.frituurbezoek_frequentie) {
-      result.frituurbezoek_frequentie[interview.frituurbezoek_frequentie] = (result.frituurbezoek_frequentie[interview.frituurbezoek_frequentie] || 0) + 1;
+      addToCounter(groupedData.frituurbezoek_frequentie, interview.frituurbezoek_frequentie);
     }
 
-    // Process belang_krokantheid
+    // Process importance of crunchiness
     if (interview.belang_van_krokantheid) {
-      result.belang_krokantheid[interview.belang_van_krokantheid] = (result.belang_krokantheid[interview.belang_van_krokantheid] || 0) + 1;
+      addToCounter(groupedData.belang_krokantheid, interview.belang_van_krokantheid);
     }
 
-    // Process boolean values - ensure we're checking for correct boolean values
+    // Process boolean fields
     if (interview.ruimte_voor_innovatie !== undefined) {
-      result.innovatie_ruimte.push(interview.ruimte_voor_innovatie ? 1 : 0);
+      groupedData.innovatie_ruimte.push(interview.ruimte_voor_innovatie ? 1 : 0);
     }
+
     if (interview.hogere_prijs !== undefined) {
-      result.hogere_prijs_bereidheid.push(interview.hogere_prijs ? 1 : 0);
+      groupedData.hogere_prijs_bereidheid.push(interview.hogere_prijs ? 1 : 0);
     }
+
     if (interview.vervangen_traditionele_snack !== undefined) {
-      result.vervangen_traditionele_snack.push(interview.vervangen_traditionele_snack ? 1 : 0);
+      groupedData.vervangen_traditionele_snack.push(interview.vervangen_traditionele_snack ? 1 : 0);
     }
   });
 
-  console.log("Processed result:", result);
-  return result;
+  console.log("Processed street interviews data:", groupedData);
+  return groupedData;
+};
+
+// Helper function to add a value to a counter object
+const addToCounter = (counter: Record<string, number>, value: string) => {
+  const normalizedValue = value.trim().toLowerCase();
+  counter[normalizedValue] = (counter[normalizedValue] || 0) + 1;
 };

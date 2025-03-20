@@ -1,20 +1,27 @@
 
-import { CommonValueInfo } from "../types";
+export type CommonValueInfo = {
+  value: string;
+  count: number;
+  percentage: number;
+};
 
-/**
- * Gets the most common value from a record
- */
+export type TopValue = {
+  value: string;
+  count: number;
+  percentage: number;
+};
+
+// Get the most common value from a record of counts
 export const getMostCommon = (record: Record<string, number>): CommonValueInfo => {
-  if (!record || Object.keys(record).length === 0) {
-    return { value: "Niet beschikbaar", count: 0, percentage: 0 };
+  if (Object.keys(record).length === 0) {
+    return { value: "No data", count: 0, percentage: 0 };
   }
   
   const entries = Object.entries(record);
   const total = entries.reduce((sum, [_, count]) => sum + count, 0);
-  
-  // Sort entries by count in descending order
-  const sortedEntries = [...entries].sort((a, b) => b[1] - a[1]);
-  const [value, count] = sortedEntries[0];
+  const [value, count] = entries.reduce((max, current) => 
+    current[1] > max[1] ? current : max
+  );
   
   return {
     value,
@@ -23,38 +30,26 @@ export const getMostCommon = (record: Record<string, number>): CommonValueInfo =
   };
 };
 
-/**
- * Formats a record into a readable breakdown string
- */
-export const formatBreakdown = (record: Record<string, number>): string => {
-  if (!record || Object.keys(record).length === 0) {
-    return "Geen gegevens beschikbaar";
-  }
+// Format breakdown of values with percentages
+export const formatBreakdown = (data: Record<string, number>): string => {
+  if (Object.keys(data).length === 0) return "No data available";
   
-  const entries = Object.entries(record);
+  const entries = Object.entries(data);
   const total = entries.reduce((sum, [_, count]) => sum + count, 0);
   
-  // Sort entries by count in descending order
-  const sortedEntries = [...entries].sort((a, b) => b[1] - a[1]);
-  
-  return sortedEntries
+  return entries
+    .sort((a, b) => b[1] - a[1])
     .map(([value, count]) => {
       const percentage = Math.round((count / total) * 100);
-      return `${value}: ${count}x (${percentage}%)`;
+      return `${value}: ${count} (${percentage}%)`;
     })
     .join(", ");
 };
 
-/**
- * Calculates the percentage of true values in a boolean array
- */
-export const calculateBooleanPercentage = (values: number[]): string => {
-  if (!values || values.length === 0) {
-    return "Niet beschikbaar";
-  }
+// Calculate percentage of true values in boolean array
+export const calculateBooleanPercentage = (values: number[]): number => {
+  if (values.length === 0) return 0;
   
-  const trueCount = values.filter(v => v === 1).length;
-  const percentage = Math.round((trueCount / values.length) * 100);
-  
-  return `${percentage}%`;
+  const trueCount = values.reduce((sum, val) => sum + val, 0);
+  return Math.round((trueCount / values.length) * 100);
 };
