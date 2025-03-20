@@ -4,3 +4,4 @@
 export { processStreetInterviewsData } from './dataProcessing';
 export { getMostCommon, formatBreakdown, calculateBooleanPercentage } from './calculationUtils';
 export { calculateAverageResponse, calculateAverageFromRecord } from './responseUtils';
+export type { GroupedStreetInterviewData } from './types';

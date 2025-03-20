@@ -2,7 +2,7 @@
 import { MessageSquare } from "lucide-react";
 import SummaryCard from "./SummaryCard";
 import DataPoint from "./DataPoint";
-import { GroupedStreetInterviewData } from "../StreetInterviewsDataUtils";
+import { GroupedStreetInterviewData } from "../utils/types";
 import { CommonValueInfo } from "../types";
 
 type ReactionsChannelsCardProps = {

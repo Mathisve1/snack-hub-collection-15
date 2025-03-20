@@ -1,7 +1,7 @@
 
-import { StreetInterview } from "../../../types";
+import { CommonValueInfo, TopValue } from "../types";
 
-export type GroupedStreetInterviewData = {
+export interface GroupedStreetInterviewData {
   count: number;
   eerste_reacties: Record<string, number>;
   verkoopskanalen: Record<string, number>;
@@ -21,4 +21,4 @@ export type GroupedStreetInterviewData = {
   hogere_prijs_bereidheid: number[];
   vervangen_traditionele_snack: number[];
   belang_krokantheid: Record<string, number>;
-};
+}
