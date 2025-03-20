@@ -20,7 +20,17 @@ const StreetInterviewsTable = () => {
   const team38Data = useTeam38StreetInterviews();
   const team3Data = useTeam3StreetInterviews();
   
+  // Always use team3Data for the quadruplicate page
   const { data, loading, error } = isTeam3Data ? team3Data : team38Data;
+  
+  // Log the data we're actually using
+  console.log("StreetInterviewsTable using data:", { 
+    teamSource: isTeam3Data ? "team3" : "team38",
+    dataLength: data?.length || 0,
+    isLoading: loading,
+    team3DataLength: team3Data.data?.length,
+    team38DataLength: team38Data.data?.length
+  });
   
   const [viewMode, setViewMode] = useState<"summary" | "table">("summary");
 

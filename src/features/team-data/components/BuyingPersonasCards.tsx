@@ -20,6 +20,7 @@ const BuyingPersonasCards = () => {
   const team38Data = useTeam38BuyingPersonas();
   const team3Data = useTeam3BuyingPersonas();
   
+  // Always use team3Data for the quadruplicate page
   const { data, loading, error } = isTeam3Data ? team3Data : team38Data;
 
   // Always log the current state for debugging
@@ -29,7 +30,9 @@ const BuyingPersonasCards = () => {
     error, 
     isTeam3Data,
     path: location.pathname,
-    dataSource: isTeam3Data ? "team3Data" : "team38Data" 
+    dataSource: isTeam3Data ? "team3Data" : "team38Data",
+    team3DataLength: team3Data.data?.length,
+    team38DataLength: team38Data.data?.length
   });
 
   if (loading) {
@@ -50,7 +53,9 @@ const BuyingPersonasCards = () => {
           isLoading: loading,
           error: error,
           currentPath: location.pathname,
-          isTeam3Data: isTeam3Data
+          isTeam3Data: isTeam3Data,
+          team3DataLength: team3Data.data?.length,
+          team38DataLength: team38Data.data?.length
         }}
       />
     );

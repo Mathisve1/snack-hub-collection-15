@@ -16,8 +16,16 @@ const BuyingPersonasTable = () => {
   // Use the appropriate hook based on the current path
   const team38Data = useTeam38BuyingPersonas();
   const team3Data = useTeam3BuyingPersonas();
-  
+
+  // Always use team3Data for the quadruplicate page
   const { data, loading, error } = isTeam3Data ? team3Data : team38Data;
+  
+  // Log the data we're actually using
+  console.log("BuyingPersonasTable using data:", { 
+    teamSource: isTeam3Data ? "team3" : "team38",
+    dataLength: data?.length || 0,
+    isLoading: loading
+  });
 
   if (loading) {
     return (

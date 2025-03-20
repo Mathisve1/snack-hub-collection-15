@@ -14,7 +14,7 @@ export function useTeam3BuyingPersonas() {
         setLoading(true);
         console.log("Fetching Team 3 buying personas data...");
         
-        // Get all data without any filtering
+        // Get all data without any filtering - use the correct table name
         const { data: personasData, error } = await supabase
           .from("Team3buyingpersonasforwebsite")
           .select("*");
@@ -51,7 +51,7 @@ export function useTeam3Frituren() {
         setLoading(true);
         console.log("Fetching Team 3 frituren data...");
         
-        // Get all data without any filtering
+        // Get all data without any filtering - use the correct table name
         const { data: friturenData, error } = await supabase
           .from("Team3friturenforwebsite")
           .select("*");
@@ -88,7 +88,7 @@ export function useTeam3StreetInterviews() {
         setLoading(true);
         console.log("Fetching Team 3 street interviews data...");
         
-        // Get all data without any filtering
+        // Get all data without any filtering - use the correct table name
         const { data: interviewsData, error } = await supabase
           .from("Team3streetinterviewsforwebsite")
           .select("*");

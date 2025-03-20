@@ -11,6 +11,8 @@ type EmptyPersonasStateProps = {
     isTeam3?: boolean;
     isTeam38?: boolean;
     isTeam3Data?: boolean; // Add this new property
+    team3DataLength?: number; // Add this new property
+    team38DataLength?: number; // Add this new property
   };
 };
 
@@ -36,6 +38,8 @@ export const EmptyPersonasState = ({ debug }: EmptyPersonasStateProps) => {
           {debug.isTeam3 !== undefined && <p>Is Team 3: {String(debug.isTeam3)}</p>}
           {debug.isTeam38 !== undefined && <p>Is Team 38: {String(debug.isTeam38)}</p>}
           {debug.isTeam3Data !== undefined && <p>Is Team 3 Data: {String(debug.isTeam3Data)}</p>}
+          {debug.team3DataLength !== undefined && <p>Team 3 Data Length: {debug.team3DataLength}</p>}
+          {debug.team38DataLength !== undefined && <p>Team 38 Data Length: {debug.team38DataLength}</p>}
           {debug.error && <p>Error: {debug.error}</p>}
         </div>
       )}
