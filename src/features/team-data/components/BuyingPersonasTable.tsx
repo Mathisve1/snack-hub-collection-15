@@ -4,8 +4,13 @@ import { useTeam38BuyingPersonas } from "../hooks/useTeam38Data";
 import { useTeam3BuyingPersonas } from "../hooks/useTeam3Data";
 import { Loader2 } from "lucide-react";
 import { useLocation } from "react-router-dom";
+import { BuyingPersona } from "../types";
 
-const BuyingPersonasTable = () => {
+interface BuyingPersonasTableProps {
+  personas?: BuyingPersona[];
+}
+
+const BuyingPersonasTable = ({ personas }: BuyingPersonasTableProps) => {
   const location = useLocation();
   // Check if the current path includes team-3 or team-38-results-quadruplicate
   const isTeam3Data = location.pathname === "/team-3-results" || location.pathname === "/team-38-results-quadruplicate";
@@ -17,12 +22,14 @@ const BuyingPersonasTable = () => {
   const team38Data = useTeam38BuyingPersonas();
   const team3Data = useTeam3BuyingPersonas();
 
-  // Always use team3Data for the quadruplicate page
-  const { data, loading, error } = isTeam3Data ? team3Data : team38Data;
+  // Use passed personas if available, otherwise use the data from hooks
+  const data = personas || (isTeam3Data ? team3Data.data : team38Data.data);
+  const loading = !personas && (isTeam3Data ? team3Data.loading : team38Data.loading);
+  const error = !personas && (isTeam3Data ? team3Data.error : team38Data.error);
   
   // Log the data we're actually using
   console.log("BuyingPersonasTable using data:", { 
-    teamSource: isTeam3Data ? "team3" : "team38",
+    teamSource: personas ? "passed directly" : (isTeam3Data ? "team3" : "team38"),
     dataLength: data?.length || 0,
     isLoading: loading
   });

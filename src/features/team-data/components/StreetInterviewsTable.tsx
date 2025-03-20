@@ -7,8 +7,13 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import StreetInterviewsSummary from "./street-interviews/StreetInterviewsSummary";
 import { useLocation } from "react-router-dom";
+import { StreetInterview } from "../types";
 
-const StreetInterviewsTable = () => {
+interface StreetInterviewsTableProps {
+  interviews?: StreetInterview[];
+}
+
+const StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps) => {
   const location = useLocation();
   // Check if the current path includes team-3 or team-38-results-quadruplicate
   const isTeam3Data = location.pathname === "/team-3-results" || location.pathname === "/team-38-results-quadruplicate";
@@ -20,12 +25,14 @@ const StreetInterviewsTable = () => {
   const team38Data = useTeam38StreetInterviews();
   const team3Data = useTeam3StreetInterviews();
   
-  // Always use team3Data for the quadruplicate page
-  const { data, loading, error } = isTeam3Data ? team3Data : team38Data;
+  // Use passed interviews if available, otherwise use the data from hooks
+  const data = interviews || (isTeam3Data ? team3Data.data : team38Data.data);
+  const loading = !interviews && (isTeam3Data ? team3Data.loading : team38Data.loading);
+  const error = !interviews && (isTeam3Data ? team3Data.error : team38Data.error);
   
   // Log the data we're actually using
   console.log("StreetInterviewsTable using data:", { 
-    teamSource: isTeam3Data ? "team3" : "team38",
+    teamSource: interviews ? "passed directly" : (isTeam3Data ? "team3" : "team38"),
     dataLength: data?.length || 0,
     isLoading: loading,
     team3DataLength: team3Data.data?.length,

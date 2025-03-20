@@ -7,8 +7,13 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import FriturenSummary from "./frituren/FriturenSummary";
 import { useLocation } from "react-router-dom";
+import { Frituur } from "../types";
 
-const FriturenTable = () => {
+interface FriturenTableProps {
+  frituren?: Frituur[];
+}
+
+const FriturenTable = ({ frituren }: FriturenTableProps) => {
   const location = useLocation();
   // Check if the current path includes team-3 or team-38-results-quadruplicate
   const isTeam3Data = location.pathname === "/team-3-results" || location.pathname === "/team-38-results-quadruplicate";
@@ -20,12 +25,14 @@ const FriturenTable = () => {
   const team38Data = useTeam38Frituren();
   const team3Data = useTeam3Frituren();
   
-  // Always use team3Data for the quadruplicate page
-  const { data, loading, error } = isTeam3Data ? team3Data : team38Data;
+  // Use passed frituren if available, otherwise use the data from hooks
+  const data = frituren || (isTeam3Data ? team3Data.data : team38Data.data);
+  const loading = !frituren && (isTeam3Data ? team3Data.loading : team38Data.loading);
+  const error = !frituren && (isTeam3Data ? team3Data.error : team38Data.error);
   
   // Log the data we're actually using
   console.log("FriturenTable using data:", { 
-    teamSource: isTeam3Data ? "team3" : "team38",
+    teamSource: frituren ? "passed directly" : (isTeam3Data ? "team3" : "team38"),
     dataLength: data?.length || 0,
     isLoading: loading,
     team3DataLength: team3Data.data?.length,

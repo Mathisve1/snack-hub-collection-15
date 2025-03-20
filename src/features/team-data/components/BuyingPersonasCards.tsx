@@ -8,7 +8,11 @@ import { PersonasErrorState } from "./buying-personas/PersonasErrorState";
 import { PersonasLoadingState } from "./buying-personas/PersonasLoadingState";
 import { BuyingPersona } from "../types";
 
-const BuyingPersonasCards = () => {
+interface BuyingPersonasCardsProps {
+  personas?: BuyingPersona[];
+}
+
+const BuyingPersonasCards = ({ personas }: BuyingPersonasCardsProps) => {
   const location = useLocation();
   // Check if the current path includes team-3 or team-38-results-quadruplicate
   const isTeam3Data = location.pathname === "/team-3-results" || location.pathname === "/team-38-results-quadruplicate";
@@ -20,8 +24,10 @@ const BuyingPersonasCards = () => {
   const team38Data = useTeam38BuyingPersonas();
   const team3Data = useTeam3BuyingPersonas();
   
-  // Always use team3Data for the quadruplicate page
-  const { data, loading, error } = isTeam3Data ? team3Data : team38Data;
+  // Use passed personas if available, otherwise use the data from hooks
+  const data = personas || (isTeam3Data ? team3Data.data : team38Data.data);
+  const loading = !personas && (isTeam3Data ? team3Data.loading : team38Data.loading);
+  const error = !personas && (isTeam3Data ? team3Data.error : team38Data.error);
 
   // Always log the current state for debugging
   console.log("BuyingPersonasCards state:", { 
@@ -30,7 +36,7 @@ const BuyingPersonasCards = () => {
     error, 
     isTeam3Data,
     path: location.pathname,
-    dataSource: isTeam3Data ? "team3Data" : "team38Data",
+    dataSource: personas ? "props" : (isTeam3Data ? "team3Data" : "team38Data"),
     team3DataLength: team3Data.data?.length,
     team38DataLength: team38Data.data?.length
   });
