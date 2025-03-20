@@ -2,6 +2,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useTeam38BuyingPersonas } from "../hooks/useTeam38Data";
 import { useTeam3BuyingPersonas } from "../hooks/useTeam3Data";
+import { useTeam13BuyingPersonas } from "../hooks/useTeam13Data";
 import { Loader2 } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { BuyingPersona } from "../types";
@@ -12,7 +13,7 @@ interface BuyingPersonasTableProps {
 
 const BuyingPersonasTable = ({ personas }: BuyingPersonasTableProps) => {
   const location = useLocation();
-  // Check if the current path includes team-3 or team-38-results-quadruplicate
+  // Check if the current path includes team-3, team-13, or team-38
   const isTeam3Data = location.pathname === "/team-3-results" || location.pathname === "/team-38-results-quadruplicate";
   const isTeam13Data = location.pathname === "/team-13-results";
   
@@ -22,15 +23,26 @@ const BuyingPersonasTable = ({ personas }: BuyingPersonasTableProps) => {
   // Use the appropriate hook based on the current path
   const team38Data = useTeam38BuyingPersonas();
   const team3Data = useTeam3BuyingPersonas();
+  const team13Data = useTeam13BuyingPersonas();
 
   // Use passed personas if available, otherwise use the data from hooks
-  const data = personas || (isTeam3Data ? team3Data.data : team38Data.data);
-  const loading = !personas && (isTeam3Data ? team3Data.loading : team38Data.loading);
-  const error = !personas && (isTeam3Data ? team3Data.error : team38Data.error);
+  const data = personas || 
+               (isTeam13Data ? team13Data.data : 
+                (isTeam3Data ? team3Data.data : team38Data.data));
+
+  const loading = !personas && 
+                  (isTeam13Data ? team13Data.loading : 
+                   (isTeam3Data ? team3Data.loading : team38Data.loading));
+
+  const error = !personas && 
+                (isTeam13Data ? team13Data.error : 
+                 (isTeam3Data ? team3Data.error : team38Data.error));
   
   // Log the data we're actually using
   console.log("BuyingPersonasTable using data:", { 
-    teamSource: personas ? "passed directly" : (isTeam3Data ? "team3" : "team38"),
+    teamSource: personas ? "passed directly" : 
+                (isTeam13Data ? "team13" : 
+                 (isTeam3Data ? "team3" : "team38")),
     dataLength: data?.length || 0,
     isLoading: loading
   });

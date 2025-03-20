@@ -1,6 +1,7 @@
 
 import { useTeam38BuyingPersonas } from "../hooks/useTeam38Data";
 import { useTeam3BuyingPersonas } from "../hooks/useTeam3Data";
+import { useTeam13BuyingPersonas } from "../hooks/useTeam13Data";
 import { useLocation } from "react-router-dom";
 import { PersonaCardItem } from "./buying-personas/PersonaCardItem";
 import { EmptyPersonasState } from "./buying-personas/EmptyPersonasState";
@@ -24,11 +25,20 @@ const BuyingPersonasCards = ({ personas }: BuyingPersonasCardsProps) => {
   // Use the appropriate hook based on the current path
   const team38Data = useTeam38BuyingPersonas();
   const team3Data = useTeam3BuyingPersonas();
+  const team13Data = useTeam13BuyingPersonas();
   
   // Use passed personas if available, otherwise use the data from hooks
-  const data = personas || (isTeam3Data ? team3Data.data : team38Data.data);
-  const loading = !personas && (isTeam3Data ? team3Data.loading : team38Data.loading);
-  const error = !personas && (isTeam3Data ? team3Data.error : team38Data.error);
+  const data = personas || 
+    (isTeam13Data ? team13Data.data : 
+     (isTeam3Data ? team3Data.data : team38Data.data));
+
+  const loading = !personas && 
+    (isTeam13Data ? team13Data.loading : 
+     (isTeam3Data ? team3Data.loading : team38Data.loading));
+
+  const error = !personas && 
+    (isTeam13Data ? team13Data.error : 
+     (isTeam3Data ? team3Data.error : team38Data.error));
 
   // Always log the current state for debugging
   console.log("BuyingPersonasCards state:", { 
@@ -38,9 +48,10 @@ const BuyingPersonasCards = ({ personas }: BuyingPersonasCardsProps) => {
     isTeam3Data,
     isTeam13Data,
     path: location.pathname,
-    dataSource: personas ? "props" : (isTeam3Data ? "team3Data" : "team38Data"),
+    dataSource: personas ? "props" : (isTeam13Data ? "team13Data" : (isTeam3Data ? "team3Data" : "team38Data")),
     team3DataLength: team3Data.data?.length,
     team38DataLength: team38Data.data?.length,
+    team13DataLength: team13Data.data?.length,
     personasLength: personas?.length
   });
 
@@ -66,6 +77,7 @@ const BuyingPersonasCards = ({ personas }: BuyingPersonasCardsProps) => {
           isTeam13Data: isTeam13Data,
           team3DataLength: team3Data.data?.length,
           team38DataLength: team38Data.data?.length,
+          team13DataLength: team13Data.data?.length,
           personasLength: personas?.length
         }}
       />
