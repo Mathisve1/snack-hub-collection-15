@@ -10,11 +10,12 @@ import {
   useTeam13StreetInterviews 
 } from "@/features/team-data/hooks/useTeam13Data";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Team13BuyingPersonasTable from "@/features/team-data/components/Team13BuyingPersonasTable";
 import Team13BuyingPersonasCards from "@/features/team-data/components/Team13BuyingPersonasCards";
 import Team13FriturenTable from "@/features/team-data/components/Team13FriturenTable";
 import Team13StreetInterviewsTable from "@/features/team-data/components/Team13StreetInterviewsTable";
+import { toast } from "sonner";
 
 const Team13Results = () => {
   const navigate = useNavigate();
@@ -29,11 +30,22 @@ const Team13Results = () => {
   const isLoading = personasLoading || friturenLoading || interviewsLoading;
   const hasErrors = personasError || friturenError || interviewsError;
 
-  console.log("Team13 Data Status:", {
-    personas: { count: personas?.length || 0, loading: personasLoading, error: personasError },
-    frituren: { count: frituren?.length || 0, loading: friturenLoading, error: friturenError },
-    interviews: { count: interviews?.length || 0, loading: interviewsLoading, error: interviewsError }
-  });
+  // Debug useEffect to log data status on each render
+  useEffect(() => {
+    console.log("Team13 Data Status:", {
+      personas: { count: personas?.length || 0, loading: personasLoading, error: personasError },
+      frituren: { count: frituren?.length || 0, loading: friturenLoading, error: friturenError },
+      interviews: { count: interviews?.length || 0, loading: interviewsLoading, error: interviewsError }
+    });
+
+    // If data is loaded but empty for all categories, show a toast message
+    if (!isLoading && !hasErrors && 
+        (!personas || personas.length === 0) && 
+        (!frituren || frituren.length === 0) && 
+        (!interviews || interviews.length === 0)) {
+      toast.info("No data available for Team 13 yet. Please check back later.");
+    }
+  }, [personas, frituren, interviews, isLoading, hasErrors, personasError, friturenError, interviewsError]);
 
   return (
     <>
@@ -100,6 +112,19 @@ const Team13Results = () => {
                   {personasError && <p className="mt-2">Personas error: {personasError}</p>}
                   {friturenError && <p className="mt-2">Frituren error: {friturenError}</p>}
                   {interviewsError && <p className="mt-2">Interviews error: {interviewsError}</p>}
+                </div>
+              ) : (!personas || personas.length === 0) && 
+                 (!frituren || frituren.length === 0) && 
+                 (!interviews || interviews.length === 0) ? (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-md p-6 text-center">
+                  <h3 className="text-xl font-medium text-yellow-800 mb-2">No Data Available</h3>
+                  <p className="text-yellow-700">
+                    The Team 13 data tables appear to be empty. Data will display here as soon as it's available.
+                  </p>
+                  <p className="text-sm text-yellow-600 mt-4">
+                    Make sure data has been uploaded to the Team13buyingpersonasforwebsite, Team13friturenforwebsite, 
+                    and Team13streetinterviewsforwebsite tables.
+                  </p>
                 </div>
               ) : (
                 <Tabs defaultValue="buyingPersonas" className="w-full">
