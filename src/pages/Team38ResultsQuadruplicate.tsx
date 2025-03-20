@@ -14,7 +14,8 @@ import {
   useTeam3StreetInterviews 
 } from "@/features/team-data/hooks/useTeam3Data";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 const Team38ResultsQuadruplicate = () => {
   const navigate = useNavigate();
@@ -28,6 +29,34 @@ const Team38ResultsQuadruplicate = () => {
   // Check if any data is loading or has errors
   const isLoading = personasLoading || friturenLoading || interviewsLoading;
   const hasErrors = personasError || friturenError || interviewsError;
+
+  // Log data for debugging
+  useEffect(() => {
+    console.log("Team38ResultsQuadruplicate - Data state:", {
+      personas: {
+        length: personas?.length || 0,
+        loading: personasLoading,
+        error: personasError
+      },
+      frituren: {
+        length: frituren?.length || 0,
+        loading: friturenLoading,
+        error: friturenError
+      },
+      interviews: {
+        length: interviews?.length || 0,
+        loading: interviewsLoading,
+        error: interviewsError
+      }
+    });
+    
+    // Notify user when data is loaded
+    if (!isLoading && !hasErrors) {
+      if ((personas?.length || 0) > 0) {
+        toast.success(`Loaded ${personas?.length} buying personas`);
+      }
+    }
+  }, [personas, frituren, interviews, isLoading, hasErrors, personasLoading, friturenLoading, interviewsLoading, personasError, friturenError, interviewsError]);
 
   return (
     <>
