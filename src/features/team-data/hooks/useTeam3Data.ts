@@ -3,6 +3,11 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { BuyingPersona, Frituur, StreetInterview } from "../types";
 
+// Define the exact table names to match Supabase typings
+type PersonasTable = "Team3buyingpersonasforwebsite" | "Team38buyingpersonasforwebsite";
+type FriturenTable = "Team3friturenforwebsite" | "Team38friturenforwebsite";
+type InterviewsTable = "Team3streetinterviewsforwebsite" | "Team38streetinterviewsforwebsite";
+
 export function useTeam3BuyingPersonas() {
   const [data, setData] = useState<BuyingPersona[]>([]);
   const [loading, setLoading] = useState(true);
@@ -15,7 +20,7 @@ export function useTeam3BuyingPersonas() {
         console.log("Fetching Team 3 buying personas data...");
         
         // Try both possible table names for Team 3 data
-        const tables = ["Team3buyingpersonasforwebsite", "Team38buyingpersonasforwebsite"];
+        const tables: PersonasTable[] = ["Team3buyingpersonasforwebsite", "Team38buyingpersonasforwebsite"];
         let personasData = null;
         let fetchError = null;
         
@@ -43,7 +48,7 @@ export function useTeam3BuyingPersonas() {
           // If we still don't have data, try a fallback solution - use Team 38 data
           console.log("Fallback: Using Team 38 data for the quadruplicate view since no Team 3 data was found");
           const { data: fallbackData, error: fallbackError } = await supabase
-            .from("Team38buyingpersonasforwebsite")
+            .from("Team38buyingpersonasforwebsite" as PersonasTable)
             .select("*");
             
           if (fallbackError) {
@@ -78,7 +83,7 @@ export function useTeam3Frituren() {
         console.log("Fetching Team 3 frituren data...");
         
         // Try both possible table names for Team 3 data
-        const tables = ["Team3friturenforwebsite", "Team38friturenforwebsite"];
+        const tables: FriturenTable[] = ["Team3friturenforwebsite", "Team38friturenforwebsite"];
         let friturenData = null;
         let fetchError = null;
         
@@ -106,7 +111,7 @@ export function useTeam3Frituren() {
           // If we still don't have data, try a fallback solution - use Team 38 data
           console.log("Fallback: Using Team 38 frituren data for the quadruplicate view");
           const { data: fallbackData, error: fallbackError } = await supabase
-            .from("Team38friturenforwebsite")
+            .from("Team38friturenforwebsite" as FriturenTable)
             .select("*");
             
           if (fallbackError) {
@@ -141,7 +146,7 @@ export function useTeam3StreetInterviews() {
         console.log("Fetching Team 3 street interviews data...");
         
         // Try both possible table names for Team 3 data
-        const tables = ["Team3streetinterviewsforwebsite", "Team38streetinterviewsforwebsite"];
+        const tables: InterviewsTable[] = ["Team3streetinterviewsforwebsite", "Team38streetinterviewsforwebsite"];
         let interviewsData = null;
         let fetchError = null;
         
@@ -169,7 +174,7 @@ export function useTeam3StreetInterviews() {
           // If we still don't have data, try a fallback solution - use Team 38 data
           console.log("Fallback: Using Team 38 street interviews data for the quadruplicate view");
           const { data: fallbackData, error: fallbackError } = await supabase
-            .from("Team38streetinterviewsforwebsite")
+            .from("Team38streetinterviewsforwebsite" as InterviewsTable)
             .select("*");
             
           if (fallbackError) {
