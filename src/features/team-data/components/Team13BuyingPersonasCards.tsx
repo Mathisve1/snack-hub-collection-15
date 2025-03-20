@@ -26,7 +26,8 @@ const Team13BuyingPersonasCards = ({ personas }: Team13BuyingPersonasCardsProps)
     error, 
     dataSource: personas ? "props" : "team13Data",
     team13DataLength: team13Data.data?.length,
-    personasLength: personas?.length
+    personasLength: personas?.length,
+    firstRecord: data && data.length > 0 ? data[0] : null
   });
 
   if (loading) {

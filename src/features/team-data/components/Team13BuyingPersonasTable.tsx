@@ -17,11 +17,12 @@ const Team13BuyingPersonasTable = ({ personas }: Team13BuyingPersonasTableProps)
   const loading = !personas && team13Data.loading;
   const error = !personas && team13Data.error;
   
-  // Log the data we're actually using
+  // Log the data we're actually using for debugging
   console.log("Team13BuyingPersonasTable using data:", { 
     dataSource: personas ? "passed directly" : "team13 hook",
     dataLength: data?.length || 0,
-    isLoading: loading
+    isLoading: loading,
+    firstRecord: data && data.length > 0 ? data[0] : null
   });
 
   if (loading) {
