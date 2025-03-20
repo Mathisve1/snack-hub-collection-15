@@ -38,7 +38,7 @@ const Team38ResultsDuplicate = () => {
   return (
     <>
       <Helmet>
-        <title>Team 38 Research Results (Duplicate) | Snack Innovation</title>
+        <title>Team 13 Research Results | Snack Innovation</title>
       </Helmet>
       
       <div className="min-h-screen bg-gray-50">
@@ -53,7 +53,7 @@ const Team38ResultsDuplicate = () => {
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
-              <h1 className="text-xl font-semibold">Team 38 Research Results (Duplicate)</h1>
+              <h1 className="text-xl font-semibold">Team 13 Research Results</h1>
             </div>
             <div className="flex gap-2">
               <Button asChild variant="outline" size="sm">
@@ -81,10 +81,10 @@ const Team38ResultsDuplicate = () => {
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="bg-white rounded-lg shadow">
             <div className="p-6">
-              <h2 className="text-2xl font-bold mb-6">Team 38 Market Research Data (Duplicate)</h2>
+              <h2 className="text-2xl font-bold mb-6">Team 13 Market Research Data</h2>
               
               <p className="text-gray-600 mb-8">
-                This page presents the complete market research findings from Team 38's research on 
+                This page presents the complete market research findings from Team 13's research on 
                 protein-based snack innovation in frituren. Use these insights to inform your 
                 product development and marketing strategies.
               </p>
