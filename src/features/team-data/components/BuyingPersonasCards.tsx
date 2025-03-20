@@ -4,15 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useTeam38BuyingPersonas } from "../hooks/useTeam38Data";
 import { Loader2, Users, Calendar, DollarSign, ShoppingBag, Clock, Lightbulb, Megaphone, CheckCircle } from "lucide-react";
-import { useLocation } from "react-router-dom";
 
 interface BuyingPersonasCardsProps {
   personas?: BuyingPersona[];
 }
 
 const BuyingPersonasCards = ({ personas }: BuyingPersonasCardsProps) => {
-  const location = useLocation();
-  
   // Use the team38Data hook only if personas are not passed as props
   const team38Data = useTeam38BuyingPersonas();
   
@@ -20,6 +17,14 @@ const BuyingPersonasCards = ({ personas }: BuyingPersonasCardsProps) => {
   const data = personas || team38Data.data;
   const loading = !personas && team38Data.loading;
   const error = !personas && team38Data.error;
+  
+  // Log the data we're using
+  console.log("BuyingPersonasCards using data:", { 
+    teamSource: personas ? "passed directly" : "team38",
+    dataLength: data?.length || 0,
+    isLoading: loading,
+    firstItem: data && data.length > 0 ? data[0].buying_persona : null
+  });
   
   if (loading) {
     return (
