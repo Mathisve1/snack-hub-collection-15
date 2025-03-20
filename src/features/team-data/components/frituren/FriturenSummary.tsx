@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Frituur } from "../../types";
 import { processFriturenData, getMostCommon, calculateAverage, formatBreakdown } from "./FriturenDataUtils";
