@@ -54,7 +54,7 @@ const Team38ResultsQuadruplicate = () => {
     // Notify user when data is loaded
     if (!isLoading && !hasErrors) {
       if ((personas?.length || 0) > 0) {
-        toast.success(`Loaded ${personas?.length} buying personas`);
+        toast.success(`Loaded ${personas?.length} Team 3 buying personas`);
       } else if (!personasLoading && (personas?.length || 0) === 0) {
         toast.warning("No Team 3 buying personas data found");
       }
@@ -64,7 +64,7 @@ const Team38ResultsQuadruplicate = () => {
   return (
     <>
       <Helmet>
-        <title>Team 38 Research Results (Quadruplicate) | Snack Innovation</title>
+        <title>Team 3 Research Results | Snack Innovation</title>
       </Helmet>
       
       <div className="min-h-screen bg-gray-50">
@@ -79,13 +79,13 @@ const Team38ResultsQuadruplicate = () => {
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
-              <h1 className="text-xl font-semibold">Team 38 Research Results (Quadruplicate - Team 3 Data)</h1>
+              <h1 className="text-xl font-semibold">Team 3 Research Results</h1>
             </div>
             <div className="flex gap-2">
               <Button asChild variant="outline" size="sm">
                 <Link to="/team-38-results">
                   <Copy className="h-4 w-4 mr-2" />
-                  View Original
+                  View Team 38 Data
                 </Link>
               </Button>
               <Button asChild variant="outline" size="sm">
@@ -101,7 +101,7 @@ const Team38ResultsQuadruplicate = () => {
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="bg-white rounded-lg shadow">
             <div className="p-6">
-              <h2 className="text-2xl font-bold mb-6">Team 38 Market Research Data (Team 3 Data)</h2>
+              <h2 className="text-2xl font-bold mb-6">Team 3 Market Research Data</h2>
               
               <p className="text-gray-600 mb-8">
                 This page presents the complete market research findings from Team 3's research on 
@@ -114,8 +114,7 @@ const Team38ResultsQuadruplicate = () => {
                 <Alert className="mb-6 border-yellow-400 bg-yellow-50 text-yellow-800">
                   <AlertTriangle className="h-4 w-4" />
                   <AlertDescription>
-                    No data found in Team 3 tables. We're showing Team 38 data as a fallback.
-                    Please check that the Team 3 tables exist and contain data.
+                    No data found in Team 3 tables. Please check that the Team 3 tables exist and contain data.
                   </AlertDescription>
                 </Alert>
               )}
@@ -123,11 +122,11 @@ const Team38ResultsQuadruplicate = () => {
               {isLoading ? (
                 <div className="flex flex-col items-center justify-center py-20">
                   <Loader2 className="h-10 w-10 animate-spin text-gray-500 mb-4" />
-                  <p className="text-gray-500">Loading research data...</p>
+                  <p className="text-gray-500">Loading Team 3 research data...</p>
                 </div>
               ) : hasErrors ? (
                 <div className="text-red-500 p-6 text-center">
-                  <p>There was a problem loading the research data. Please try again later.</p>
+                  <p>There was a problem loading the Team 3 research data. Please try again later.</p>
                   {personasError && <p className="mt-2">Personas error: {personasError}</p>}
                   {friturenError && <p className="mt-2">Frituren error: {friturenError}</p>}
                   {interviewsError && <p className="mt-2">Interviews error: {interviewsError}</p>}

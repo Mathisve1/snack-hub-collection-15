@@ -25,24 +25,8 @@ export function useTeam3BuyingPersonas() {
           throw result.error;
         }
         
-        if (result.data && result.data.length > 0) {
-          console.log(`Successfully found data in table: ${tableName}`, result.data);
-          setData(result.data as BuyingPersona[]);
-        } else {
-          console.log(`No data found in table: ${tableName}`);
-          // Check for any data in the Team38 table as a fallback
-          console.log("Checking Team38 table as fallback...");
-          const fallbackResult = await supabase
-            .from("Team38buyingpersonasforwebsite")
-            .select("*");
-            
-          if (fallbackResult.data && fallbackResult.data.length > 0) {
-            console.log("Using Team38 data as fallback");
-            setData(fallbackResult.data as BuyingPersona[]);
-          } else {
-            setData([]);
-          }
-        }
+        console.log(`Data from Team 3 buying personas:`, result.data);
+        setData(result.data as BuyingPersona[] || []);
         
       } catch (err) {
         console.error("Error fetching Team 3 buying personas:", err);
@@ -80,24 +64,8 @@ export function useTeam3Frituren() {
           throw result.error;
         }
         
-        if (result.data && result.data.length > 0) {
-          console.log(`Successfully found frituren data in table: ${tableName}`, result.data);
-          setData(result.data as Frituur[]);
-        } else {
-          console.log(`No frituren data found in table: ${tableName}`);
-          // Check for any data in the Team38 table as a fallback
-          console.log("Checking Team38 table as fallback...");
-          const fallbackResult = await supabase
-            .from("Team38friturenforwebsite")
-            .select("*");
-            
-          if (fallbackResult.data && fallbackResult.data.length > 0) {
-            console.log("Using Team38 data as fallback");
-            setData(fallbackResult.data as Frituur[]);
-          } else {
-            setData([]);
-          }
-        }
+        console.log(`Data from Team 3 frituren:`, result.data);
+        setData(result.data as Frituur[] || []);
         
       } catch (err) {
         console.error("Error fetching Team 3 frituren data:", err);
@@ -135,24 +103,8 @@ export function useTeam3StreetInterviews() {
           throw result.error;
         }
         
-        if (result.data && result.data.length > 0) {
-          console.log(`Successfully found street interviews data in table: ${tableName}`, result.data);
-          setData(result.data as StreetInterview[]);
-        } else {
-          console.log(`No street interviews data found in table: ${tableName}`);
-          // Check for any data in the Team38 table as a fallback
-          console.log("Checking Team38 table as fallback...");
-          const fallbackResult = await supabase
-            .from("Team38streetinterviewsforwebsite")
-            .select("*");
-            
-          if (fallbackResult.data && fallbackResult.data.length > 0) {
-            console.log("Using Team38 data as fallback");
-            setData(fallbackResult.data as StreetInterview[]);
-          } else {
-            setData([]);
-          }
-        }
+        console.log(`Data from Team 3 street interviews:`, result.data);
+        setData(result.data as StreetInterview[] || []);
         
       } catch (err) {
         console.error("Error fetching Team 3 street interviews:", err);
