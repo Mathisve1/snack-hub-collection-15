@@ -17,9 +17,10 @@ const StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps) => {
   const location = useLocation();
   // Check if the current path includes team-3 or team-38-results-quadruplicate
   const isTeam3Data = location.pathname === "/team-3-results" || location.pathname === "/team-38-results-quadruplicate";
+  const isTeam13Data = location.pathname === "/team-13-results";
   
   // Log the current path and which team was detected
-  console.log(`StreetInterviewsTable - Current path: ${location.pathname}, isTeam3Data: ${isTeam3Data}`);
+  console.log(`StreetInterviewsTable - Current path: ${location.pathname}, isTeam3Data: ${isTeam3Data}, isTeam13Data: ${isTeam13Data}`);
   
   // Use the appropriate hook based on the current path
   const team38Data = useTeam38StreetInterviews();
@@ -36,7 +37,8 @@ const StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps) => {
     dataLength: data?.length || 0,
     isLoading: loading,
     team3DataLength: team3Data.data?.length,
-    team38DataLength: team38Data.data?.length
+    team38DataLength: team38Data.data?.length,
+    interviewsLength: interviews?.length
   });
   
   const [viewMode, setViewMode] = useState<"summary" | "table">("summary");

@@ -110,7 +110,7 @@ const Team13Results = () => {
               </p>
               
               {!isLoading && !hasErrors && 
-               personas.length === 0 && frituren.length === 0 && interviews.length === 0 && (
+               personas?.length === 0 && frituren?.length === 0 && interviews?.length === 0 && (
                 <Alert className="mb-6 border-amber-400 bg-amber-50 text-amber-800">
                   <AlertTriangle className="h-4 w-4" />
                   <AlertDescription>
