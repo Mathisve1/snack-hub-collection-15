@@ -9,18 +9,18 @@ import FriturenTable from "@/features/team-data/components/FriturenTable";
 import StreetInterviewsTable from "@/features/team-data/components/StreetInterviewsTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
-  useTeam38BuyingPersonas, 
-  useTeam38Frituren, 
-  useTeam38StreetInterviews 
-} from "@/features/team-data/hooks/useTeam38Data";
+  useTeam13BuyingPersonas, 
+  useTeam13Frituren, 
+  useTeam13StreetInterviews 
+} from "@/features/team-data/hooks/useTeam13Data";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 
 const Team38ResultsDuplicate = () => {
   const navigate = useNavigate();
-  const { data: personas, loading: personasLoading, error: personasError } = useTeam38BuyingPersonas();
-  const { data: frituren, loading: friturenLoading, error: friturenError } = useTeam38Frituren();
-  const { data: interviews, loading: interviewsLoading, error: interviewsError } = useTeam38StreetInterviews();
+  const { data: personas, loading: personasLoading, error: personasError } = useTeam13BuyingPersonas();
+  const { data: frituren, loading: friturenLoading, error: friturenError } = useTeam13Frituren();
+  const { data: interviews, loading: interviewsLoading, error: interviewsError } = useTeam13StreetInterviews();
   
   // State to toggle between table and card view for buying personas
   const [personasViewMode, setPersonasViewMode] = useState<"table" | "cards">("cards");
@@ -28,6 +28,12 @@ const Team38ResultsDuplicate = () => {
   // Check if any data is loading or has errors
   const isLoading = personasLoading || friturenLoading || interviewsLoading;
   const hasErrors = personasError || friturenError || interviewsError;
+
+  console.log("Team13 Data Status:", {
+    personas: { count: personas?.length || 0, loading: personasLoading, error: personasError },
+    frituren: { count: frituren?.length || 0, loading: friturenLoading, error: friturenError },
+    interviews: { count: interviews?.length || 0, loading: interviewsLoading, error: interviewsError }
+  });
 
   return (
     <>
@@ -134,18 +140,18 @@ const Team38ResultsDuplicate = () => {
                     </div>
                     
                     {personasViewMode === "table" ? (
-                      <BuyingPersonasTable />
+                      <BuyingPersonasTable personas={personas} />
                     ) : (
-                      <BuyingPersonasCards />
+                      <BuyingPersonasCards personas={personas} />
                     )}
                   </TabsContent>
                   
                   <TabsContent value="frituren">
-                    <FriturenTable />
+                    <FriturenTable frituren={frituren} />
                   </TabsContent>
                   
                   <TabsContent value="streetInterviews">
-                    <StreetInterviewsTable />
+                    <StreetInterviewsTable interviews={interviews} />
                   </TabsContent>
                 </Tabs>
               )}
