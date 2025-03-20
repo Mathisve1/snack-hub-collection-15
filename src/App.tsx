@@ -15,6 +15,7 @@ import Team38ResultsDuplicate from "./pages/Team38ResultsDuplicate";
 import Team38ResultsTriplicate from "./pages/Team38ResultsTriplicate";
 import Team38ResultsQuadruplicate from "./pages/Team38ResultsQuadruplicate";
 import Team3Results from "./pages/Team3Results";
+import Team13Results from "./pages/Team13Results";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -37,6 +38,7 @@ const App = () => (
           <Route path="/team-38-results-triplicate" element={<Team38ResultsTriplicate />} />
           <Route path="/team-38-results-quadruplicate" element={<Team38ResultsQuadruplicate />} />
           <Route path="/team-3-results" element={<Team3Results />} />
+          <Route path="/team-13-results" element={<Team13Results />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
