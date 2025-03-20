@@ -3,11 +3,6 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { BuyingPersona, Frituur, StreetInterview } from "../types";
 
-// Define strict table names to match Supabase typings
-type PersonasTable = "Team3buyingpersonasforwebsite";
-type FriturenTable = "Team3friturenforwebsite";
-type InterviewsTable = "Team3streetinterviewsforwebsite";
-
 export function useTeam3BuyingPersonas() {
   const [data, setData] = useState<BuyingPersona[]>([]);
   const [loading, setLoading] = useState(true);
@@ -19,8 +14,7 @@ export function useTeam3BuyingPersonas() {
         setLoading(true);
         console.log("Fetching Team 3 buying personas data...");
         
-        // Focus only on Team 3 data table
-        const tableName: PersonasTable = "Team3buyingpersonasforwebsite";
+        const tableName = "Team3buyingpersonasforwebsite";
         
         console.log(`Trying to fetch data from table: ${tableName}`);
         const result = await supabase
@@ -36,7 +30,18 @@ export function useTeam3BuyingPersonas() {
           setData(result.data as BuyingPersona[]);
         } else {
           console.log(`No data found in table: ${tableName}`);
-          setData([]);
+          // Check for any data in the Team38 table as a fallback
+          console.log("Checking Team38 table as fallback...");
+          const fallbackResult = await supabase
+            .from("Team38buyingpersonasforwebsite")
+            .select("*");
+            
+          if (fallbackResult.data && fallbackResult.data.length > 0) {
+            console.log("Using Team38 data as fallback");
+            setData(fallbackResult.data as BuyingPersona[]);
+          } else {
+            setData([]);
+          }
         }
         
       } catch (err) {
@@ -64,8 +69,7 @@ export function useTeam3Frituren() {
         setLoading(true);
         console.log("Fetching Team 3 frituren data...");
         
-        // Focus only on Team 3 data table
-        const tableName: FriturenTable = "Team3friturenforwebsite";
+        const tableName = "Team3friturenforwebsite";
         
         console.log(`Trying to fetch frituren data from table: ${tableName}`);
         const result = await supabase
@@ -81,7 +85,18 @@ export function useTeam3Frituren() {
           setData(result.data as Frituur[]);
         } else {
           console.log(`No frituren data found in table: ${tableName}`);
-          setData([]);
+          // Check for any data in the Team38 table as a fallback
+          console.log("Checking Team38 table as fallback...");
+          const fallbackResult = await supabase
+            .from("Team38friturenforwebsite")
+            .select("*");
+            
+          if (fallbackResult.data && fallbackResult.data.length > 0) {
+            console.log("Using Team38 data as fallback");
+            setData(fallbackResult.data as Frituur[]);
+          } else {
+            setData([]);
+          }
         }
         
       } catch (err) {
@@ -109,8 +124,7 @@ export function useTeam3StreetInterviews() {
         setLoading(true);
         console.log("Fetching Team 3 street interviews data...");
         
-        // Focus only on Team 3 data table
-        const tableName: InterviewsTable = "Team3streetinterviewsforwebsite";
+        const tableName = "Team3streetinterviewsforwebsite";
         
         console.log(`Trying to fetch street interviews data from table: ${tableName}`);
         const result = await supabase
@@ -126,7 +140,18 @@ export function useTeam3StreetInterviews() {
           setData(result.data as StreetInterview[]);
         } else {
           console.log(`No street interviews data found in table: ${tableName}`);
-          setData([]);
+          // Check for any data in the Team38 table as a fallback
+          console.log("Checking Team38 table as fallback...");
+          const fallbackResult = await supabase
+            .from("Team38streetinterviewsforwebsite")
+            .select("*");
+            
+          if (fallbackResult.data && fallbackResult.data.length > 0) {
+            console.log("Using Team38 data as fallback");
+            setData(fallbackResult.data as StreetInterview[]);
+          } else {
+            setData([]);
+          }
         }
         
       } catch (err) {

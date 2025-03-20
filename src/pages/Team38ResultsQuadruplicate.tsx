@@ -1,7 +1,7 @@
 
 import { Helmet } from "react-helmet";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Table as TableIcon, LayoutGrid, Copy } from "lucide-react";
+import { ArrowLeft, Table as TableIcon, LayoutGrid, Copy, AlertTriangle } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import BuyingPersonasTable from "@/features/team-data/components/BuyingPersonasTable";
 import BuyingPersonasCards from "@/features/team-data/components/BuyingPersonasCards";
@@ -16,6 +16,7 @@ import {
 import { Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Team38ResultsQuadruplicate = () => {
   const navigate = useNavigate();
@@ -54,6 +55,8 @@ const Team38ResultsQuadruplicate = () => {
     if (!isLoading && !hasErrors) {
       if ((personas?.length || 0) > 0) {
         toast.success(`Loaded ${personas?.length} buying personas`);
+      } else if (!personasLoading && (personas?.length || 0) === 0) {
+        toast.warning("No Team 3 buying personas data found");
       }
     }
   }, [personas, frituren, interviews, isLoading, hasErrors, personasLoading, friturenLoading, interviewsLoading, personasError, friturenError, interviewsError]);
@@ -105,6 +108,17 @@ const Team38ResultsQuadruplicate = () => {
                 protein-based snack innovation in frituren. Use these insights to inform your 
                 product development and marketing strategies.
               </p>
+              
+              {!isLoading && !hasErrors && 
+               personas.length === 0 && frituren.length === 0 && interviews.length === 0 && (
+                <Alert className="mb-6" variant="warning">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertDescription>
+                    No data found in Team 3 tables. We're showing Team 38 data as a fallback.
+                    Please check that the Team 3 tables exist and contain data.
+                  </AlertDescription>
+                </Alert>
+              )}
               
               {isLoading ? (
                 <div className="flex flex-col items-center justify-center py-20">
