@@ -3,10 +3,10 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { BuyingPersona, Frituur, StreetInterview } from "../types";
 
-// Define the exact table names to match Supabase typings
-type PersonasTable = "Team3buyingpersonasforwebsite" | "Team38buyingpersonasforwebsite";
-type FriturenTable = "Team3friturenforwebsite" | "Team38friturenforwebsite";
-type InterviewsTable = "Team3streetinterviewsforwebsite" | "Team38streetinterviewsforwebsite";
+// Define strict table names to match Supabase typings
+type PersonasTable = "Team3buyingpersonasforwebsite";
+type FriturenTable = "Team3friturenforwebsite";
+type InterviewsTable = "Team3streetinterviewsforwebsite";
 
 export function useTeam3BuyingPersonas() {
   const [data, setData] = useState<BuyingPersona[]>([]);
@@ -19,44 +19,26 @@ export function useTeam3BuyingPersonas() {
         setLoading(true);
         console.log("Fetching Team 3 buying personas data...");
         
-        // Try both possible table names for Team 3 data
-        const tables: PersonasTable[] = ["Team3buyingpersonasforwebsite", "Team38buyingpersonasforwebsite"];
-        let personasData = null;
-        let fetchError = null;
+        // Focus only on Team 3 data table
+        const tableName: PersonasTable = "Team3buyingpersonasforwebsite";
         
-        // Try each table until we find data
-        for (const tableName of tables) {
-          console.log(`Trying to fetch data from table: ${tableName}`);
-          const result = await supabase
-            .from(tableName)
-            .select("*");
-          
-          if (!result.error && result.data && result.data.length > 0) {
-            personasData = result.data;
-            console.log(`Successfully found data in table: ${tableName}`, personasData);
-            break;
-          } else {
-            fetchError = result.error;
-            console.log(`No data found in table: ${tableName} or error:`, fetchError);
-          }
+        console.log(`Trying to fetch data from table: ${tableName}`);
+        const result = await supabase
+          .from(tableName)
+          .select("*");
+        
+        if (result.error) {
+          throw result.error;
         }
-
-        if (personasData) {
-          console.log("Fetched Team 3 buying personas data:", personasData);
-          setData(personasData as BuyingPersona[]);
+        
+        if (result.data && result.data.length > 0) {
+          console.log(`Successfully found data in table: ${tableName}`, result.data);
+          setData(result.data as BuyingPersona[]);
         } else {
-          // If we still don't have data, try a fallback solution - use Team 38 data
-          console.log("Fallback: Using Team 38 data for the quadruplicate view since no Team 3 data was found");
-          const { data: fallbackData, error: fallbackError } = await supabase
-            .from("Team38buyingpersonasforwebsite" as PersonasTable)
-            .select("*");
-            
-          if (fallbackError) {
-            throw fallbackError;
-          }
-          
-          setData(fallbackData as BuyingPersona[]);
+          console.log(`No data found in table: ${tableName}`);
+          setData([]);
         }
+        
       } catch (err) {
         console.error("Error fetching Team 3 buying personas:", err);
         setError(err instanceof Error ? err.message : "Unknown error");
@@ -82,44 +64,26 @@ export function useTeam3Frituren() {
         setLoading(true);
         console.log("Fetching Team 3 frituren data...");
         
-        // Try both possible table names for Team 3 data
-        const tables: FriturenTable[] = ["Team3friturenforwebsite", "Team38friturenforwebsite"];
-        let friturenData = null;
-        let fetchError = null;
+        // Focus only on Team 3 data table
+        const tableName: FriturenTable = "Team3friturenforwebsite";
         
-        // Try each table until we find data
-        for (const tableName of tables) {
-          console.log(`Trying to fetch frituren data from table: ${tableName}`);
-          const result = await supabase
-            .from(tableName)
-            .select("*");
-          
-          if (!result.error && result.data && result.data.length > 0) {
-            friturenData = result.data;
-            console.log(`Successfully found frituren data in table: ${tableName}`, friturenData);
-            break;
-          } else {
-            fetchError = result.error;
-            console.log(`No frituren data found in table: ${tableName} or error:`, fetchError);
-          }
+        console.log(`Trying to fetch frituren data from table: ${tableName}`);
+        const result = await supabase
+          .from(tableName)
+          .select("*");
+        
+        if (result.error) {
+          throw result.error;
         }
-
-        if (friturenData) {
-          console.log("Fetched Team 3 frituren data:", friturenData);
-          setData(friturenData as Frituur[]);
+        
+        if (result.data && result.data.length > 0) {
+          console.log(`Successfully found frituren data in table: ${tableName}`, result.data);
+          setData(result.data as Frituur[]);
         } else {
-          // If we still don't have data, try a fallback solution - use Team 38 data
-          console.log("Fallback: Using Team 38 frituren data for the quadruplicate view");
-          const { data: fallbackData, error: fallbackError } = await supabase
-            .from("Team38friturenforwebsite" as FriturenTable)
-            .select("*");
-            
-          if (fallbackError) {
-            throw fallbackError;
-          }
-          
-          setData(fallbackData as Frituur[]);
+          console.log(`No frituren data found in table: ${tableName}`);
+          setData([]);
         }
+        
       } catch (err) {
         console.error("Error fetching Team 3 frituren data:", err);
         setError(err instanceof Error ? err.message : "Unknown error");
@@ -145,44 +109,26 @@ export function useTeam3StreetInterviews() {
         setLoading(true);
         console.log("Fetching Team 3 street interviews data...");
         
-        // Try both possible table names for Team 3 data
-        const tables: InterviewsTable[] = ["Team3streetinterviewsforwebsite", "Team38streetinterviewsforwebsite"];
-        let interviewsData = null;
-        let fetchError = null;
+        // Focus only on Team 3 data table
+        const tableName: InterviewsTable = "Team3streetinterviewsforwebsite";
         
-        // Try each table until we find data
-        for (const tableName of tables) {
-          console.log(`Trying to fetch street interviews data from table: ${tableName}`);
-          const result = await supabase
-            .from(tableName)
-            .select("*");
-          
-          if (!result.error && result.data && result.data.length > 0) {
-            interviewsData = result.data;
-            console.log(`Successfully found street interviews data in table: ${tableName}`, interviewsData);
-            break;
-          } else {
-            fetchError = result.error;
-            console.log(`No street interviews data found in table: ${tableName} or error:`, fetchError);
-          }
+        console.log(`Trying to fetch street interviews data from table: ${tableName}`);
+        const result = await supabase
+          .from(tableName)
+          .select("*");
+        
+        if (result.error) {
+          throw result.error;
         }
-
-        if (interviewsData) {
-          console.log("Fetched Team 3 street interviews data:", interviewsData);
-          setData(interviewsData as StreetInterview[]);
+        
+        if (result.data && result.data.length > 0) {
+          console.log(`Successfully found street interviews data in table: ${tableName}`, result.data);
+          setData(result.data as StreetInterview[]);
         } else {
-          // If we still don't have data, try a fallback solution - use Team 38 data
-          console.log("Fallback: Using Team 38 street interviews data for the quadruplicate view");
-          const { data: fallbackData, error: fallbackError } = await supabase
-            .from("Team38streetinterviewsforwebsite" as InterviewsTable)
-            .select("*");
-            
-          if (fallbackError) {
-            throw fallbackError;
-          }
-          
-          setData(fallbackData as StreetInterview[]);
+          console.log(`No street interviews data found in table: ${tableName}`);
+          setData([]);
         }
+        
       } catch (err) {
         console.error("Error fetching Team 3 street interviews:", err);
         setError(err instanceof Error ? err.message : "Unknown error");
