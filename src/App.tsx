@@ -32,7 +32,7 @@ const App = () => (
           <Route path="/frituur/:team/:businessName" element={<FrituurDetails />} />
           <Route path="/frituren/:team/add" element={<AddFrituurPage />} />
           <Route path="/team-38-results" element={<Team38Results />} />
-          <Route path="/team-38-results-duplicate" element={<Team38ResultsDuplicate />} />
+          <Route path="/team-13-results" element={<Team38ResultsDuplicate />} />
           <Route path="/team-38-results-triplicate" element={<Team38ResultsTriplicate />} />
           <Route path="/team-38-results-quadruplicate" element={<Team38ResultsQuadruplicate />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
