@@ -32,7 +32,7 @@ const Team38ResultsDuplicate = () => {
   return (
     <>
       <Helmet>
-        <title>Team 38 Research Results (Duplicate) | Snack Innovation</title>
+        <title>Team 38 Research Results | Snack Innovation</title>
       </Helmet>
       
       <div className="min-h-screen bg-gray-50">
@@ -47,13 +47,13 @@ const Team38ResultsDuplicate = () => {
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
-              <h1 className="text-xl font-semibold">Team 38 Research Results (Duplicate)</h1>
+              <h1 className="text-xl font-semibold">Team 38 Research Results</h1>
             </div>
             <div className="flex gap-2">
               <Button asChild variant="outline" size="sm">
                 <Link to="/team-38-results">
                   <Copy className="h-4 w-4 mr-2" />
-                  View Original
+                  View Team 38
                 </Link>
               </Button>
               <Button asChild variant="outline" size="sm">
@@ -75,7 +75,7 @@ const Team38ResultsDuplicate = () => {
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="bg-white rounded-lg shadow">
             <div className="p-6">
-              <h2 className="text-2xl font-bold mb-6">Team 38 Market Research Data (Duplicate)</h2>
+              <h2 className="text-2xl font-bold mb-6">Team 38 Market Research Data</h2>
               
               <p className="text-gray-600 mb-8">
                 This page presents the complete market research findings from Team 38's research on 
@@ -134,18 +134,18 @@ const Team38ResultsDuplicate = () => {
                     </div>
                     
                     {personasViewMode === "table" ? (
-                      <BuyingPersonasTable />
+                      <BuyingPersonasTable personas={personas} />
                     ) : (
-                      <BuyingPersonasCards />
+                      <BuyingPersonasCards personas={personas} />
                     )}
                   </TabsContent>
                   
                   <TabsContent value="frituren">
-                    <FriturenTable />
+                    <FriturenTable frituren={frituren} />
                   </TabsContent>
                   
                   <TabsContent value="streetInterviews">
-                    <StreetInterviewsTable />
+                    <StreetInterviewsTable interviews={interviews} />
                   </TabsContent>
                 </Tabs>
               )}
