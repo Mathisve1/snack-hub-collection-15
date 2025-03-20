@@ -24,3 +24,24 @@ export const calculateAverageFromRecord = (record: Record<string, number>): numb
   
   return count > 0 ? parseFloat((sum / count).toFixed(1)) : 0;
 };
+
+// Calculate standard deviation
+export const calculateStandardDeviation = (values: number[]): number => {
+  if (values.length <= 1) return 0;
+  
+  const avg = calculateAverageResponse(values);
+  const squareDiffs = values.map(value => Math.pow(value - avg, 2));
+  const variance = squareDiffs.reduce((sum, squareDiff) => sum + squareDiff, 0) / values.length;
+  return parseFloat(Math.sqrt(variance).toFixed(1));
+};
+
+// Normalize values to percentage
+export const normalizeToPercentage = (record: Record<string, number>): Record<string, number> => {
+  const total = Object.values(record).reduce((sum, count) => sum + count, 0);
+  if (total === 0) return {};
+  
+  return Object.entries(record).reduce((result, [key, value]) => {
+    result[key] = Math.round((value / total) * 100);
+    return result;
+  }, {} as Record<string, number>);
+};

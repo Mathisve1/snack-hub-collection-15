@@ -1,44 +1,55 @@
 
-import { MessageSquare } from "lucide-react";
-import SummaryCard from "./SummaryCard";
-import DataPoint from "./DataPoint";
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { GroupedStreetInterviewData } from "../utils/types";
-import { CommonValueInfo } from "../types";
+import { getMostCommon, formatBreakdown } from "../utils/calculationUtils";
+import DataPoint from "./DataPoint";
 
-type ReactionsChannelsCardProps = {
-  eersteReactieInfo: CommonValueInfo;
-  verkoopskanalenInfo: CommonValueInfo;
-  eerste_reacties: Record<string, number>;
-  verkoopskanalen: Record<string, number>;
-  formatBreakdown: (record: Record<string, number>) => string;
-};
+interface ReactionsChannelsCardProps {
+  groupedData: GroupedStreetInterviewData;
+}
 
-const ReactionsChannelsCard = ({ 
-  eersteReactieInfo, 
-  verkoopskanalenInfo, 
-  eerste_reacties, 
-  verkoopskanalen,
-  formatBreakdown 
-}: ReactionsChannelsCardProps) => {
+const ReactionsChannelsCard: React.FC<ReactionsChannelsCardProps> = ({ groupedData }) => {
+  const firstReactionData = getMostCommon(groupedData.eerste_reacties);
+  const salesChannelsData = getMostCommon(groupedData.verkoopskanalen);
+
   return (
-    <SummaryCard
-      title="Eerste Reactie & Verkoopskanalen"
-      icon={MessageSquare}
-      iconColor="text-blue-500"
-    >
-      <div className="space-y-4">
-        <DataPoint
-          label="Meest voorkomende eerste reactie:"
-          value={`${eersteReactieInfo.value} (${eersteReactieInfo.percentage}%)`}
-          breakdown={formatBreakdown(eerste_reacties)}
-        />
-        <DataPoint
-          label="Populairste verkoopskanalen:"
-          value={`${verkoopskanalenInfo.value} (${verkoopskanalenInfo.percentage}%)`}
-          breakdown={formatBreakdown(verkoopskanalen)}
-        />
-      </div>
-    </SummaryCard>
+    <Card className="shadow-md h-full">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg font-medium">Eerste Reacties & Verkoopskanalen</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          <DataPoint
+            label="Meest Voorkomende Eerste Reactie"
+            value={firstReactionData.value}
+            subValue={`${firstReactionData.percentage}% van de reacties`}
+          />
+          
+          <div className="mt-2">
+            <h4 className="text-sm font-medium text-gray-500">Alle Eerste Reacties:</h4>
+            <p className="text-sm text-gray-700 mt-1">
+              {formatBreakdown(groupedData.eerste_reacties)}
+            </p>
+          </div>
+          
+          <div className="border-t pt-4 mt-4">
+            <DataPoint
+              label="Favoriete Verkoopskanaal"
+              value={salesChannelsData.value}
+              subValue={`${salesChannelsData.percentage}% van alle respondenten`}
+            />
+            
+            <div className="mt-2">
+              <h4 className="text-sm font-medium text-gray-500">Alle Verkoopskanalen:</h4>
+              <p className="text-sm text-gray-700 mt-1">
+                {formatBreakdown(groupedData.verkoopskanalen)}
+              </p>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

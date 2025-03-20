@@ -1,32 +1,27 @@
 
-import React, { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useTeam13StreetInterviews } from "../hooks/useTeam13Data";
-import { Loader2 } from "lucide-react";
-import { StreetInterview } from "../types";
+import { Loader2, LayoutGrid, Table as TableIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import Team13StreetInterviewsSummary from "./Team13StreetInterviewsSummary";
+import { StreetInterview } from "../types";
 
 interface Team13StreetInterviewsTableProps {
   interviews?: StreetInterview[];
 }
 
 const Team13StreetInterviewsTable = ({ interviews }: Team13StreetInterviewsTableProps) => {
-  const [showSummary, setShowSummary] = useState(true);
-  
-  // Use the hook if no data is provided directly
+  // Use the team13 hook
   const team13Data = useTeam13StreetInterviews();
   
-  // Use passed data if available, otherwise use the data from hooks
+  // Use passed interviews if available, otherwise use the data from hooks
   const data = interviews || team13Data.data;
   const loading = !interviews && team13Data.loading;
   const error = !interviews && team13Data.error;
   
-  console.log("Team13StreetInterviewsTable using data:", { 
-    dataSource: interviews ? "passed directly" : "team13 hook",
-    dataLength: data?.length || 0,
-    isLoading: loading,
-    firstRecord: data && data.length > 0 ? data[0] : null
-  });
+  // View mode state
+  const [viewMode, setViewMode] = useState<"summary" | "table">("summary");
 
   if (loading) {
     return (
@@ -52,79 +47,59 @@ const Team13StreetInterviewsTable = ({ interviews }: Team13StreetInterviewsTable
     );
   }
 
-  // Use the Summary view by default
+  // Get all unique column keys excluding 'id'
+  const columnKeys = Object.keys(data[0]).filter(key => key !== 'id');
+
   return (
-    <div>
+    <>
       <div className="flex justify-end mb-4">
         <div className="bg-gray-100 rounded-md p-1 inline-flex">
-          <button
-            className={`px-3 py-1 rounded-md text-sm ${showSummary ? 'bg-white shadow' : ''}`}
-            onClick={() => setShowSummary(true)}
+          <Button
+            variant={viewMode === "summary" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setViewMode("summary")}
+            className="rounded-md"
           >
-            Summary View
-          </button>
-          <button
-            className={`px-3 py-1 rounded-md text-sm ${!showSummary ? 'bg-white shadow' : ''}`}
-            onClick={() => setShowSummary(false)}
+            <LayoutGrid className="h-4 w-4 mr-1" />
+            Samenvatting
+          </Button>
+          <Button
+            variant={viewMode === "table" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setViewMode("table")}
+            className="rounded-md"
           >
-            Table View
-          </button>
+            <TableIcon className="h-4 w-4 mr-1" />
+            Tabel
+          </Button>
         </div>
       </div>
-      
-      {showSummary ? (
-        <Team13StreetInterviewsSummary />
+
+      {viewMode === "summary" ? (
+        <Team13StreetInterviewsSummary interviews={data} />
       ) : (
         <div className="rounded-md border overflow-hidden">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="font-semibold">Eerste Reactie</TableHead>
-                  <TableHead className="font-semibold">Verkoopskanalen</TableHead>
-                  <TableHead className="font-semibold">Motivatie Frituur</TableHead>
-                  <TableHead className="font-semibold">Populaire Snack 1</TableHead>
-                  <TableHead className="font-semibold">Populaire Snack 2</TableHead>
-                  <TableHead className="font-semibold">Eiwitgehalte</TableHead>
-                  <TableHead className="font-semibold">Prijs</TableHead>
-                  <TableHead className="font-semibold">Branding</TableHead>
-                  <TableHead className="font-semibold">Marketing 1</TableHead>
-                  <TableHead className="font-semibold">Marketing 2</TableHead>
-                  <TableHead className="font-semibold">Smaakvoorkeuren</TableHead>
-                  <TableHead className="font-semibold">Coating</TableHead>
-                  <TableHead className="font-semibold">Krokantheid</TableHead>
-                  <TableHead className="font-semibold">Bereiding</TableHead>
-                  <TableHead className="font-semibold">Innovatie</TableHead>
-                  <TableHead className="font-semibold">Hogere Prijs</TableHead>
-                  <TableHead className="font-semibold">Vervangen Traditioneel</TableHead>
-                  <TableHead className="font-semibold">Frituurbezoek</TableHead>
-                  <TableHead className="font-semibold">Prijs Factoren</TableHead>
-                  <TableHead className="font-semibold">Aankoopbarrières</TableHead>
+                  {columnKeys.map((key) => (
+                    <TableHead key={key} className="font-semibold">
+                      {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    </TableHead>
+                  ))}
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {data.map((interview) => (
                   <TableRow key={interview.id}>
-                    <TableCell>{interview.eerste_reactie || '—'}</TableCell>
-                    <TableCell>{interview.verkoopskanalen || '—'}</TableCell>
-                    <TableCell>{interview.motivatie_frituur || '—'}</TableCell>
-                    <TableCell>{interview.populaire_snack_1 || '—'}</TableCell>
-                    <TableCell>{interview.populaire_snack_2 || '—'}</TableCell>
-                    <TableCell>{interview.eiwitgehalte || '—'}</TableCell>
-                    <TableCell>{interview.prijs || '—'}</TableCell>
-                    <TableCell>{interview.branding || '—'}</TableCell>
-                    <TableCell>{interview.marketing_1 || '—'}</TableCell>
-                    <TableCell>{interview.marketing_2 || '—'}</TableCell>
-                    <TableCell>{interview.smaakvoorkeuren || '—'}</TableCell>
-                    <TableCell>{interview.welke_coating || '—'}</TableCell>
-                    <TableCell>{interview.belang_van_krokantheid || '—'}</TableCell>
-                    <TableCell>{interview.bereidingsvoorkeur || '—'}</TableCell>
-                    <TableCell>{interview.ruimte_voor_innovatie ? 'Ja' : 'Nee'}</TableCell>
-                    <TableCell>{interview.hogere_prijs ? 'Ja' : 'Nee'}</TableCell>
-                    <TableCell>{interview.vervangen_traditionele_snack ? 'Ja' : 'Nee'}</TableCell>
-                    <TableCell>{interview.frituurbezoek_frequentie || '—'}</TableCell>
-                    <TableCell>{interview.hogere_prijs_factoren || '—'}</TableCell>
-                    <TableCell>{interview.belangrijkst_aankoopbariere || '—'}</TableCell>
+                    {columnKeys.map((key) => (
+                      <TableCell key={`${interview.id}-${key}`}>
+                        {typeof interview[key] === 'boolean' 
+                          ? interview[key] ? 'Yes' : 'No'
+                          : interview[key] || '—'}
+                      </TableCell>
+                    ))}
                   </TableRow>
                 ))}
               </TableBody>
@@ -132,7 +107,7 @@ const Team13StreetInterviewsTable = ({ interviews }: Team13StreetInterviewsTable
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
