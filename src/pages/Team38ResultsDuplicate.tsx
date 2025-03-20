@@ -3,10 +3,6 @@ import { Helmet } from "react-helmet";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Table as TableIcon, LayoutGrid, Copy } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
-import BuyingPersonasTable from "@/features/team-data/components/BuyingPersonasTable";
-import BuyingPersonasCards from "@/features/team-data/components/BuyingPersonasCards";
-import FriturenTable from "@/features/team-data/components/FriturenTable";
-import StreetInterviewsTable from "@/features/team-data/components/StreetInterviewsTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   useTeam13BuyingPersonas, 
@@ -15,6 +11,10 @@ import {
 } from "@/features/team-data/hooks/useTeam13Data";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import Team13BuyingPersonasTable from "@/features/team-data/components/Team13BuyingPersonasTable";
+import Team13BuyingPersonasCards from "@/features/team-data/components/Team13BuyingPersonasCards";
+import Team13FriturenTable from "@/features/team-data/components/Team13FriturenTable";
+import Team13StreetInterviewsTable from "@/features/team-data/components/Team13StreetInterviewsTable";
 
 const Team38ResultsDuplicate = () => {
   const navigate = useNavigate();
@@ -140,18 +140,18 @@ const Team38ResultsDuplicate = () => {
                     </div>
                     
                     {personasViewMode === "table" ? (
-                      <BuyingPersonasTable personas={personas} />
+                      <Team13BuyingPersonasTable personas={personas} />
                     ) : (
-                      <BuyingPersonasCards personas={personas} />
+                      <Team13BuyingPersonasCards personas={personas} />
                     )}
                   </TabsContent>
                   
                   <TabsContent value="frituren">
-                    <FriturenTable frituren={frituren} />
+                    <Team13FriturenTable frituren={frituren} />
                   </TabsContent>
                   
                   <TabsContent value="streetInterviews">
-                    <StreetInterviewsTable interviews={interviews} />
+                    <Team13StreetInterviewsTable interviews={interviews} />
                   </TabsContent>
                 </Tabs>
               )}
