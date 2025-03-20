@@ -6,6 +6,8 @@ import { GroupedStreetInterviewData } from "./types";
  * Processes raw street interview data and groups it into a structured format
  */
 export const processStreetInterviewsData = (data: StreetInterview[]): GroupedStreetInterviewData => {
+  console.log("Processing street interviews data:", data);
+  
   const result: GroupedStreetInterviewData = {
     count: data.length,
     eerste_reacties: {},
@@ -53,13 +55,15 @@ export const processStreetInterviewsData = (data: StreetInterview[]): GroupedStr
     }
 
     // Process eiwitgehalte
-    if (interview.eiwitgehalte) {
-      result.eiwitgehalte[interview.eiwitgehalte] = (result.eiwitgehalte[interview.eiwitgehalte] || 0) + 1;
+    if (interview.eiwitgehalte !== undefined && interview.eiwitgehalte !== null) {
+      const key = String(interview.eiwitgehalte);
+      result.eiwitgehalte[key] = (result.eiwitgehalte[key] || 0) + 1;
     }
 
     // Process prijs
-    if (interview.prijs) {
-      result.prijzen[interview.prijs] = (result.prijzen[interview.prijs] || 0) + 1;
+    if (interview.prijs !== undefined && interview.prijs !== null) {
+      const key = String(interview.prijs);
+      result.prijzen[key] = (result.prijzen[key] || 0) + 1;
     }
 
     // Process branding
@@ -110,7 +114,7 @@ export const processStreetInterviewsData = (data: StreetInterview[]): GroupedStr
       result.belang_krokantheid[interview.belang_van_krokantheid] = (result.belang_krokantheid[interview.belang_van_krokantheid] || 0) + 1;
     }
 
-    // Process boolean values
+    // Process boolean values - ensure we're checking for correct boolean values
     if (interview.ruimte_voor_innovatie !== undefined) {
       result.innovatie_ruimte.push(interview.ruimte_voor_innovatie ? 1 : 0);
     }
@@ -122,5 +126,6 @@ export const processStreetInterviewsData = (data: StreetInterview[]): GroupedStr
     }
   });
 
+  console.log("Processed result:", result);
   return result;
 };

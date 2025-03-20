@@ -24,7 +24,10 @@ type StreetInterviewsSummaryProps = {
 };
 
 const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
+  console.log("Rendering StreetInterviewsSummary with data:", data);
+  
   const processedData = processStreetInterviewsData(data);
+  console.log("Processed data:", processedData);
   
   const eersteReactieInfo = getMostCommon(processedData.eerste_reacties);
   const verkoopskanalenInfo = getMostCommon(processedData.verkoopskanalen);

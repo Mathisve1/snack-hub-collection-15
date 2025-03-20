@@ -1,6 +1,6 @@
 
-// Re-export all utility functions for easier imports
-export * from './types';
-export * from './dataProcessing';
-export * from './calculationUtils';
-export * from './responseUtils';
+// Re-export all utility functions from the individual files
+
+export { processStreetInterviewsData } from './dataProcessing';
+export { getMostCommon, formatBreakdown, calculateBooleanPercentage } from './calculationUtils';
+export { calculateAverageResponse, calculateAverageFromRecord } from './responseUtils';

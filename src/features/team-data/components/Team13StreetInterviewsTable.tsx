@@ -25,8 +25,8 @@ const Team13StreetInterviewsTable = ({ interviews }: Team13StreetInterviewsTable
     dataSource: interviews ? "passed directly" : "team13 hook",
     dataLength: data?.length || 0,
     isLoading: loading,
-    team13DataLength: team13Data.data?.length,
-    interviewsLength: interviews?.length
+    hasError: !!error,
+    data: data
   });
   
   const [viewMode, setViewMode] = useState<"summary" | "table">("summary");
@@ -57,6 +57,48 @@ const Team13StreetInterviewsTable = ({ interviews }: Team13StreetInterviewsTable
 
   // Get all unique column keys excluding 'id'
   const columnKeys = Object.keys(data[0]).filter(key => key !== 'id');
+  
+  // Create a readable label for each column
+  const getColumnLabel = (key: string): string => {
+    const labelMap: Record<string, string> = {
+      frituurbezoek_frequentie: "Frituurbezoek Frequentie",
+      motivatie_frituur: "Motivatie Frituur",
+      populaire_snack_1: "Populaire Snack 1",
+      populaire_snack_2: "Populaire Snack 2",
+      ruimte_voor_innovatie: "Ruimte Voor Innovatie",
+      eiwitgehalte: "Eiwitgehalte",
+      prijs: "Prijs",
+      hogere_prijs: "Hogere Prijs",
+      vervangen_traditionele_snack: "Vervangen Traditionele Snack",
+      branding: "Branding",
+      marketing_1: "Marketing 1",
+      marketing_2: "Marketing 2",
+      smaakvoorkeuren: "Smaakvoorkeuren",
+      welke_coating: "Welke Coating",
+      belang_van_krokantheid: "Belang Van Krokantheid",
+      bereidingsvoorkeur: "Bereidingsvoorkeur",
+      hogere_prijs_factoren: "Hogere Prijs Factoren",
+      verkoopskanalen: "Verkoopskanalen",
+      eerste_reactie: "Eerste Reactie",
+      belangrijkst_aankoopbariere: "Belangrijkst Aankoopbarrière"
+    };
+    
+    return labelMap[key] || key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  };
+  
+  // Format cell values for display
+  const formatCellValue = (value: any): string => {
+    if (value === null || value === undefined) return '—';
+    if (typeof value === 'boolean') return value ? 'Ja' : 'Nee';
+    if (typeof value === 'number') {
+      // Check if it might be a price
+      if (columnKeys.includes('prijs') && value > 0 && value < 100) {
+        return `€${value.toFixed(2)}`;
+      }
+      return value.toString();
+    }
+    return value;
+  };
   
   return (
     <>
@@ -93,7 +135,7 @@ const Team13StreetInterviewsTable = ({ interviews }: Team13StreetInterviewsTable
                 <TableRow>
                   {columnKeys.map((key) => (
                     <TableHead key={key} className="font-semibold">
-                      {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                      {getColumnLabel(key)}
                     </TableHead>
                   ))}
                 </TableRow>
@@ -103,9 +145,7 @@ const Team13StreetInterviewsTable = ({ interviews }: Team13StreetInterviewsTable
                   <TableRow key={interview.id}>
                     {columnKeys.map((key) => (
                       <TableCell key={`${interview.id}-${key}`}>
-                        {typeof interview[key] === 'boolean' 
-                          ? interview[key] ? 'Yes' : 'No'
-                          : interview[key] || '—'}
+                        {formatCellValue(interview[key])}
                       </TableCell>
                     ))}
                   </TableRow>
