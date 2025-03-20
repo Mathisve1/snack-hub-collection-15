@@ -111,7 +111,7 @@ const Team38ResultsQuadruplicate = () => {
               
               {!isLoading && !hasErrors && 
                personas.length === 0 && frituren.length === 0 && interviews.length === 0 && (
-                <Alert className="mb-6" variant="warning">
+                <Alert className="mb-6 border-yellow-400 bg-yellow-50 text-yellow-800">
                   <AlertTriangle className="h-4 w-4" />
                   <AlertDescription>
                     No data found in Team 3 tables. We're showing Team 38 data as a fallback.
