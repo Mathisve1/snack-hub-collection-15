@@ -16,7 +16,7 @@ import Team13BuyingPersonasCards from "@/features/team-data/components/Team13Buy
 import Team13FriturenTable from "@/features/team-data/components/Team13FriturenTable";
 import Team13StreetInterviewsTable from "@/features/team-data/components/Team13StreetInterviewsTable";
 
-const Team38ResultsDuplicate = () => {
+const Team13Results = () => {
   const navigate = useNavigate();
   const { data: personas, loading: personasLoading, error: personasError } = useTeam13BuyingPersonas();
   const { data: frituren, loading: friturenLoading, error: friturenError } = useTeam13Frituren();
@@ -163,4 +163,4 @@ const Team38ResultsDuplicate = () => {
   );
 };
 
-export default Team38ResultsDuplicate;
+export default Team13Results;

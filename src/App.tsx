@@ -11,7 +11,7 @@ import FriturenList from "./pages/FriturenList";
 import FrituurDetails from "./pages/FrituurDetails";
 import AddFrituurPage from "./pages/AddFrituurPage";
 import Team38Results from "./pages/Team38Results";
-import Team38ResultsDuplicate from "./pages/Team38ResultsDuplicate";
+import Team13Results from "./pages/Team13Results";
 import Team38ResultsTriplicate from "./pages/Team38ResultsTriplicate";
 import Team38ResultsQuadruplicate from "./pages/Team38ResultsQuadruplicate";
 import NotFound from "./pages/NotFound";
@@ -32,7 +32,7 @@ const App = () => (
           <Route path="/frituur/:team/:businessName" element={<FrituurDetails />} />
           <Route path="/frituren/:team/add" element={<AddFrituurPage />} />
           <Route path="/team-38-results" element={<Team38Results />} />
-          <Route path="/team-13-results" element={<Team38ResultsDuplicate />} />
+          <Route path="/team-13-results" element={<Team13Results />} />
           <Route path="/team-38-results-triplicate" element={<Team38ResultsTriplicate />} />
           <Route path="/team-38-results-quadruplicate" element={<Team38ResultsQuadruplicate />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
