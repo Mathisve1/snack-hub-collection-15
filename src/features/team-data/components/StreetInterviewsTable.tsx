@@ -1,7 +1,12 @@
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useTeam38StreetInterviews } from "../hooks/useTeam38Data";
-import { Loader2 } from "lucide-react";
+import { useTeam3StreetInterviews } from "../hooks/useTeam3Data";
+import { Loader2, LayoutGrid, Table as TableIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import StreetInterviewsSummary from "./street-interviews/StreetInterviewsSummary";
+import { useLocation } from "react-router-dom";
 import { StreetInterview } from "../types";
 
 interface StreetInterviewsTableProps {
@@ -9,13 +14,34 @@ interface StreetInterviewsTableProps {
 }
 
 const StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps) => {
-  // Use the team38Data hook only if interviews are not passed as props
+  const location = useLocation();
+  // Check if the current path includes team-3
+  const isTeam3Data = location.pathname === "/team-3-results";
+  const isTeam13Data = location.pathname === "/team-13-results";
+  
+  // Log the current path and which team was detected
+  console.log(`StreetInterviewsTable - Current path: ${location.pathname}, isTeam3Data: ${isTeam3Data}, isTeam13Data: ${isTeam13Data}`);
+  
+  // Use the appropriate hook based on the current path
   const team38Data = useTeam38StreetInterviews();
-
+  const team3Data = useTeam3StreetInterviews();
+  
   // Use passed interviews if available, otherwise use the data from hooks
-  const data = interviews || team38Data.data;
-  const loading = !interviews && team38Data.loading;
-  const error = !interviews && team38Data.error;
+  const data = interviews || (isTeam3Data ? team3Data.data : team38Data.data);
+  const loading = !interviews && (isTeam3Data ? team3Data.loading : team38Data.loading);
+  const error = !interviews && (isTeam3Data ? team3Data.error : team38Data.error);
+  
+  // Log the data we're actually using
+  console.log("StreetInterviewsTable using data:", { 
+    teamSource: interviews ? "passed directly" : (isTeam3Data ? "team3" : "team38"),
+    dataLength: data?.length || 0,
+    isLoading: loading,
+    team3DataLength: team3Data.data?.length,
+    team38DataLength: team38Data.data?.length,
+    interviewsLength: interviews?.length
+  });
+  
+  const [viewMode, setViewMode] = useState<"summary" | "table">("summary");
 
   if (loading) {
     return (
@@ -44,43 +70,64 @@ const StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps) => {
   // Get all unique column keys excluding 'id'
   const columnKeys = Object.keys(data[0]).filter(key => key !== 'id');
   
-  // Filter out columns we want to display
-  const displayColumns = [
-    'eerste_reactie', 'populaire_snack_1', 'populaire_snack_2', 
-    'prijs', 'smaakvoorkeuren', 'marketing_1', 'hogere_prijs'
-  ];
-  
-  const filteredColumns = columnKeys.filter(key => displayColumns.includes(key));
-
   return (
-    <div className="rounded-md border overflow-hidden">
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {filteredColumns.map((key) => (
-                <TableHead key={key} className="font-semibold">
-                  {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.map((interview) => (
-              <TableRow key={interview.id}>
-                {filteredColumns.map((key) => (
-                  <TableCell key={`${interview.id}-${key}`}>
-                    {typeof interview[key] === 'boolean' 
-                      ? interview[key] ? 'Yes' : 'No'
-                      : interview[key] || '—'}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+    <>
+      <div className="flex justify-end mb-4">
+        <div className="bg-gray-100 rounded-md p-1 inline-flex">
+          <Button
+            variant={viewMode === "summary" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setViewMode("summary")}
+            className="rounded-md"
+          >
+            <LayoutGrid className="h-4 w-4 mr-1" />
+            Samenvatting
+          </Button>
+          <Button
+            variant={viewMode === "table" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setViewMode("table")}
+            className="rounded-md"
+          >
+            <TableIcon className="h-4 w-4 mr-1" />
+            Tabel
+          </Button>
+        </div>
       </div>
-    </div>
+
+      {viewMode === "summary" ? (
+        <StreetInterviewsSummary data={data} />
+      ) : (
+        <div className="rounded-md border overflow-hidden">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  {columnKeys.map((key) => (
+                    <TableHead key={key} className="font-semibold">
+                      {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {data.map((interview) => (
+                  <TableRow key={interview.id}>
+                    {columnKeys.map((key) => (
+                      <TableCell key={`${interview.id}-${key}`}>
+                        {typeof interview[key] === 'boolean' 
+                          ? interview[key] ? 'Yes' : 'No'
+                          : interview[key] || '—'}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
