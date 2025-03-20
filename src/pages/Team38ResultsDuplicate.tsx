@@ -18,9 +18,25 @@ import { useState } from "react";
 
 const Team38ResultsDuplicate = () => {
   const navigate = useNavigate();
-  const { data: personas, loading: personasLoading, error: personasError } = useTeam13BuyingPersonas();
-  const { data: frituren, loading: friturenLoading, error: friturenError } = useTeam13Frituren();
-  const { data: interviews, loading: interviewsLoading, error: interviewsError } = useTeam13StreetInterviews();
+  
+  // Fetch Team 13 data
+  const { 
+    data: personas, 
+    loading: personasLoading, 
+    error: personasError 
+  } = useTeam13BuyingPersonas();
+  
+  const { 
+    data: frituren, 
+    loading: friturenLoading, 
+    error: friturenError 
+  } = useTeam13Frituren();
+  
+  const { 
+    data: interviews, 
+    loading: interviewsLoading, 
+    error: interviewsError 
+  } = useTeam13StreetInterviews();
   
   // State to toggle between table and card view for buying personas
   const [personasViewMode, setPersonasViewMode] = useState<"table" | "cards">("cards");
@@ -30,12 +46,32 @@ const Team38ResultsDuplicate = () => {
   const hasErrors = personasError || friturenError || interviewsError;
 
   // Log the loading status and data for debugging
-  console.log("Team38ResultsDuplicate - Personas data:", {
-    loading: personasLoading,
-    error: personasError,
-    dataLength: personas?.length || 0,
-    sampleData: personas && personas.length > 0 ? personas[0] : null
+  console.log("Team13ResultsDuplicate - Debug Data:", {
+    personasLoading,
+    personasError,
+    personasLength: personas?.length || 0,
+    frituren: {
+      loading: friturenLoading,
+      error: friturenError,
+      dataLength: frituren?.length || 0
+    },
+    interviews: {
+      loading: interviewsLoading,
+      error: interviewsError,
+      dataLength: interviews?.length || 0
+    }
   });
+
+  // Log sample data if available
+  if (personas && personas.length > 0) {
+    console.log("Team13 Personas - First record:", personas[0]);
+  }
+  if (frituren && frituren.length > 0) {
+    console.log("Team13 Frituren - First record:", frituren[0]);
+  }
+  if (interviews && interviews.length > 0) {
+    console.log("Team13 Street Interviews - First record:", interviews[0]);
+  }
 
   return (
     <>

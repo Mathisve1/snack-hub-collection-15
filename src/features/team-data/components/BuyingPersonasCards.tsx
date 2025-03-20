@@ -23,6 +23,7 @@ const BuyingPersonasCards = ({ personas }: BuyingPersonasCardsProps) => {
     teamSource: personas ? "passed directly" : "team38",
     dataLength: data?.length || 0,
     isLoading: loading,
+    hasData: data && data.length > 0,
     firstItem: data && data.length > 0 ? data[0].buying_persona : null
   });
   
