@@ -1,7 +1,7 @@
 
 import { Helmet } from "react-helmet";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Table as TableIcon, LayoutGrid, Copy } from "lucide-react";
+import { ArrowLeft, Table as TableIcon, LayoutGrid, Copy, Loader2 } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
@@ -9,8 +9,7 @@ import {
   useTeam13Frituren, 
   useTeam13StreetInterviews 
 } from "@/features/team-data/hooks/useTeam13Data";
-import { Loader2 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Team13BuyingPersonasTable from "@/features/team-data/components/Team13BuyingPersonasTable";
 import Team13BuyingPersonasCards from "@/features/team-data/components/Team13BuyingPersonasCards";
 import Team13FriturenTable from "@/features/team-data/components/Team13FriturenTable";
@@ -30,22 +29,20 @@ const Team13Results = () => {
   const isLoading = personasLoading || friturenLoading || interviewsLoading;
   const hasErrors = personasError || friturenError || interviewsError;
 
-  // Debug useEffect to log data status on each render
-  useEffect(() => {
-    console.log("Team13 Data Status:", {
-      personas: { count: personas?.length || 0, loading: personasLoading, error: personasError },
-      frituren: { count: frituren?.length || 0, loading: friturenLoading, error: friturenError },
-      interviews: { count: interviews?.length || 0, loading: interviewsLoading, error: interviewsError }
-    });
+  // Log data statistics to debug
+  console.log("Team13Results page - data stats:", {
+    personasCount: personas?.length || 0,
+    friturenCount: frituren?.length || 0,
+    interviewsCount: interviews?.length || 0,
+    isLoading,
+    hasErrors
+  });
 
-    // If data is loaded but empty for all categories, show a toast message
-    if (!isLoading && !hasErrors && 
-        (!personas || personas.length === 0) && 
-        (!frituren || frituren.length === 0) && 
-        (!interviews || interviews.length === 0)) {
-      toast.info("No data available for Team 13 yet. Please check back later.");
-    }
-  }, [personas, frituren, interviews, isLoading, hasErrors, personasError, friturenError, interviewsError]);
+  // Let's display an informative message specifically for Team 13
+  const showPlaceholderData = (!isLoading && !hasErrors && 
+    (!personas || personas.length === 0) && 
+    (!frituren || frituren.length === 0) && 
+    (!interviews || interviews.length === 0));
 
   return (
     <>
@@ -71,19 +68,13 @@ const Team13Results = () => {
               <Button asChild variant="outline" size="sm">
                 <Link to="/team-38-results">
                   <Copy className="h-4 w-4 mr-2" />
-                  View Original
+                  View Team 38
                 </Link>
               </Button>
               <Button asChild variant="outline" size="sm">
-                <Link to="/team-38-results-triplicate">
+                <Link to="/team-3-results">
                   <Copy className="h-4 w-4 mr-2" />
-                  View Triplicate
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="sm">
-                <Link to="/team-38-results-quadruplicate">
-                  <Copy className="h-4 w-4 mr-2" />
-                  View Quadruplicate
+                  View Team 3
                 </Link>
               </Button>
             </div>
@@ -113,18 +104,26 @@ const Team13Results = () => {
                   {friturenError && <p className="mt-2">Frituren error: {friturenError}</p>}
                   {interviewsError && <p className="mt-2">Interviews error: {interviewsError}</p>}
                 </div>
-              ) : (!personas || personas.length === 0) && 
-                 (!frituren || frituren.length === 0) && 
-                 (!interviews || interviews.length === 0) ? (
-                <div className="bg-yellow-50 border border-yellow-200 rounded-md p-6 text-center">
-                  <h3 className="text-xl font-medium text-yellow-800 mb-2">No Data Available</h3>
-                  <p className="text-yellow-700">
-                    The Team 13 data tables appear to be empty. Data will display here as soon as it's available.
+              ) : showPlaceholderData ? (
+                <div className="bg-blue-50 border border-blue-200 rounded-md p-6 text-center">
+                  <h3 className="text-xl font-medium text-blue-800 mb-2">Team 13 Data Status</h3>
+                  <p className="text-blue-700 mb-4">
+                    The Team 13 data tables appear to be empty. Your data will display here as soon as it's uploaded to Supabase.
                   </p>
-                  <p className="text-sm text-yellow-600 mt-4">
-                    Make sure data has been uploaded to the Team13buyingpersonasforwebsite, Team13friturenforwebsite, 
-                    and Team13streetinterviewsforwebsite tables.
-                  </p>
+                  <div className="bg-white rounded-md p-4 mt-4 border border-blue-100 text-left max-w-xl mx-auto">
+                    <h4 className="font-medium text-gray-800 mb-2">Insert Sample Data</h4>
+                    <p className="text-sm text-gray-600 mb-2">
+                      To display your data, upload it to the following Supabase tables:
+                    </p>
+                    <ul className="list-disc pl-5 text-sm text-gray-600">
+                      <li><code>Team13buyingpersonasforwebsite</code></li>
+                      <li><code>Team13friturenforwebsite</code></li>
+                      <li><code>Team13streetinterviewsforwebsite</code></li>
+                    </ul>
+                    <p className="text-xs text-gray-500 mt-2">
+                      Your data structure should match the Team 38 tables, including the same column names and data types.
+                    </p>
+                  </div>
                 </div>
               ) : (
                 <Tabs defaultValue="buyingPersonas" className="w-full">
