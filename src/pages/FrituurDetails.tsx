@@ -10,6 +10,7 @@ import FrituurHeader from "@/features/frituur-details/FrituurHeader";
 import BusinessInfoSection from "@/features/frituur-details/BusinessInfoSection";
 import NotesTabContent from "@/features/frituur-details/NotesTabContent";
 import AdditionalInfoTab from "@/features/frituur-details/AdditionalInfoTab";
+import ContactInfoForm from "@/features/frituur-details/ContactInfoForm";
 
 const FrituurDetails = () => {
   const { team = "", businessName = "" } = useParams<{ team: string; businessName: string }>();
@@ -74,6 +75,8 @@ const FrituurDetails = () => {
           {/* Left column: Location and contact info */}
           <div className="md:col-span-1 space-y-4">
             <BusinessInfoSection frituur={frituur} />
+            {/* Add the contact info form */}
+            <ContactInfoForm businessName={decodedBusinessName} team={team} />
           </div>
           
           {/* Right column: Notes and attachments */}

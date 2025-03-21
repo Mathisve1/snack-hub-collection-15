@@ -1,10 +1,13 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Frituur } from "../../types";
 import { TrendingUp, ShoppingBag, Store, DollarSign, BarChart, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+
 type FriturenCardViewProps = {
   frituren: Frituur[];
 };
+
 const FriturenCardView = ({
   frituren
 }: FriturenCardViewProps) => {
@@ -40,6 +43,99 @@ const FriturenCardView = ({
     acc[item] = (acc[item] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
-  return;
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+      {/* Popular Bestsellers */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center">
+            <ShoppingBag className="mr-2 h-5 w-5 text-primary" />
+            Popular Bestsellers
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {Object.entries(bestsellers)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 5)
+              .map(([item, count], index) => (
+                <div key={index} className="flex justify-between items-center">
+                  <span className="text-sm font-medium">{item}</span>
+                  <Badge variant="secondary">{count} mentions</Badge>
+                </div>
+              ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Top Suppliers */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center">
+            <Store className="mr-2 h-5 w-5 text-primary" />
+            Popular Suppliers
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {Object.entries(suppliers)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 5)
+              .map(([item, count], index) => (
+                <div key={index} className="flex justify-between items-center">
+                  <span className="text-sm font-medium">{item}</span>
+                  <Badge variant="secondary">{count} frituren</Badge>
+                </div>
+              ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Current Trends */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center">
+            <TrendingUp className="mr-2 h-5 w-5 text-primary" />
+            Current Trends
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {Object.entries(trends)
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 5)
+              .map(([item, count], index) => (
+                <div key={index} className="flex justify-between items-center">
+                  <span className="text-sm font-medium">{item}</span>
+                  <Badge variant="secondary">{count} mentions</Badge>
+                </div>
+              ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Financial Insights */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg flex items-center">
+            <DollarSign className="mr-2 h-5 w-5 text-primary" />
+            Financial Insights
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">Average Margins</span>
+              <Badge variant="outline" className="font-semibold">
+                {averageMargins.toFixed(1)}%
+              </Badge>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
 };
+
 export default FriturenCardView;

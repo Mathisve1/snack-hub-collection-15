@@ -78,6 +78,36 @@ export type Database = {
         }
         Relationships: []
       }
+      frituren_contact_info: {
+        Row: {
+          business_name: string
+          created_at: string
+          email: string | null
+          id: string
+          phone_number: string | null
+          team: string
+          updated_at: string
+        }
+        Insert: {
+          business_name: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          phone_number?: string | null
+          team: string
+          updated_at?: string
+        }
+        Update: {
+          business_name?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          phone_number?: string | null
+          team?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       frituren_folder_items: {
         Row: {
           added_at: string

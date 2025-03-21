@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { TableIcon, LayoutGrid } from "lucide-react";
@@ -5,13 +6,16 @@ import Team3FriturenTable from "../Team3FriturenTable";
 import FriturenSummary from "../frituren/FriturenSummary";
 import FriturenCardView from "../frituren/FriturenCardView";
 import { Frituur } from "../../types";
+
 interface Team3FriturenTabProps {
   frituren: Frituur[];
 }
+
 const Team3FriturenTab = ({
   frituren
 }: Team3FriturenTabProps) => {
   const [viewMode, setViewMode] = useState<"table" | "cards">("cards");
+  
   return <>
       <div className="flex justify-end mb-4">
         <div className="bg-gray-100 rounded-md p-1 inline-flex">
@@ -34,4 +38,5 @@ const Team3FriturenTab = ({
         </>}
     </>;
 };
+
 export default Team3FriturenTab;
