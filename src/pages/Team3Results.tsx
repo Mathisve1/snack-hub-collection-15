@@ -1,4 +1,3 @@
-
 import { Helmet } from "react-helmet";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Table as TableIcon, LayoutGrid, Copy, Loader2, AlertTriangle, Database } from "lucide-react";
@@ -26,16 +25,13 @@ const Team3Results = () => {
   const { data: frituren, loading: friturenLoading, error: friturenError } = useTeam3Frituren();
   const { data: interviews, loading: interviewsLoading, error: interviewsError } = useTeam3StreetInterviews();
   
-  // State to toggle between table and card view for buying personas
   const [personasViewMode, setPersonasViewMode] = useState<"table" | "cards">("cards");
   const [friturenViewMode, setFriturenViewMode] = useState<"table" | "cards">("cards");
   const [interviewsViewMode, setInterviewsViewMode] = useState<"table" | "summary">("summary");
 
-  // Check if any data is loading or has errors
   const isLoading = personasLoading || friturenLoading || interviewsLoading;
   const hasErrors = personasError || friturenError || interviewsError;
 
-  // Log data statistics for debugging
   console.log("Team3Results page - data stats:", {
     personasCount: personas?.length || 0,
     friturenCount: frituren?.length || 0,
@@ -44,16 +40,13 @@ const Team3Results = () => {
     hasErrors
   });
 
-  // Check if we actually have data or not
   const hasData = 
     (personas && personas.length > 0) || 
     (frituren && frituren.length > 0) || 
     (interviews && interviews.length > 0);
 
-  // Define a placeholder message for when we have no data
   const showPlaceholderData = !isLoading && !hasErrors && !hasData;
 
-  // Create grouped personas for card view
   const groupedPersonas = personas 
     ? Object.entries(
         personas.reduce((groups, persona) => {
@@ -181,7 +174,9 @@ const Team3Results = () => {
                       <Team3BuyingPersonasTable personas={personas} />
                     ) : (
                       <>
-                        <Team3BuyingPersonasCards personas={personas} />
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+                          <Team3BuyingPersonasCards personas={personas} />
+                        </div>
                         <h3 className="text-xl font-bold mt-10 mb-4">Persona Profiles</h3>
                         <PersonaCardList groupedPersonas={groupedPersonas} />
                       </>

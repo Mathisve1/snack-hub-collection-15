@@ -31,7 +31,7 @@ const Team3BuyingPersonasCards = ({ personas }: BuyingPersonasCardsProps) => {
   const opennessData = calculateOpenness(personas);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+    <>
       {/* Demographics Card */}
       <Card>
         <CardContent className="p-6">
@@ -171,7 +171,7 @@ const Team3BuyingPersonasCards = ({ personas }: BuyingPersonasCardsProps) => {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </>
   );
 };
 
