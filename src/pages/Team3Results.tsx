@@ -1,3 +1,4 @@
+
 import { Helmet } from "react-helmet";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Table as TableIcon, LayoutGrid, Copy, Loader2, AlertTriangle, Database } from "lucide-react";
@@ -9,11 +10,11 @@ import {
   useTeam3StreetInterviews 
 } from "@/features/team-data/hooks/useTeam3Data";
 import { useState } from "react";
+import { toast } from "sonner";
 import Team3BuyingPersonasTable from "@/features/team-data/components/Team3BuyingPersonasTable";
 import Team3BuyingPersonasCards from "@/features/team-data/components/Team3BuyingPersonasCards";
 import Team3FriturenTable from "@/features/team-data/components/Team3FriturenTable";
 import Team3StreetInterviewsTable from "@/features/team-data/components/Team3StreetInterviewsTable";
-import { toast } from "sonner";
 
 const Team3Results = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const Team3Results = () => {
   const isLoading = personasLoading || friturenLoading || interviewsLoading;
   const hasErrors = personasError || friturenError || interviewsError;
 
-  // Log data statistics to debug
+  // Log data statistics for debugging
   console.log("Team3Results page - data stats:", {
     personasCount: personas?.length || 0,
     friturenCount: frituren?.length || 0,
