@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { BuyingPersona, Frituur, StreetInterview } from "../types";
+import { toast } from "sonner";
 
 export function useTeam13BuyingPersonas() {
   const [data, setData] = useState<BuyingPersona[]>([]);
@@ -16,22 +17,23 @@ export function useTeam13BuyingPersonas() {
         
         const tableName = "Team13buyingpersonasforwebsite";
         
-        console.log(`Trying to fetch data from table: ${tableName}`);
         const result = await supabase
           .from(tableName)
           .select("*");
         
         if (result.error) {
+          console.error("Error from Supabase:", result.error);
           throw result.error;
         }
         
-        console.log(`Raw data from Team 13 buying personas:`, result.data);
+        console.log(`Successfully fetched data from ${tableName}:`, result.data);
+        console.log(`Data length: ${result.data?.length || 0}`);
         
-        // Log column names
+        // Log column names if data exists
         if (result.data && result.data.length > 0) {
-          console.log(`Team 13 buying personas table columns:`, Object.keys(result.data[0]));
+          console.log(`Table columns:`, Object.keys(result.data[0]));
         } else {
-          console.log(`Team 13 buying personas table is empty. No columns to display.`);
+          console.log(`No data returned from the table.`);
         }
         
         // Transform data to ensure correct types
@@ -45,12 +47,13 @@ export function useTeam13BuyingPersonas() {
           openheid_nieuwe_snack: !!item.openheid_nieuwe_snack
         })) || [];
         
-        console.log(`Transformed data from Team 13 buying personas:`, transformedData);
+        console.log(`Transformed data:`, transformedData);
         setData(transformedData as BuyingPersona[]);
         
       } catch (err) {
         console.error("Error fetching Team 13 buying personas:", err);
         setError(err instanceof Error ? err.message : "Unknown error");
+        toast.error(`Error loading Team 13 buying personas: ${err instanceof Error ? err.message : "Unknown error"}`);
       } finally {
         setLoading(false);
       }
@@ -75,22 +78,23 @@ export function useTeam13Frituren() {
         
         const tableName = "Team13friturenforwebsite";
         
-        console.log(`Trying to fetch frituren data from table: ${tableName}`);
         const result = await supabase
           .from(tableName)
           .select("*");
         
         if (result.error) {
+          console.error("Error from Supabase:", result.error);
           throw result.error;
         }
         
-        console.log(`Raw data from Team 13 frituren:`, result.data);
+        console.log(`Successfully fetched data from ${tableName}:`, result.data);
+        console.log(`Data length: ${result.data?.length || 0}`);
         
-        // Log column names
+        // Log column names if data exists
         if (result.data && result.data.length > 0) {
-          console.log(`Team 13 frituren table columns:`, Object.keys(result.data[0]));
+          console.log(`Table columns:`, Object.keys(result.data[0]));
         } else {
-          console.log(`Team 13 frituren table is empty. No columns to display.`);
+          console.log(`No data returned from the table.`);
         }
         
         // Transform data to ensure correct types
@@ -104,12 +108,13 @@ export function useTeam13Frituren() {
             parseFloat(item.aankoopprijs_proteine_snacks) : item.aankoopprijs_proteine_snacks
         })) || [];
         
-        console.log(`Transformed data from Team 13 frituren:`, transformedData);
+        console.log(`Transformed data:`, transformedData);
         setData(transformedData as Frituur[]);
         
       } catch (err) {
         console.error("Error fetching Team 13 frituren data:", err);
         setError(err instanceof Error ? err.message : "Unknown error");
+        toast.error(`Error loading Team 13 frituren data: ${err instanceof Error ? err.message : "Unknown error"}`);
       } finally {
         setLoading(false);
       }
@@ -134,22 +139,23 @@ export function useTeam13StreetInterviews() {
         
         const tableName = "Team13streetinterviewsforwebsite";
         
-        console.log(`Trying to fetch street interviews data from table: ${tableName}`);
         const result = await supabase
           .from(tableName)
           .select("*");
         
         if (result.error) {
+          console.error("Error from Supabase:", result.error);
           throw result.error;
         }
         
-        console.log(`Raw data from Team 13 street interviews:`, result.data);
+        console.log(`Successfully fetched data from ${tableName}:`, result.data);
+        console.log(`Data length: ${result.data?.length || 0}`);
         
-        // Log column names
+        // Log column names if data exists
         if (result.data && result.data.length > 0) {
-          console.log(`Team 13 street interviews table columns:`, Object.keys(result.data[0]));
+          console.log(`Table columns:`, Object.keys(result.data[0]));
         } else {
-          console.log(`Team 13 street interviews table is empty. No columns to display.`);
+          console.log(`No data returned from the table.`);
         }
         
         // Transform data to ensure correct types
@@ -165,12 +171,13 @@ export function useTeam13StreetInterviews() {
           vervangen_traditionele_snack: !!item.vervangen_traditionele_snack
         })) || [];
         
-        console.log(`Transformed data from Team 13 street interviews:`, transformedData);
+        console.log(`Transformed data:`, transformedData);
         setData(transformedData as StreetInterview[]);
         
       } catch (err) {
         console.error("Error fetching Team 13 street interviews:", err);
         setError(err instanceof Error ? err.message : "Unknown error");
+        toast.error(`Error loading Team 13 street interviews: ${err instanceof Error ? err.message : "Unknown error"}`);
       } finally {
         setLoading(false);
       }

@@ -1,7 +1,7 @@
 
 import { Helmet } from "react-helmet";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Table as TableIcon, LayoutGrid, Copy, Loader2 } from "lucide-react";
+import { ArrowLeft, Table as TableIcon, LayoutGrid, Copy, Loader2, AlertTriangle, Database } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
@@ -38,11 +38,14 @@ const Team13Results = () => {
     hasErrors
   });
 
-  // Let's display an informative message if we still have no data
-  const showPlaceholderData = (!isLoading && !hasErrors && 
-    (!personas || personas.length === 0) && 
-    (!frituren || frituren.length === 0) && 
-    (!interviews || interviews.length === 0));
+  // Check if we actually have data or not
+  const hasData = 
+    (personas && personas.length > 0) || 
+    (frituren && frituren.length > 0) || 
+    (interviews && interviews.length > 0);
+
+  // Define a placeholder message for when we have no data
+  const showPlaceholderData = !isLoading && !hasErrors && !hasData;
 
   return (
     <>
@@ -94,22 +97,40 @@ const Team13Results = () => {
               
               {isLoading ? (
                 <div className="flex flex-col items-center justify-center py-20">
-                  <Loader2 className="h-10 w-10 animate-spin text-gray-500 mb-4" />
-                  <p className="text-gray-500">Loading research data...</p>
+                  <Loader2 className="h-10 w-10 animate-spin text-blue-500 mb-4" />
+                  <p className="text-gray-600 font-medium">Loading research data...</p>
+                  <p className="text-gray-500 text-sm mt-2">This may take a few moments</p>
                 </div>
               ) : hasErrors ? (
-                <div className="text-red-500 p-6 text-center">
-                  <p>There was a problem loading the research data. Please try again later.</p>
-                  {personasError && <p className="mt-2">Personas error: {personasError}</p>}
-                  {friturenError && <p className="mt-2">Frituren error: {friturenError}</p>}
-                  {interviewsError && <p className="mt-2">Interviews error: {interviewsError}</p>}
+                <div className="bg-red-50 border border-red-200 rounded-md p-6 text-center">
+                  <AlertTriangle className="h-10 w-10 text-red-500 mx-auto mb-4" />
+                  <h3 className="text-xl font-medium text-red-800 mb-2">Error Loading Data</h3>
+                  <p className="text-red-700 mb-4">
+                    There was a problem loading the research data. Please try refreshing the page.
+                  </p>
+                  <div className="bg-white rounded p-4 text-left max-w-lg mx-auto border border-red-100">
+                    <p className="text-sm font-medium text-red-800">Error details:</p>
+                    {personasError && <p className="text-xs text-red-700 mt-1">Personas: {personasError}</p>}
+                    {friturenError && <p className="text-xs text-red-700 mt-1">Frituren: {friturenError}</p>}
+                    {interviewsError && <p className="text-xs text-red-700 mt-1">Interviews: {interviewsError}</p>}
+                  </div>
                 </div>
               ) : showPlaceholderData ? (
                 <div className="bg-blue-50 border border-blue-200 rounded-md p-6 text-center">
-                  <h3 className="text-xl font-medium text-blue-800 mb-2">Team 13 Data Status</h3>
+                  <Database className="h-10 w-10 text-blue-500 mx-auto mb-4" />
+                  <h3 className="text-xl font-medium text-blue-800 mb-2">No Data Available</h3>
                   <p className="text-blue-700 mb-4">
-                    The Team 13 data tables appear to be empty. Please check the Supabase database.
+                    There appears to be no data in the Team 13 tables. Please check the Supabase database 
+                    to ensure data has been properly uploaded.
                   </p>
+                  <div className="bg-white rounded p-4 text-left max-w-lg mx-auto border border-blue-100">
+                    <p className="text-sm font-medium text-blue-800">Expected tables:</p>
+                    <ul className="list-disc pl-5 text-sm text-blue-600">
+                      <li><code>Team13buyingpersonasforwebsite</code></li>
+                      <li><code>Team13friturenforwebsite</code></li>
+                      <li><code>Team13streetinterviewsforwebsite</code></li>
+                    </ul>
+                  </div>
                 </div>
               ) : (
                 <Tabs defaultValue="buyingPersonas" className="w-full">
