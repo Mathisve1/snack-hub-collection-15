@@ -42,9 +42,18 @@ const StreetInterviewsCardView = ({ interviews }: StreetInterviewsCardViewProps)
     : 0;
 
   // Calculate average protein content preference
-  const totalWithProteinData = interviews.filter(i => i.eiwitgehalte !== undefined && i.eiwitgehalte !== null).length;
+  const totalWithProteinData = interviews.filter(i => {
+    if (i.eiwitgehalte === undefined || i.eiwitgehalte === null) return false;
+    const value = typeof i.eiwitgehalte === 'string' ? parseFloat(i.eiwitgehalte) : i.eiwitgehalte;
+    return !isNaN(value);
+  }).length;
+  
   const averageProtein = totalWithProteinData > 0
-    ? interviews.reduce((sum, i) => sum + (typeof i.eiwitgehalte === 'number' ? i.eiwitgehalte : 0), 0) / totalWithProteinData
+    ? interviews.reduce((sum, i) => {
+        if (i.eiwitgehalte === undefined || i.eiwitgehalte === null) return sum;
+        const value = typeof i.eiwitgehalte === 'string' ? parseFloat(i.eiwitgehalte) : i.eiwitgehalte;
+        return sum + (isNaN(value) ? 0 : value);
+      }, 0) / totalWithProteinData
     : 0;
 
   // Get top initial reactions
@@ -110,14 +119,14 @@ const StreetInterviewsCardView = ({ interviews }: StreetInterviewsCardViewProps)
           <div className="mt-4">
             <p className="text-sm font-medium text-gray-500">Key barriers to adoption:</p>
             <div className="mt-2 space-y-2">
-              {interviews
+              {Object.entries(interviews
                 .map(i => i.belangrijkst_aankoopbariere)
                 .filter(Boolean)
                 .reduce((acc, item) => {
                   if (!item) return acc;
                   acc[item] = (acc[item] || 0) + 1;
                   return acc;
-                }, {} as Record<string, number>)
+                }, {} as Record<string, number>))
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 3)
                 .map(([barrier, count]) => (
@@ -177,8 +186,16 @@ const StreetInterviewsCardView = ({ interviews }: StreetInterviewsCardViewProps)
           <div className="mt-2">
             <DataPoint 
               label="Average Price Point" 
-              value={interviews.reduce((sum, i) => sum + (typeof i.prijs === 'number' ? i.prijs : 0), 0) / 
-                interviews.filter(i => typeof i.prijs === 'number').length} 
+              value={interviews.reduce((sum, i) => {
+                if (i.prijs === undefined || i.prijs === null) return sum;
+                const price = typeof i.prijs === 'string' ? parseFloat(i.prijs) : i.prijs;
+                return sum + (isNaN(price) ? 0 : price);
+              }, 0) / 
+              interviews.filter(i => {
+                if (i.prijs === undefined || i.prijs === null) return false;
+                const price = typeof i.prijs === 'string' ? parseFloat(i.prijs) : i.prijs;
+                return !isNaN(price);
+              }).length} 
               unit="€"
               highlightValue={true}
             />
@@ -186,14 +203,14 @@ const StreetInterviewsCardView = ({ interviews }: StreetInterviewsCardViewProps)
           <div className="mt-4">
             <p className="text-sm font-medium text-gray-500">Price increase factors:</p>
             <div className="mt-2 space-y-2">
-              {interviews
+              {Object.entries(interviews
                 .map(i => i.hogere_prijs_factoren)
                 .filter(Boolean)
                 .reduce((acc, item) => {
                   if (!item) return acc;
                   acc[item] = (acc[item] || 0) + 1;
                   return acc;
-                }, {} as Record<string, number>)
+                }, {} as Record<string, number>))
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 3)
                 .map(([factor, count]) => (
@@ -267,14 +284,14 @@ const StreetInterviewsCardView = ({ interviews }: StreetInterviewsCardViewProps)
             <div>
               <p className="text-sm font-medium text-gray-500 mb-2">Coating Preferences:</p>
               <div className="space-y-2">
-                {interviews
+                {Object.entries(interviews
                   .map(i => i.welke_coating)
                   .filter(Boolean)
                   .reduce((acc, item) => {
                     if (!item) return acc;
                     acc[item] = (acc[item] || 0) + 1;
                     return acc;
-                  }, {} as Record<string, number>)
+                  }, {} as Record<string, number>))
                   .sort((a, b) => b[1] - a[1])
                   .slice(0, 3)
                   .map(([coating, count]) => (

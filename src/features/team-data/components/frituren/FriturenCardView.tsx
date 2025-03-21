@@ -26,7 +26,10 @@ const FriturenCardView = ({ frituren }: FriturenCardViewProps) => {
 
   // Calculate average margins
   const averageMargins = 
-    frituren.reduce((sum, f) => sum + (f.gemiddlede_marges || 0), 0) / 
+    frituren.reduce((sum, f) => {
+      const margin = typeof f.gemiddlede_marges === 'string' ? parseFloat(f.gemiddlede_marges) : (f.gemiddlede_marges || 0);
+      return sum + margin;
+    }, 0) / 
     frituren.filter(f => f.gemiddlede_marges !== null && f.gemiddlede_marges !== undefined).length;
 
   // Get top bestsellers
@@ -153,7 +156,10 @@ const FriturenCardView = ({ frituren }: FriturenCardViewProps) => {
             <div>
               <p className="text-sm text-gray-500 mb-1">Average Purchase Price</p>
               <p className="text-2xl font-bold">
-                €{(frituren.reduce((sum, f) => sum + (f.aankoopprijs || 0), 0) / 
+                €{(frituren.reduce((sum, f) => {
+                  const price = typeof f.aankoopprijs === 'string' ? parseFloat(f.aankoopprijs) : (f.aankoopprijs || 0);
+                  return sum + price;
+                }, 0) / 
                   frituren.filter(f => f.aankoopprijs !== null && f.aankoopprijs !== undefined).length).toFixed(2)}
               </p>
             </div>
@@ -174,15 +180,27 @@ const FriturenCardView = ({ frituren }: FriturenCardViewProps) => {
             <div>
               <p className="text-sm text-gray-500 mb-1">Average Purchase Price</p>
               <p className="text-2xl font-bold">
-                €{(frituren.reduce((sum, f) => sum + (f.aankoopprijs_proteine_snacks || 0), 0) / 
+                €{(frituren.reduce((sum, f) => {
+                  const price = typeof f.aankoopprijs_proteine_snacks === 'string' ? 
+                    parseFloat(f.aankoopprijs_proteine_snacks) : (f.aankoopprijs_proteine_snacks || 0);
+                  return sum + price;
+                }, 0) / 
                   frituren.filter(f => f.aankoopprijs_proteine_snacks !== null && f.aankoopprijs_proteine_snacks !== undefined).length).toFixed(2)}
               </p>
             </div>
             <div>
               <p className="text-sm text-gray-500 mb-1">Price Range</p>
               <p className="text-lg">
-                €{Math.min(...frituren.map(f => f.aankoopprijs_proteine_snacks || Infinity)).toFixed(2)} - 
-                €{Math.max(...frituren.map(f => f.aankoopprijs_proteine_snacks || 0)).toFixed(2)}
+                €{Math.min(...frituren.map(f => {
+                  const price = typeof f.aankoopprijs_proteine_snacks === 'string' ? 
+                    parseFloat(f.aankoopprijs_proteine_snacks) : (f.aankoopprijs_proteine_snacks || 0);
+                  return isNaN(price) ? Infinity : price;
+                }).filter(p => p !== Infinity)).toFixed(2)} - 
+                €{Math.max(...frituren.map(f => {
+                  const price = typeof f.aankoopprijs_proteine_snacks === 'string' ? 
+                    parseFloat(f.aankoopprijs_proteine_snacks) : (f.aankoopprijs_proteine_snacks || 0);
+                  return isNaN(price) ? 0 : price;
+                })).toFixed(2)}
               </p>
             </div>
           </div>
@@ -199,14 +217,14 @@ const FriturenCardView = ({ frituren }: FriturenCardViewProps) => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {frituren
+            {Object.entries(frituren
               .map(f => f.bereidheid_aanbieden)
               .filter(Boolean)
               .reduce((acc, item) => {
                 if (!item) return acc;
                 acc[item] = (acc[item] || 0) + 1;
                 return acc;
-              }, {} as Record<string, number>)
+              }, {} as Record<string, number>))
               .sort((a, b) => b[1] - a[1])
               .slice(0, 5)
               .map(([willingness, count], index) => (
@@ -217,14 +235,14 @@ const FriturenCardView = ({ frituren }: FriturenCardViewProps) => {
                   </Badge>
                 </div>
               ))}
-            {frituren
+            {Object.entries(frituren
               .flatMap(f => [f.waarom_niet_verkopen, f.waarom_niet_verkopen_2])
               .filter(Boolean)
               .reduce((acc, item) => {
                 if (!item) return acc;
                 acc[item] = (acc[item] || 0) + 1;
                 return acc;
-              }, {} as Record<string, number>)
+              }, {} as Record<string, number>))
               .sort((a, b) => b[1] - a[1])
               .slice(0, 3)
               .map(([reason, count]) => (
