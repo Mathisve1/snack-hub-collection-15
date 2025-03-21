@@ -135,3 +135,45 @@ export const calculateAverageFromRecord = (record: Record<string, number>): stri
   const average = Math.round((sum / count) * 10) / 10; // Round to 1 decimal place
   return average.toString();
 };
+
+/**
+ * Extracts numeric values from a record with string keys
+ * Added for missing function error
+ */
+export const extractNumericValues = (record: Record<string, number>): number[] => {
+  if (!record || Object.keys(record).length === 0) return [];
+  
+  const result: number[] = [];
+  
+  for (const [valueStr, count] of Object.entries(record)) {
+    const numValue = parseFloat(valueStr);
+    if (!isNaN(numValue)) {
+      // Add the value to the array 'count' times
+      for (let i = 0; i < count; i++) {
+        result.push(numValue);
+      }
+    }
+  }
+  
+  return result;
+};
+
+/**
+ * Gets the top N values from a record
+ * Added for missing function error
+ */
+export const getTopNValues = (record: Record<string, number>, n: number = 3): TopValue[] => {
+  if (!record || Object.keys(record).length === 0) return [];
+  
+  const total = Object.values(record).reduce((sum, count) => sum + count, 0);
+  
+  return Object.entries(record)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, n)
+    .map(([name, count]) => ({
+      name,
+      count,
+      percentage: Math.round((count / total) * 100)
+    }));
+};
+

@@ -1,8 +1,6 @@
-
 import { StreetInterview } from "../../../types";
 import { GroupedStreetInterviewData } from "./types";
-import { extractNumericValues } from "./responseUtils";
-import { getTopNValues } from "./responseUtils";
+import { extractNumericValues, getTopNValues } from "./responseUtils";
 
 export const processStreetInterviewsData = (interviews: StreetInterview[]): GroupedStreetInterviewData => {
   console.log("Processing street interviews data:", interviews);
@@ -246,3 +244,4 @@ const categorizeNumericValues = (record: Record<string, number>): Record<string,
   
   return categories;
 };
+
