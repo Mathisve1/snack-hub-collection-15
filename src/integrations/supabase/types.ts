@@ -939,11 +939,11 @@ export type Database = {
           frequentie_frituurbezoek: string | null
           geslacht: string | null
           id: string
-          leeftijd: string | null
+          leeftijd: number | null
           marketing: string | null
           motivatie_kiezen_proteine_snack: string | null
           openheid_nieuwe_snack: boolean | null
-          prijs: string | null
+          prijs: number | null
         }
         Insert: {
           buying_persona: string
@@ -951,11 +951,11 @@ export type Database = {
           frequentie_frituurbezoek?: string | null
           geslacht?: string | null
           id?: string
-          leeftijd?: string | null
+          leeftijd?: number | null
           marketing?: string | null
           motivatie_kiezen_proteine_snack?: string | null
           openheid_nieuwe_snack?: boolean | null
-          prijs?: string | null
+          prijs?: number | null
         }
         Update: {
           buying_persona?: string
@@ -963,19 +963,19 @@ export type Database = {
           frequentie_frituurbezoek?: string | null
           geslacht?: string | null
           id?: string
-          leeftijd?: string | null
+          leeftijd?: number | null
           marketing?: string | null
           motivatie_kiezen_proteine_snack?: string | null
           openheid_nieuwe_snack?: boolean | null
-          prijs?: string | null
+          prijs?: number | null
         }
         Relationships: []
       }
       Team14friturenforwebsite: {
         Row: {
-          aankoopprijs: string | null
-          aankoopprijs_proteine_snacks: string | null
-          absolute_marges: string | null
+          aankoopprijs: number | null
+          aankoopprijs_proteine_snacks: number | null
+          absolute_marges: number | null
           belangrijke_factor_1: string | null
           belangrijke_factor_2: string | null
           bereidheid_aanbieden: string | null
@@ -983,7 +983,7 @@ export type Database = {
           bestseller_2: string | null
           bestseller_3: string | null
           extra_groothandel: string | null
-          gemiddlede_marges: string | null
+          gemiddlede_marges: number | null
           groothandel: string | null
           id: string
           marketing_1: string | null
@@ -994,9 +994,9 @@ export type Database = {
           waarom_niet_verkopen_2: string | null
         }
         Insert: {
-          aankoopprijs?: string | null
-          aankoopprijs_proteine_snacks?: string | null
-          absolute_marges?: string | null
+          aankoopprijs?: number | null
+          aankoopprijs_proteine_snacks?: number | null
+          absolute_marges?: number | null
           belangrijke_factor_1?: string | null
           belangrijke_factor_2?: string | null
           bereidheid_aanbieden?: string | null
@@ -1004,7 +1004,7 @@ export type Database = {
           bestseller_2?: string | null
           bestseller_3?: string | null
           extra_groothandel?: string | null
-          gemiddlede_marges?: string | null
+          gemiddlede_marges?: number | null
           groothandel?: string | null
           id?: string
           marketing_1?: string | null
@@ -1015,9 +1015,9 @@ export type Database = {
           waarom_niet_verkopen_2?: string | null
         }
         Update: {
-          aankoopprijs?: string | null
-          aankoopprijs_proteine_snacks?: string | null
-          absolute_marges?: string | null
+          aankoopprijs?: number | null
+          aankoopprijs_proteine_snacks?: number | null
+          absolute_marges?: number | null
           belangrijke_factor_1?: string | null
           belangrijke_factor_2?: string | null
           bereidheid_aanbieden?: string | null
@@ -1025,7 +1025,7 @@ export type Database = {
           bestseller_2?: string | null
           bestseller_3?: string | null
           extra_groothandel?: string | null
-          gemiddlede_marges?: string | null
+          gemiddlede_marges?: number | null
           groothandel?: string | null
           id?: string
           marketing_1?: string | null
@@ -1044,7 +1044,7 @@ export type Database = {
           bereidingsvoorkeur: string | null
           branding: string | null
           eerste_reactie: string | null
-          eiwitgehalte: string | null
+          eiwitgehalte: number | null
           frituurbezoek_frequentie: string | null
           hogere_prijs: boolean | null
           hogere_prijs_factoren: string | null
@@ -1054,7 +1054,7 @@ export type Database = {
           motivatie_frituur: string | null
           populaire_snack_1: string | null
           populaire_snack_2: string | null
-          prijs: string | null
+          prijs: number | null
           ruimte_voor_innovatie: boolean | null
           smaakvoorkeuren: string | null
           verkoopskanalen: string | null
@@ -1067,7 +1067,7 @@ export type Database = {
           bereidingsvoorkeur?: string | null
           branding?: string | null
           eerste_reactie?: string | null
-          eiwitgehalte?: string | null
+          eiwitgehalte?: number | null
           frituurbezoek_frequentie?: string | null
           hogere_prijs?: boolean | null
           hogere_prijs_factoren?: string | null
@@ -1077,7 +1077,7 @@ export type Database = {
           motivatie_frituur?: string | null
           populaire_snack_1?: string | null
           populaire_snack_2?: string | null
-          prijs?: string | null
+          prijs?: number | null
           ruimte_voor_innovatie?: boolean | null
           smaakvoorkeuren?: string | null
           verkoopskanalen?: string | null
@@ -1090,7 +1090,7 @@ export type Database = {
           bereidingsvoorkeur?: string | null
           branding?: string | null
           eerste_reactie?: string | null
-          eiwitgehalte?: string | null
+          eiwitgehalte?: number | null
           frituurbezoek_frequentie?: string | null
           hogere_prijs?: boolean | null
           hogere_prijs_factoren?: string | null
@@ -1100,7 +1100,7 @@ export type Database = {
           motivatie_frituur?: string | null
           populaire_snack_1?: string | null
           populaire_snack_2?: string | null
-          prijs?: string | null
+          prijs?: number | null
           ruimte_voor_innovatie?: boolean | null
           smaakvoorkeuren?: string | null
           verkoopskanalen?: string | null
@@ -1293,11 +1293,11 @@ export type Database = {
           frequentie_frituurbezoek: string | null
           geslacht: string | null
           id: string
-          leeftijd: string | null
+          leeftijd: number | null
           marketing: string | null
           motivatie_kiezen_proteine_snack: string | null
           openheid_nieuwe_snack: boolean | null
-          prijs: string | null
+          prijs: number | null
         }
         Insert: {
           buying_persona: string
@@ -1305,11 +1305,11 @@ export type Database = {
           frequentie_frituurbezoek?: string | null
           geslacht?: string | null
           id?: string
-          leeftijd?: string | null
+          leeftijd?: number | null
           marketing?: string | null
           motivatie_kiezen_proteine_snack?: string | null
           openheid_nieuwe_snack?: boolean | null
-          prijs?: string | null
+          prijs?: number | null
         }
         Update: {
           buying_persona?: string
@@ -1317,19 +1317,19 @@ export type Database = {
           frequentie_frituurbezoek?: string | null
           geslacht?: string | null
           id?: string
-          leeftijd?: string | null
+          leeftijd?: number | null
           marketing?: string | null
           motivatie_kiezen_proteine_snack?: string | null
           openheid_nieuwe_snack?: boolean | null
-          prijs?: string | null
+          prijs?: number | null
         }
         Relationships: []
       }
       Team3friturenforwebsite: {
         Row: {
-          aankoopprijs: string | null
-          aankoopprijs_proteine_snacks: string | null
-          absolute_marges: string | null
+          aankoopprijs: number | null
+          aankoopprijs_proteine_snacks: number | null
+          absolute_marges: number | null
           belangrijke_factor_1: string | null
           belangrijke_factor_2: string | null
           bereidheid_aanbieden: string | null
@@ -1337,7 +1337,7 @@ export type Database = {
           bestseller_2: string | null
           bestseller_3: string | null
           extra_groothandel: string | null
-          gemiddlede_marges: string | null
+          gemiddlede_marges: number | null
           groothandel: string | null
           id: string
           marketing_1: string | null
@@ -1348,9 +1348,9 @@ export type Database = {
           waarom_niet_verkopen_2: string | null
         }
         Insert: {
-          aankoopprijs?: string | null
-          aankoopprijs_proteine_snacks?: string | null
-          absolute_marges?: string | null
+          aankoopprijs?: number | null
+          aankoopprijs_proteine_snacks?: number | null
+          absolute_marges?: number | null
           belangrijke_factor_1?: string | null
           belangrijke_factor_2?: string | null
           bereidheid_aanbieden?: string | null
@@ -1358,7 +1358,7 @@ export type Database = {
           bestseller_2?: string | null
           bestseller_3?: string | null
           extra_groothandel?: string | null
-          gemiddlede_marges?: string | null
+          gemiddlede_marges?: number | null
           groothandel?: string | null
           id?: string
           marketing_1?: string | null
@@ -1369,9 +1369,9 @@ export type Database = {
           waarom_niet_verkopen_2?: string | null
         }
         Update: {
-          aankoopprijs?: string | null
-          aankoopprijs_proteine_snacks?: string | null
-          absolute_marges?: string | null
+          aankoopprijs?: number | null
+          aankoopprijs_proteine_snacks?: number | null
+          absolute_marges?: number | null
           belangrijke_factor_1?: string | null
           belangrijke_factor_2?: string | null
           bereidheid_aanbieden?: string | null
@@ -1379,7 +1379,7 @@ export type Database = {
           bestseller_2?: string | null
           bestseller_3?: string | null
           extra_groothandel?: string | null
-          gemiddlede_marges?: string | null
+          gemiddlede_marges?: number | null
           groothandel?: string | null
           id?: string
           marketing_1?: string | null
@@ -1398,7 +1398,7 @@ export type Database = {
           bereidingsvoorkeur: string | null
           branding: string | null
           eerste_reactie: string | null
-          eiwitgehalte: string | null
+          eiwitgehalte: number | null
           frituurbezoek_frequentie: string | null
           hogere_prijs: boolean | null
           hogere_prijs_factoren: string | null
@@ -1408,7 +1408,7 @@ export type Database = {
           motivatie_frituur: string | null
           populaire_snack_1: string | null
           populaire_snack_2: string | null
-          prijs: string | null
+          prijs: number | null
           ruimte_voor_innovatie: boolean | null
           smaakvoorkeuren: string | null
           verkoopskanalen: string | null
@@ -1421,7 +1421,7 @@ export type Database = {
           bereidingsvoorkeur?: string | null
           branding?: string | null
           eerste_reactie?: string | null
-          eiwitgehalte?: string | null
+          eiwitgehalte?: number | null
           frituurbezoek_frequentie?: string | null
           hogere_prijs?: boolean | null
           hogere_prijs_factoren?: string | null
@@ -1431,7 +1431,7 @@ export type Database = {
           motivatie_frituur?: string | null
           populaire_snack_1?: string | null
           populaire_snack_2?: string | null
-          prijs?: string | null
+          prijs?: number | null
           ruimte_voor_innovatie?: boolean | null
           smaakvoorkeuren?: string | null
           verkoopskanalen?: string | null
@@ -1444,7 +1444,7 @@ export type Database = {
           bereidingsvoorkeur?: string | null
           branding?: string | null
           eerste_reactie?: string | null
-          eiwitgehalte?: string | null
+          eiwitgehalte?: number | null
           frituurbezoek_frequentie?: string | null
           hogere_prijs?: boolean | null
           hogere_prijs_factoren?: string | null
@@ -1454,7 +1454,7 @@ export type Database = {
           motivatie_frituur?: string | null
           populaire_snack_1?: string | null
           populaire_snack_2?: string | null
-          prijs?: string | null
+          prijs?: number | null
           ruimte_voor_innovatie?: boolean | null
           smaakvoorkeuren?: string | null
           verkoopskanalen?: string | null
