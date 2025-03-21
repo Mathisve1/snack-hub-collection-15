@@ -1,7 +1,7 @@
 
 import { Helmet } from "react-helmet";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Table as TableIcon, LayoutGrid, Copy } from "lucide-react";
+import { ArrowLeft, Table as TableIcon, LayoutGrid, Copy, Loader2, AlertTriangle, Database } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
@@ -9,13 +9,11 @@ import {
   useTeam3Frituren, 
   useTeam3StreetInterviews 
 } from "@/features/team-data/hooks/useTeam3Data";
-import { Loader2 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Team3BuyingPersonasTable from "@/features/team-data/components/Team3BuyingPersonasTable";
 import Team3BuyingPersonasCards from "@/features/team-data/components/Team3BuyingPersonasCards";
 import Team3FriturenTable from "@/features/team-data/components/Team3FriturenTable";
 import Team3StreetInterviewsTable from "@/features/team-data/components/Team3StreetInterviewsTable";
-import Team3StreetInterviewsSummary from "@/features/team-data/components/Team3StreetInterviewsSummary";
 import { toast } from "sonner";
 
 const Team3Results = () => {
@@ -26,28 +24,28 @@ const Team3Results = () => {
   
   // State to toggle between table and card view for buying personas
   const [personasViewMode, setPersonasViewMode] = useState<"table" | "cards">("cards");
-  const [showSummary, setShowSummary] = useState<boolean>(true);
 
   // Check if any data is loading or has errors
   const isLoading = personasLoading || friturenLoading || interviewsLoading;
   const hasErrors = personasError || friturenError || interviewsError;
 
-  // Debug useEffect to log data status on each render
-  useEffect(() => {
-    console.log("Team3 Data Status:", {
-      personas: { count: personas?.length || 0, loading: personasLoading, error: personasError },
-      frituren: { count: frituren?.length || 0, loading: friturenLoading, error: friturenError },
-      interviews: { count: interviews?.length || 0, loading: interviewsLoading, error: interviewsError }
-    });
+  // Log data statistics to debug
+  console.log("Team3Results page - data stats:", {
+    personasCount: personas?.length || 0,
+    friturenCount: frituren?.length || 0,
+    interviewsCount: interviews?.length || 0,
+    isLoading,
+    hasErrors
+  });
 
-    // If data is loaded but empty for all categories, show a toast message
-    if (!isLoading && !hasErrors && 
-        (!personas || personas.length === 0) && 
-        (!frituren || frituren.length === 0) && 
-        (!interviews || interviews.length === 0)) {
-      toast.info("No data available for Team 3 yet. Please check back later.");
-    }
-  }, [personas, frituren, interviews, isLoading, hasErrors, personasError, friturenError, interviewsError]);
+  // Check if we actually have data or not
+  const hasData = 
+    (personas && personas.length > 0) || 
+    (frituren && frituren.length > 0) || 
+    (interviews && interviews.length > 0);
+
+  // Define a placeholder message for when we have no data
+  const showPlaceholderData = !isLoading && !hasErrors && !hasData;
 
   return (
     <>
@@ -99,28 +97,40 @@ const Team3Results = () => {
               
               {isLoading ? (
                 <div className="flex flex-col items-center justify-center py-20">
-                  <Loader2 className="h-10 w-10 animate-spin text-gray-500 mb-4" />
-                  <p className="text-gray-500">Loading research data...</p>
+                  <Loader2 className="h-10 w-10 animate-spin text-blue-500 mb-4" />
+                  <p className="text-gray-600 font-medium">Loading research data...</p>
+                  <p className="text-gray-500 text-sm mt-2">This may take a few moments</p>
                 </div>
               ) : hasErrors ? (
-                <div className="text-red-500 p-6 text-center">
-                  <p>There was a problem loading the research data. Please try again later.</p>
-                  {personasError && <p className="mt-2">Personas error: {personasError}</p>}
-                  {friturenError && <p className="mt-2">Frituren error: {friturenError}</p>}
-                  {interviewsError && <p className="mt-2">Interviews error: {interviewsError}</p>}
+                <div className="bg-red-50 border border-red-200 rounded-md p-6 text-center">
+                  <AlertTriangle className="h-10 w-10 text-red-500 mx-auto mb-4" />
+                  <h3 className="text-xl font-medium text-red-800 mb-2">Error Loading Data</h3>
+                  <p className="text-red-700 mb-4">
+                    There was a problem loading the research data. Please try refreshing the page.
+                  </p>
+                  <div className="bg-white rounded p-4 text-left max-w-lg mx-auto border border-red-100">
+                    <p className="text-sm font-medium text-red-800">Error details:</p>
+                    {personasError && <p className="text-xs text-red-700 mt-1">Personas: {personasError}</p>}
+                    {friturenError && <p className="text-xs text-red-700 mt-1">Frituren: {friturenError}</p>}
+                    {interviewsError && <p className="text-xs text-red-700 mt-1">Interviews: {interviewsError}</p>}
+                  </div>
                 </div>
-              ) : (!personas || personas.length === 0) && 
-                 (!frituren || frituren.length === 0) && 
-                 (!interviews || interviews.length === 0) ? (
-                <div className="bg-yellow-50 border border-yellow-200 rounded-md p-6 text-center">
-                  <h3 className="text-xl font-medium text-yellow-800 mb-2">No Data Available</h3>
-                  <p className="text-yellow-700">
-                    The Team 3 data tables appear to be empty. Data will display here as soon as it's available.
+              ) : showPlaceholderData ? (
+                <div className="bg-blue-50 border border-blue-200 rounded-md p-6 text-center">
+                  <Database className="h-10 w-10 text-blue-500 mx-auto mb-4" />
+                  <h3 className="text-xl font-medium text-blue-800 mb-2">No Data Available</h3>
+                  <p className="text-blue-700 mb-4">
+                    There appears to be no data in the Team 3 tables. Please check the Supabase database 
+                    to ensure data has been properly uploaded.
                   </p>
-                  <p className="text-sm text-yellow-600 mt-4">
-                    Make sure data has been uploaded to the Team3buyingpersonasforwebsite, Team3friturenforwebsite, 
-                    and Team3streetinterviewsforwebsite tables.
-                  </p>
+                  <div className="bg-white rounded p-4 text-left max-w-lg mx-auto border border-blue-100">
+                    <p className="text-sm font-medium text-blue-800">Expected tables:</p>
+                    <ul className="list-disc pl-5 text-sm text-blue-600">
+                      <li><code>Team3buyingpersonasforwebsite</code></li>
+                      <li><code>Team3friturenforwebsite</code></li>
+                      <li><code>Team3streetinterviewsforwebsite</code></li>
+                    </ul>
+                  </div>
                 </div>
               ) : (
                 <Tabs defaultValue="buyingPersonas" className="w-full">
@@ -172,35 +182,7 @@ const Team3Results = () => {
                   </TabsContent>
                   
                   <TabsContent value="streetInterviews">
-                    <div className="mb-6 flex justify-between items-center">
-                      <h3 className="text-xl font-semibold">Street Interviews Data</h3>
-                      <div className="bg-gray-100 rounded-md p-1 inline-flex">
-                        <Button
-                          variant={showSummary ? "default" : "ghost"}
-                          size="sm"
-                          onClick={() => setShowSummary(true)}
-                          className="rounded-md"
-                        >
-                          <LayoutGrid className="h-4 w-4 mr-1" />
-                          Summary
-                        </Button>
-                        <Button
-                          variant={!showSummary ? "default" : "ghost"}
-                          size="sm"
-                          onClick={() => setShowSummary(false)}
-                          className="rounded-md"
-                        >
-                          <TableIcon className="h-4 w-4 mr-1" />
-                          Raw Data
-                        </Button>
-                      </div>
-                    </div>
-                    
-                    {showSummary ? (
-                      <Team3StreetInterviewsSummary data={interviews} />
-                    ) : (
-                      <Team3StreetInterviewsTable interviews={interviews} />
-                    )}
+                    <Team3StreetInterviewsTable interviews={interviews} />
                   </TabsContent>
                 </Tabs>
               )}
