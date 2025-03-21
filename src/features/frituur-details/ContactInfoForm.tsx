@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -52,7 +51,6 @@ export default function ContactInfoForm({ businessName, team }: ContactInfoFormP
       let query;
       
       if (existingInfo) {
-        // Update existing record
         query = supabase
           .from('frituren_contact_info')
           .update({
@@ -62,7 +60,6 @@ export default function ContactInfoForm({ businessName, team }: ContactInfoFormP
           })
           .eq('business_name', businessName);
       } else {
-        // Insert new record
         query = supabase
           .from('frituren_contact_info')
           .insert({
@@ -91,6 +88,11 @@ export default function ContactInfoForm({ businessName, team }: ContactInfoFormP
     }
   }
   
+  const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const numericValue = e.target.value.replace(/\D/g, '');
+    setPhoneNumber(numericValue);
+  };
+  
   return (
     <div className="bg-white rounded-lg shadow-sm p-4 mb-4">
       <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
@@ -117,8 +119,10 @@ export default function ContactInfoForm({ businessName, team }: ContactInfoFormP
             id="phoneNumber"
             type="tel" 
             value={phoneNumber} 
-            onChange={(e) => setPhoneNumber(e.target.value)}
+            onChange={handlePhoneNumberChange}
             placeholder="Telefoonnummer van de friturist"
+            inputMode="numeric"
+            pattern="[0-9]*"
           />
         </div>
         
