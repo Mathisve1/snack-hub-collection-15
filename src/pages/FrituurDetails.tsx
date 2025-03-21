@@ -72,15 +72,16 @@ const FrituurDetails = () => {
       
       <main className="max-w-7xl mx-auto px-4 py-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Left column: Location and contact info */}
+          {/* Left column: Location info */}
           <div className="md:col-span-1 space-y-4">
             <BusinessInfoSection frituur={frituur} />
-            {/* Add the contact info form */}
-            <ContactInfoForm businessName={decodedBusinessName} team={team} />
           </div>
           
-          {/* Right column: Notes and attachments */}
+          {/* Right column: Notes, attachments, and contact info */}
           <div className="md:col-span-2">
+            {/* Contact info form (moved from left side to right side) */}
+            <ContactInfoForm businessName={decodedBusinessName} team={team} />
+            
             <div className="bg-white rounded-lg shadow-sm p-5">
               <Tabs defaultValue="attachments" className="w-full">
                 <TabsList className="mb-4">
