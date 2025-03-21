@@ -38,7 +38,7 @@ const Team13Results = () => {
     hasErrors
   });
 
-  // Let's display an informative message specifically for Team 13
+  // Let's display an informative message if we still have no data
   const showPlaceholderData = (!isLoading && !hasErrors && 
     (!personas || personas.length === 0) && 
     (!frituren || frituren.length === 0) && 
@@ -108,22 +108,8 @@ const Team13Results = () => {
                 <div className="bg-blue-50 border border-blue-200 rounded-md p-6 text-center">
                   <h3 className="text-xl font-medium text-blue-800 mb-2">Team 13 Data Status</h3>
                   <p className="text-blue-700 mb-4">
-                    The Team 13 data tables appear to be empty. Your data will display here as soon as it's uploaded to Supabase.
+                    The Team 13 data tables appear to be empty. Please check the Supabase database.
                   </p>
-                  <div className="bg-white rounded-md p-4 mt-4 border border-blue-100 text-left max-w-xl mx-auto">
-                    <h4 className="font-medium text-gray-800 mb-2">Insert Sample Data</h4>
-                    <p className="text-sm text-gray-600 mb-2">
-                      To display your data, upload it to the following Supabase tables:
-                    </p>
-                    <ul className="list-disc pl-5 text-sm text-gray-600">
-                      <li><code>Team13buyingpersonasforwebsite</code></li>
-                      <li><code>Team13friturenforwebsite</code></li>
-                      <li><code>Team13streetinterviewsforwebsite</code></li>
-                    </ul>
-                    <p className="text-xs text-gray-500 mt-2">
-                      Your data structure should match the Team 38 tables, including the same column names and data types.
-                    </p>
-                  </div>
                 </div>
               ) : (
                 <Tabs defaultValue="buyingPersonas" className="w-full">
