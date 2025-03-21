@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -24,7 +25,7 @@ export default function ContactInfoForm({
       const {
         data,
         error
-      } = await supabase.from('frituren_contact_info').select('email, phone_number').eq('business_name', businessName).single();
+      } = await supabase.from('frituren_contact_info_indien_interesse').select('email, phone_number').eq('business_name', businessName).single();
       if (error && error.code !== 'PGRST116') {
         console.error("Error fetching contact info:", error);
         return;
@@ -44,13 +45,13 @@ export default function ContactInfoForm({
     try {
       let query;
       if (existingInfo) {
-        query = supabase.from('frituren_contact_info').update({
+        query = supabase.from('frituren_contact_info_indien_interesse').update({
           email,
           phone_number: phoneNumber,
           team
         }).eq('business_name', businessName);
       } else {
-        query = supabase.from('frituren_contact_info').insert({
+        query = supabase.from('frituren_contact_info_indien_interesse').insert({
           business_name: businessName,
           email,
           phone_number: phoneNumber,
