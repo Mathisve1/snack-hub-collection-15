@@ -1,11 +1,13 @@
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useState } from "react";
+import { EditableTable } from "@/components/ui/editable-table";
 import { useTeam13StreetInterviews } from "../hooks/useTeam13Data";
 import { Loader2, LayoutGrid, Table as TableIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import Team13StreetInterviewsSummary from "./Team13StreetInterviewsSummary";
 import { StreetInterview } from "../types";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface Team13StreetInterviewsTableProps {
   interviews?: StreetInterview[];
@@ -20,17 +22,31 @@ const Team13StreetInterviewsTable = ({ interviews }: Team13StreetInterviewsTable
   const loading = !interviews && team13Data.loading;
   const error = !interviews && team13Data.error;
   
-  // Log the data we're actually using
-  console.log("Team13StreetInterviewsTable using data:", { 
-    dataSource: interviews ? "passed directly" : "team13 hook",
-    dataLength: data?.length || 0,
-    isLoading: loading,
-    team13DataLength: team13Data.data?.length,
-    interviewsLength: interviews?.length
-  });
-  
   // View mode state
   const [viewMode, setViewMode] = useState<"summary" | "table">("summary");
+  
+  const handleSaveData = async (updatedData: StreetInterview[]) => {
+    try {
+      // Update each row individually
+      for (const interview of updatedData) {
+        const { error } = await supabase
+          .from('Team13streetinterviewsforwebsite')
+          .update(interview)
+          .eq('id', interview.id);
+          
+        if (error) {
+          console.error("Error updating interview:", error);
+          toast.error(`Failed to update interview: ${error.message}`);
+          return;
+        }
+      }
+      
+      toast.success("Street interviews data updated successfully!");
+    } catch (error) {
+      console.error("Error in handleSaveData:", error);
+      toast.error("Failed to save changes");
+    }
+  };
 
   if (loading) {
     return (
@@ -55,12 +71,6 @@ const Team13StreetInterviewsTable = ({ interviews }: Team13StreetInterviewsTable
       </div>
     );
   }
-
-  // Get all unique column keys excluding 'id'
-  const columnKeys = Object.keys(data[0]).filter(key => key !== 'id');
-  
-  console.log("Team 13 Street Interviews data columns:", columnKeys);
-  console.log("Team 13 Street Interviews data sample:", data[0]);
 
   return (
     <>
@@ -90,34 +100,11 @@ const Team13StreetInterviewsTable = ({ interviews }: Team13StreetInterviewsTable
       {viewMode === "summary" ? (
         <Team13StreetInterviewsSummary data={data} />
       ) : (
-        <div className="rounded-md border overflow-hidden">
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  {columnKeys.map((key) => (
-                    <TableHead key={key} className="font-semibold">
-                      {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.map((interview) => (
-                  <TableRow key={interview.id}>
-                    {columnKeys.map((key) => (
-                      <TableCell key={`${interview.id}-${key}`}>
-                        {typeof interview[key] === 'boolean' 
-                          ? interview[key] ? 'Yes' : 'No'
-                          : interview[key] || '—'}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </div>
+        <EditableTable 
+          data={data} 
+          caption="Team 13 Street Interviews Data"
+          onSave={handleSaveData}
+        />
       )}
     </>
   );

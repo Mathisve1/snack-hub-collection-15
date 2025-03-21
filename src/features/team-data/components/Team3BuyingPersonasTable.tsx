@@ -1,6 +1,8 @@
 
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { EditableTable } from "@/components/ui/editable-table";
 import { BuyingPersona } from "../types";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface BuyingPersonasTableProps {
   personas: BuyingPersona[];
@@ -11,40 +13,45 @@ const Team3BuyingPersonasTable = ({ personas }: BuyingPersonasTableProps) => {
     return <div className="text-center p-6">No buying personas data available</div>;
   }
 
+  const handleSaveData = async (updatedData: BuyingPersona[]) => {
+    try {
+      // Update each row individually
+      for (const persona of updatedData) {
+        const { error } = await supabase
+          .from('Team3buyingpersonasforwebsite')
+          .update({
+            buying_persona: persona.buying_persona,
+            leeftijd: persona.leeftijd,
+            geslacht: persona.geslacht,
+            prijs: persona.prijs,
+            consumptie_situatie: persona.consumptie_situatie,
+            frequentie_frituurbezoek: persona.frequentie_frituurbezoek,
+            motivatie_kiezen_proteine_snack: persona.motivatie_kiezen_proteine_snack,
+            marketing: persona.marketing,
+            openheid_nieuwe_snack: persona.openheid_nieuwe_snack
+          })
+          .eq('id', persona.id);
+          
+        if (error) {
+          console.error("Error updating persona:", error);
+          toast.error(`Failed to update persona: ${error.message}`);
+          return;
+        }
+      }
+      
+      toast.success("Personas updated successfully!");
+    } catch (error) {
+      console.error("Error in handleSaveData:", error);
+      toast.error("Failed to save changes");
+    }
+  };
+
   return (
-    <div className="overflow-x-auto">
-      <Table>
-        <TableCaption>Team 3 Buying Personas Data</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Persona</TableHead>
-            <TableHead>Geslacht</TableHead>
-            <TableHead>Leeftijd</TableHead>
-            <TableHead>Prijs</TableHead>
-            <TableHead>Consumptie Situatie</TableHead>
-            <TableHead>Frituurbezoek</TableHead>
-            <TableHead>Motivatie</TableHead>
-            <TableHead>Marketing</TableHead>
-            <TableHead>Open voor Nieuwe Snack</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {personas.map((persona) => (
-            <TableRow key={persona.id}>
-              <TableCell className="font-medium">{persona.buying_persona}</TableCell>
-              <TableCell>{persona.geslacht || 'N/A'}</TableCell>
-              <TableCell>{persona.leeftijd || 'N/A'}</TableCell>
-              <TableCell>{persona.prijs || 'N/A'}</TableCell>
-              <TableCell>{persona.consumptie_situatie || 'N/A'}</TableCell>
-              <TableCell>{persona.frequentie_frituurbezoek || 'N/A'}</TableCell>
-              <TableCell>{persona.motivatie_kiezen_proteine_snack || 'N/A'}</TableCell>
-              <TableCell>{persona.marketing || 'N/A'}</TableCell>
-              <TableCell>{persona.openheid_nieuwe_snack ? 'Ja' : 'Nee'}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+    <EditableTable 
+      data={personas} 
+      caption="Team 3 Buying Personas Data"
+      onSave={handleSaveData}
+    />
   );
 };
 

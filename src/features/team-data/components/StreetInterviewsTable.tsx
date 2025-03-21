@@ -1,13 +1,15 @@
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useState } from "react";
+import { EditableTable } from "@/components/ui/editable-table";
 import { useTeam38StreetInterviews } from "../hooks/useTeam38Data";
 import { useTeam3StreetInterviews } from "../hooks/useTeam3Data";
 import { Loader2, LayoutGrid, Table as TableIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import StreetInterviewsSummary from "./street-interviews/StreetInterviewsSummary";
 import { useLocation } from "react-router-dom";
 import { StreetInterview } from "../types";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface StreetInterviewsTableProps {
   interviews?: StreetInterview[];
@@ -31,17 +33,45 @@ const StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps) => {
   const loading = !interviews && (isTeam3Data ? team3Data.loading : team38Data.loading);
   const error = !interviews && (isTeam3Data ? team3Data.error : team38Data.error);
   
-  // Log the data we're actually using
-  console.log("StreetInterviewsTable using data:", { 
-    teamSource: interviews ? "passed directly" : (isTeam3Data ? "team3" : "team38"),
-    dataLength: data?.length || 0,
-    isLoading: loading,
-    team3DataLength: team3Data.data?.length,
-    team38DataLength: team38Data.data?.length,
-    interviewsLength: interviews?.length
-  });
-  
   const [viewMode, setViewMode] = useState<"summary" | "table">("summary");
+
+  // Determine which table to update based on path
+  const getTableName = () => {
+    if (location.pathname.includes("team-3")) {
+      return "Team3streetinterviewsforwebsite";
+    } else if (location.pathname.includes("team-13")) {
+      return "Team13streetinterviewsforwebsite";
+    } else if (location.pathname.includes("team-14")) {
+      return "Team14streetinterviewsforwebsite";
+    } else {
+      return "Team38streetinterviewsforwebsite";
+    }
+  };
+
+  const handleSaveData = async (updatedData: StreetInterview[]) => {
+    try {
+      const tableName = getTableName();
+      
+      // Update each row individually
+      for (const interview of updatedData) {
+        const { error } = await supabase
+          .from(tableName)
+          .update(interview)
+          .eq('id', interview.id);
+          
+        if (error) {
+          console.error("Error updating interview:", error);
+          toast.error(`Failed to update interview: ${error.message}`);
+          return;
+        }
+      }
+      
+      toast.success("Street interviews data updated successfully!");
+    } catch (error) {
+      console.error("Error in handleSaveData:", error);
+      toast.error("Failed to save changes");
+    }
+  };
 
   if (loading) {
     return (
@@ -66,9 +96,6 @@ const StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps) => {
       </div>
     );
   }
-
-  // Get all unique column keys excluding 'id'
-  const columnKeys = Object.keys(data[0]).filter(key => key !== 'id');
   
   return (
     <>
@@ -98,34 +125,11 @@ const StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps) => {
       {viewMode === "summary" ? (
         <StreetInterviewsSummary data={data} />
       ) : (
-        <div className="rounded-md border overflow-hidden">
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  {columnKeys.map((key) => (
-                    <TableHead key={key} className="font-semibold">
-                      {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.map((interview) => (
-                  <TableRow key={interview.id}>
-                    {columnKeys.map((key) => (
-                      <TableCell key={`${interview.id}-${key}`}>
-                        {typeof interview[key] === 'boolean' 
-                          ? interview[key] ? 'Yes' : 'No'
-                          : interview[key] || '—'}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </div>
+        <EditableTable 
+          data={data} 
+          caption="Street Interviews Data"
+          onSave={handleSaveData}
+        />
       )}
     </>
   );

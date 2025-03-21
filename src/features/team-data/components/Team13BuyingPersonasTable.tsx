@@ -1,8 +1,10 @@
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { EditableTable } from "@/components/ui/editable-table";
 import { useTeam13BuyingPersonas } from "../hooks/useTeam13Data";
 import { Loader2 } from "lucide-react";
 import { BuyingPersona } from "../types";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface Team13BuyingPersonasTableProps {
   personas?: BuyingPersona[];
@@ -17,13 +19,38 @@ const Team13BuyingPersonasTable = ({ personas }: Team13BuyingPersonasTableProps)
   const loading = !personas && team13Data.loading;
   const error = !personas && team13Data.error;
   
-  // Log the data we're actually using for debugging
-  console.log("Team13BuyingPersonasTable using data:", { 
-    dataSource: personas ? "passed directly" : "team13 hook",
-    dataLength: data?.length || 0,
-    isLoading: loading,
-    firstRecord: data && data.length > 0 ? data[0] : null
-  });
+  const handleSaveData = async (updatedData: BuyingPersona[]) => {
+    try {
+      // Update each row individually
+      for (const persona of updatedData) {
+        const { error } = await supabase
+          .from('Team13buyingpersonasforwebsite')
+          .update({
+            buying_persona: persona.buying_persona,
+            leeftijd: persona.leeftijd,
+            geslacht: persona.geslacht,
+            prijs: persona.prijs,
+            consumptie_situatie: persona.consumptie_situatie,
+            frequentie_frituurbezoek: persona.frequentie_frituurbezoek,
+            motivatie_kiezen_proteine_snack: persona.motivatie_kiezen_proteine_snack,
+            marketing: persona.marketing,
+            openheid_nieuwe_snack: persona.openheid_nieuwe_snack
+          })
+          .eq('id', persona.id);
+          
+        if (error) {
+          console.error("Error updating persona:", error);
+          toast.error(`Failed to update persona: ${error.message}`);
+          return;
+        }
+      }
+      
+      toast.success("Personas updated successfully!");
+    } catch (error) {
+      console.error("Error in handleSaveData:", error);
+      toast.error("Failed to save changes");
+    }
+  };
 
   if (loading) {
     return (
@@ -49,41 +76,12 @@ const Team13BuyingPersonasTable = ({ personas }: Team13BuyingPersonasTableProps)
     );
   }
 
-  // Get all unique column keys excluding 'id'
-  const columnKeys = Object.keys(data[0]).filter(key => key !== 'id');
-  
-  console.log("Team 13 Buying personas data columns:", columnKeys);
-  console.log("Team 13 Buying personas data sample:", data[0]);
-
   return (
-    <div className="rounded-md border overflow-hidden">
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {columnKeys.map((key) => (
-                <TableHead key={key} className="font-semibold">
-                  {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.map((persona) => (
-              <TableRow key={persona.id}>
-                {columnKeys.map((key) => (
-                  <TableCell key={`${persona.id}-${key}`}>
-                    {typeof persona[key] === 'boolean' 
-                      ? persona[key] ? 'Yes' : 'No'
-                      : persona[key] || '—'}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    </div>
+    <EditableTable 
+      data={data} 
+      caption="Team 13 Buying Personas Data"
+      onSave={handleSaveData}
+    />
   );
 };
 

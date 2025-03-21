@@ -1,13 +1,15 @@
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useState } from "react";
+import { EditableTable } from "@/components/ui/editable-table";
 import { useTeam38Frituren } from "../hooks/useTeam38Data";
 import { useTeam3Frituren } from "../hooks/useTeam3Data";
 import { Loader2, LayoutGrid, Table as TableIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import FriturenSummary from "./frituren/FriturenSummary";
 import { useLocation } from "react-router-dom";
 import { Frituur } from "../types";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface FriturenTableProps {
   frituren?: Frituur[];
@@ -31,17 +33,46 @@ const FriturenTable = ({ frituren }: FriturenTableProps) => {
   const loading = !frituren && (isTeam3Data ? team3Data.loading : team38Data.loading);
   const error = !frituren && (isTeam3Data ? team3Data.error : team38Data.error);
   
-  // Log the data we're actually using
-  console.log("FriturenTable using data:", { 
-    teamSource: frituren ? "passed directly" : (isTeam3Data ? "team3" : "team38"),
-    dataLength: data?.length || 0,
-    isLoading: loading,
-    team3DataLength: team3Data.data?.length,
-    team38DataLength: team38Data.data?.length,
-    friturenLength: frituren?.length
-  });
-  
+  // View mode state
   const [viewMode, setViewMode] = useState<"summary" | "table">("summary");
+  
+  // Determine which table to update based on path
+  const getTableName = () => {
+    if (location.pathname.includes("team-3")) {
+      return "Team3friturenforwebsite";
+    } else if (location.pathname.includes("team-13")) {
+      return "Team13friturenforwebsite";
+    } else if (location.pathname.includes("team-14")) {
+      return "Team14friturenforwebsite";
+    } else {
+      return "Team38friturenforwebsite";
+    }
+  };
+
+  const handleSaveData = async (updatedData: Frituur[]) => {
+    try {
+      const tableName = getTableName();
+      
+      // Update each row individually
+      for (const frituur of updatedData) {
+        const { error } = await supabase
+          .from(tableName)
+          .update(frituur)
+          .eq('id', frituur.id);
+          
+        if (error) {
+          console.error("Error updating frituur:", error);
+          toast.error(`Failed to update frituur: ${error.message}`);
+          return;
+        }
+      }
+      
+      toast.success("Frituren data updated successfully!");
+    } catch (error) {
+      console.error("Error in handleSaveData:", error);
+      toast.error("Failed to save changes");
+    }
+  };
 
   if (loading) {
     return (
@@ -66,9 +97,6 @@ const FriturenTable = ({ frituren }: FriturenTableProps) => {
       </div>
     );
   }
-
-  // Get all unique column keys excluding 'id'
-  const columnKeys = Object.keys(data[0]).filter(key => key !== 'id');
 
   return (
     <>
@@ -98,34 +126,11 @@ const FriturenTable = ({ frituren }: FriturenTableProps) => {
       {viewMode === "summary" ? (
         <FriturenSummary data={data} />
       ) : (
-        <div className="rounded-md border overflow-hidden">
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  {columnKeys.map((key) => (
-                    <TableHead key={key} className="font-semibold">
-                      {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.map((frituur) => (
-                  <TableRow key={frituur.id}>
-                    {columnKeys.map((key) => (
-                      <TableCell key={`${frituur.id}-${key}`}>
-                        {typeof frituur[key] === 'boolean' 
-                          ? frituur[key] ? 'Yes' : 'No'
-                          : frituur[key] || '—'}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </div>
+        <EditableTable 
+          data={data} 
+          caption="Frituren Data"
+          onSave={handleSaveData}
+        />
       )}
     </>
   );
