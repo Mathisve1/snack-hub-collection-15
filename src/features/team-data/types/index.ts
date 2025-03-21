@@ -44,8 +44,8 @@ export interface StreetInterview {
   motivatie_frituur?: string;
   populaire_snack_1?: string;
   populaire_snack_2?: string;
-  eiwitgehalte?: number;
-  prijs?: number;
+  eiwitgehalte?: number | string; // Updated to accept both number and string
+  prijs?: number | string; // Updated to accept both number and string
   branding?: string;
   marketing_1?: string;
   marketing_2?: string;

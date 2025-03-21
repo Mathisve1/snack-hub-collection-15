@@ -99,7 +99,9 @@ export function useTeam38StreetInterviews() {
         }
         
         console.log("Fetched street interviews data:", interviewsData);
-        setData(interviewsData as StreetInterview[]);
+        
+        // Type assertion to handle the conversion properly
+        setData(interviewsData as unknown as StreetInterview[]);
       } catch (err) {
         console.error("Error fetching Team 38 street interviews:", err);
         setError(err instanceof Error ? err.message : "Unknown error");
