@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { EditableTable } from "@/components/ui/editable-table";
 import { useTeam38StreetInterviews } from "../hooks/useTeam38Data";
@@ -53,10 +54,16 @@ const StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps) => {
       
       // Update each row individually
       for (const interview of updatedData) {
-        // Send the interview object as is - keeping its original types
+        // Convert string numeric values to numbers
+        const updateData = {
+          ...interview,
+          eiwitgehalte: typeof interview.eiwitgehalte === 'string' ? parseFloat(interview.eiwitgehalte) : interview.eiwitgehalte,
+          prijs: typeof interview.prijs === 'string' ? parseFloat(interview.prijs) : interview.prijs
+        };
+          
         const { error } = await supabase
           .from(tableName)
-          .update(interview)
+          .update(updateData)
           .eq('id', interview.id);
           
         if (error) {

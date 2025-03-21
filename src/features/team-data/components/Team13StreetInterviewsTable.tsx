@@ -29,9 +29,16 @@ const Team13StreetInterviewsTable = ({ interviews }: Team13StreetInterviewsTable
     try {
       // Update each row individually
       for (const interview of updatedData) {
+        // Convert string numeric values to numbers
+        const updateData = {
+          ...interview,
+          eiwitgehalte: typeof interview.eiwitgehalte === 'string' ? parseFloat(interview.eiwitgehalte) : interview.eiwitgehalte,
+          prijs: typeof interview.prijs === 'string' ? parseFloat(interview.prijs) : interview.prijs
+        };
+
         const { error } = await supabase
           .from('Team13streetinterviewsforwebsite')
-          .update(interview)
+          .update(updateData)
           .eq('id', interview.id);
           
         if (error) {

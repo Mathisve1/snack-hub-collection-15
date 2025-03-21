@@ -17,19 +17,22 @@ const Team3BuyingPersonasTable = ({ personas }: BuyingPersonasTableProps) => {
     try {
       // Update each row individually
       for (const persona of updatedData) {
+        // Convert string numeric values to numbers
+        const updateData = {
+          buying_persona: persona.buying_persona,
+          leeftijd: typeof persona.leeftijd === 'string' ? parseFloat(persona.leeftijd) : persona.leeftijd,
+          geslacht: persona.geslacht,
+          prijs: typeof persona.prijs === 'string' ? parseFloat(persona.prijs) : persona.prijs,
+          consumptie_situatie: persona.consumptie_situatie,
+          frequentie_frituurbezoek: persona.frequentie_frituurbezoek,
+          motivatie_kiezen_proteine_snack: persona.motivatie_kiezen_proteine_snack,
+          marketing: persona.marketing,
+          openheid_nieuwe_snack: persona.openheid_nieuwe_snack
+        };
+
         const { error } = await supabase
           .from('Team3buyingpersonasforwebsite')
-          .update({
-            buying_persona: persona.buying_persona,
-            leeftijd: persona.leeftijd,
-            geslacht: persona.geslacht,
-            prijs: persona.prijs,
-            consumptie_situatie: persona.consumptie_situatie,
-            frequentie_frituurbezoek: persona.frequentie_frituurbezoek,
-            motivatie_kiezen_proteine_snack: persona.motivatie_kiezen_proteine_snack,
-            marketing: persona.marketing,
-            openheid_nieuwe_snack: persona.openheid_nieuwe_snack
-          })
+          .update(updateData)
           .eq('id', persona.id);
           
         if (error) {

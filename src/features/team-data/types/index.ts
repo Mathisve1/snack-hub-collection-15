@@ -3,9 +3,9 @@
 export interface BuyingPersona {
   id: string;
   buying_persona: string;
-  leeftijd?: string | number;
+  leeftijd?: number;
   geslacht?: string;
-  prijs?: string | number;
+  prijs?: number;
   marketing?: string;
   consumptie_situatie?: string;
   frequentie_frituurbezoek?: string;
@@ -23,10 +23,10 @@ export interface Frituur {
   trends_2?: string;
   groothandel?: string;
   extra_groothandel?: string;
-  gemiddlede_marges?: string | number;
-  absolute_marges?: string | number;
-  aankoopprijs?: string | number;
-  aankoopprijs_proteine_snacks?: string | number;
+  gemiddlede_marges?: number;
+  absolute_marges?: number;
+  aankoopprijs?: number;
+  aankoopprijs_proteine_snacks?: number;
   belangrijke_factor_1?: string;
   belangrijke_factor_2?: string;
   marketing_1?: string;
@@ -44,8 +44,8 @@ export interface StreetInterview {
   motivatie_frituur?: string;
   populaire_snack_1?: string;
   populaire_snack_2?: string;
-  eiwitgehalte?: string | number;
-  prijs?: string | number;
+  eiwitgehalte?: number;
+  prijs?: number;
   branding?: string;
   marketing_1?: string;
   marketing_2?: string;

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { EditableTable } from "@/components/ui/editable-table";
 import { useTeam38Frituren } from "../hooks/useTeam38Data";
@@ -54,10 +55,18 @@ const FriturenTable = ({ frituren }: FriturenTableProps) => {
       
       // Update each row individually
       for (const frituur of updatedData) {
-        // Send the frituur object as is - keeping its original types
+        // Convert string numeric values to numbers
+        const updateData = {
+          ...frituur,
+          gemiddlede_marges: typeof frituur.gemiddlede_marges === 'string' ? parseFloat(frituur.gemiddlede_marges) : frituur.gemiddlede_marges,
+          absolute_marges: typeof frituur.absolute_marges === 'string' ? parseFloat(frituur.absolute_marges) : frituur.absolute_marges,
+          aankoopprijs: typeof frituur.aankoopprijs === 'string' ? parseFloat(frituur.aankoopprijs) : frituur.aankoopprijs,
+          aankoopprijs_proteine_snacks: typeof frituur.aankoopprijs_proteine_snacks === 'string' ? parseFloat(frituur.aankoopprijs_proteine_snacks) : frituur.aankoopprijs_proteine_snacks
+        };
+          
         const { error } = await supabase
           .from(tableName)
-          .update(frituur)
+          .update(updateData)
           .eq('id', frituur.id);
           
         if (error) {

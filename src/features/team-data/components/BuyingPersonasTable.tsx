@@ -54,12 +54,12 @@ const BuyingPersonasTable = ({ personas }: BuyingPersonasTableProps) => {
       
       // Update each row individually
       for (const persona of updatedData) {
-        // Create object with appropriate types for numeric fields
+        // Create an object with numeric fields converted to numbers
         const updateData = {
           buying_persona: persona.buying_persona,
-          leeftijd: persona.leeftijd,
+          leeftijd: typeof persona.leeftijd === 'string' ? parseFloat(persona.leeftijd) : persona.leeftijd,
           geslacht: persona.geslacht,
-          prijs: persona.prijs,
+          prijs: typeof persona.prijs === 'string' ? parseFloat(persona.prijs) : persona.prijs,
           consumptie_situatie: persona.consumptie_situatie,
           frequentie_frituurbezoek: persona.frequentie_frituurbezoek,
           motivatie_kiezen_proteine_snack: persona.motivatie_kiezen_proteine_snack,

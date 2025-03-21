@@ -17,9 +17,18 @@ const Team3FriturenTable = ({ frituren }: FriturenTableProps) => {
     try {
       // Update each row individually
       for (const frituur of updatedData) {
+        // Convert string numeric values to numbers
+        const updateData = {
+          ...frituur,
+          gemiddlede_marges: typeof frituur.gemiddlede_marges === 'string' ? parseFloat(frituur.gemiddlede_marges) : frituur.gemiddlede_marges,
+          absolute_marges: typeof frituur.absolute_marges === 'string' ? parseFloat(frituur.absolute_marges) : frituur.absolute_marges,
+          aankoopprijs: typeof frituur.aankoopprijs === 'string' ? parseFloat(frituur.aankoopprijs) : frituur.aankoopprijs,
+          aankoopprijs_proteine_snacks: typeof frituur.aankoopprijs_proteine_snacks === 'string' ? parseFloat(frituur.aankoopprijs_proteine_snacks) : frituur.aankoopprijs_proteine_snacks
+        };
+
         const { error } = await supabase
           .from('Team3friturenforwebsite')
-          .update(frituur)
+          .update(updateData)
           .eq('id', frituur.id);
           
         if (error) {
