@@ -47,9 +47,7 @@ const Team3PersonasTab = ({ personas, groupedPersonas }: Team3PersonasTabProps) 
         <Team3BuyingPersonasTable personas={personas} />
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
-            <Team3BuyingPersonasCards personas={personas} />
-          </div>
+          <Team3BuyingPersonasCards personas={personas} />
           <h3 className="text-xl font-bold mt-10 mb-4">Persona Profiles</h3>
           <PersonaCardList groupedPersonas={groupedPersonas} />
         </>
