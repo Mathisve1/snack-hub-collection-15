@@ -6,7 +6,7 @@ import { useNavigate, Link } from "react-router-dom";
 import BuyingPersonasTable from "@/features/team-data/components/BuyingPersonasTable";
 import BuyingPersonasCards from "@/features/team-data/components/BuyingPersonasCards";
 import FriturenTable from "@/features/team-data/components/FriturenTable";
-import StreetInterviewsTable from "@/features/team-data/components/StreetInterviewsTable";
+import Team38StreetInterviewsTable from "@/features/team-data/components/Team38StreetInterviewsTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   useTeam38BuyingPersonas, 
@@ -123,7 +123,7 @@ const Team38Results = () => {
                   </TabsContent>
                   
                   <TabsContent value="streetInterviews">
-                    <StreetInterviewsTable />
+                    <Team38StreetInterviewsTable interviews={interviews} />
                   </TabsContent>
                 </Tabs>
               )}

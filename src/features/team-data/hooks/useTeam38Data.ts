@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { BuyingPersona, Frituur, StreetInterview } from "../types";
@@ -100,8 +99,21 @@ export function useTeam38StreetInterviews() {
         
         console.log("Fetched street interviews data:", interviewsData);
         
-        // Type assertion to handle the conversion properly
-        setData(interviewsData as unknown as StreetInterview[]);
+        // Process the data to ensure numeric values are properly handled
+        const processedData = interviewsData.map(interview => {
+          return {
+            ...interview,
+            // Keep numeric types as numeric if they're already numbers
+            eiwitgehalte: typeof interview.eiwitgehalte === 'number' 
+              ? interview.eiwitgehalte 
+              : interview.eiwitgehalte,
+            prijs: typeof interview.prijs === 'number' 
+              ? interview.prijs 
+              : interview.prijs
+          };
+        });
+        
+        setData(processedData as StreetInterview[]);
       } catch (err) {
         console.error("Error fetching Team 38 street interviews:", err);
         setError(err instanceof Error ? err.message : "Unknown error");
