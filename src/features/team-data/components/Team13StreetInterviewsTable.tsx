@@ -1,4 +1,3 @@
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useTeam13StreetInterviews } from "../hooks/useTeam13Data";
 import { Loader2, LayoutGrid, Table as TableIcon } from "lucide-react";
@@ -19,6 +18,15 @@ const Team13StreetInterviewsTable = ({ interviews }: Team13StreetInterviewsTable
   const data = interviews || team13Data.data;
   const loading = !interviews && team13Data.loading;
   const error = !interviews && team13Data.error;
+  
+  // Log the data we're actually using
+  console.log("Team13StreetInterviewsTable using data:", { 
+    dataSource: interviews ? "passed directly" : "team13 hook",
+    dataLength: data?.length || 0,
+    isLoading: loading,
+    team13DataLength: team13Data.data?.length,
+    interviewsLength: interviews?.length
+  });
   
   // View mode state
   const [viewMode, setViewMode] = useState<"summary" | "table">("summary");
@@ -49,6 +57,9 @@ const Team13StreetInterviewsTable = ({ interviews }: Team13StreetInterviewsTable
 
   // Get all unique column keys excluding 'id'
   const columnKeys = Object.keys(data[0]).filter(key => key !== 'id');
+  
+  console.log("Team 13 Street Interviews data columns:", columnKeys);
+  console.log("Team 13 Street Interviews data sample:", data[0]);
 
   return (
     <>

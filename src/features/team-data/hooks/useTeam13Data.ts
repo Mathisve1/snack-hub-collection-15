@@ -27,6 +27,13 @@ export function useTeam13BuyingPersonas() {
         
         console.log(`Raw data from Team 13 buying personas:`, result.data);
         
+        // Log column names
+        if (result.data && result.data.length > 0) {
+          console.log(`Team 13 buying personas table columns:`, Object.keys(result.data[0]));
+        } else {
+          console.log(`Team 13 buying personas table is empty. No columns to display.`);
+        }
+        
         // Transform data to ensure correct types
         const transformedData = result.data?.map(item => ({
           ...item,
@@ -79,6 +86,13 @@ export function useTeam13Frituren() {
         
         console.log(`Raw data from Team 13 frituren:`, result.data);
         
+        // Log column names
+        if (result.data && result.data.length > 0) {
+          console.log(`Team 13 frituren table columns:`, Object.keys(result.data[0]));
+        } else {
+          console.log(`Team 13 frituren table is empty. No columns to display.`);
+        }
+        
         // Transform data to ensure correct types
         const transformedData = result.data?.map(item => ({
           ...item,
@@ -130,6 +144,13 @@ export function useTeam13StreetInterviews() {
         }
         
         console.log(`Raw data from Team 13 street interviews:`, result.data);
+        
+        // Log column names
+        if (result.data && result.data.length > 0) {
+          console.log(`Team 13 street interviews table columns:`, Object.keys(result.data[0]));
+        } else {
+          console.log(`Team 13 street interviews table is empty. No columns to display.`);
+        }
         
         // Transform data to ensure correct types
         const transformedData = result.data?.map(item => ({

@@ -1,4 +1,3 @@
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useTeam13Frituren } from "../hooks/useTeam13Data";
 import { Loader2, LayoutGrid, Table as TableIcon } from "lucide-react";
@@ -57,6 +56,9 @@ const Team13FriturenTable = ({ frituren }: Team13FriturenTableProps) => {
 
   // Get all unique column keys excluding 'id'
   const columnKeys = Object.keys(data[0]).filter(key => key !== 'id');
+  
+  console.log("Team 13 Frituren data columns:", columnKeys);
+  console.log("Team 13 Frituren data sample:", data[0]);
 
   return (
     <>
