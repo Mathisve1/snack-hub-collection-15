@@ -4,16 +4,15 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Table as TableIcon, LayoutGrid, Copy, Loader2, AlertTriangle, Database } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
-  useTeam3BuyingPersonas, 
-  useTeam3Frituren, 
-  useTeam3StreetInterviews 
-} from "@/features/team-data/hooks/useTeam3Data";
+import { useTeam3BuyingPersonas, useTeam3Frituren, useTeam3StreetInterviews } from "@/features/team-data/hooks/useTeam3Data";
 import { useState } from "react";
 import Team3BuyingPersonasTable from "@/features/team-data/components/Team3BuyingPersonasTable";
-import Team3BuyingPersonasCards from "@/features/team-data/components/Team3BuyingPersonasCards";
 import Team3FriturenTable from "@/features/team-data/components/Team3FriturenTable";
 import Team3StreetInterviewsTable from "@/features/team-data/components/Team3StreetInterviewsTable";
+import { groupPersonasByType } from "@/features/team-data/components/buying-personas/utils/personaDataUtils";
+import PersonaCardList from "@/features/team-data/components/buying-personas/PersonaCardList";
+import FriturenCardView from "@/features/team-data/components/frituren/FriturenCardView";
+import StreetInterviewsCardView from "@/features/team-data/components/street-interviews/StreetInterviewsCardView";
 
 const Team38ResultsQuadruplicate = () => {
   const navigate = useNavigate();
@@ -21,8 +20,10 @@ const Team38ResultsQuadruplicate = () => {
   const { data: frituren, loading: friturenLoading, error: friturenError } = useTeam3Frituren();
   const { data: interviews, loading: interviewsLoading, error: interviewsError } = useTeam3StreetInterviews();
   
-  // State to toggle between table and card view for buying personas
+  // State to toggle between table and card view for data sections
   const [personasViewMode, setPersonasViewMode] = useState<"table" | "cards">("cards");
+  const [friturenViewMode, setFriturenViewMode] = useState<"table" | "cards">("cards");
+  const [interviewsViewMode, setInterviewsViewMode] = useState<"table" | "cards">("cards");
 
   // Check if any data is loading or has errors
   const isLoading = personasLoading || friturenLoading || interviewsLoading;
@@ -36,6 +37,9 @@ const Team38ResultsQuadruplicate = () => {
 
   // Define a placeholder message for when we have no data
   const showPlaceholderData = !isLoading && !hasErrors && !hasData;
+
+  // Group personas by type for card view
+  const groupedPersonas = personas ? groupPersonasByType(personas) : [];
 
   return (
     <>
@@ -169,16 +173,70 @@ const Team38ResultsQuadruplicate = () => {
                     {personasViewMode === "table" ? (
                       <Team3BuyingPersonasTable personas={personas} />
                     ) : (
-                      <Team3BuyingPersonasCards personas={personas} />
+                      <PersonaCardList groupedPersonas={groupedPersonas} />
                     )}
                   </TabsContent>
                   
                   <TabsContent value="frituren">
-                    <Team3FriturenTable frituren={frituren} />
+                    <div className="flex justify-end mb-4">
+                      <div className="bg-gray-100 rounded-md p-1 inline-flex">
+                        <Button
+                          variant={friturenViewMode === "cards" ? "default" : "ghost"}
+                          size="sm"
+                          onClick={() => setFriturenViewMode("cards")}
+                          className="rounded-md"
+                        >
+                          <LayoutGrid className="h-4 w-4 mr-1" />
+                          Cards
+                        </Button>
+                        <Button
+                          variant={friturenViewMode === "table" ? "default" : "ghost"}
+                          size="sm"
+                          onClick={() => setFriturenViewMode("table")}
+                          className="rounded-md"
+                        >
+                          <TableIcon className="h-4 w-4 mr-1" />
+                          Table
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    {friturenViewMode === "table" ? (
+                      <Team3FriturenTable frituren={frituren} />
+                    ) : (
+                      <FriturenCardView frituren={frituren} />
+                    )}
                   </TabsContent>
                   
                   <TabsContent value="streetInterviews">
-                    <Team3StreetInterviewsTable interviews={interviews} />
+                    <div className="flex justify-end mb-4">
+                      <div className="bg-gray-100 rounded-md p-1 inline-flex">
+                        <Button
+                          variant={interviewsViewMode === "cards" ? "default" : "ghost"}
+                          size="sm"
+                          onClick={() => setInterviewsViewMode("cards")}
+                          className="rounded-md"
+                        >
+                          <LayoutGrid className="h-4 w-4 mr-1" />
+                          Cards
+                        </Button>
+                        <Button
+                          variant={interviewsViewMode === "table" ? "default" : "ghost"}
+                          size="sm"
+                          onClick={() => setInterviewsViewMode("table")}
+                          className="rounded-md"
+                        >
+                          <TableIcon className="h-4 w-4 mr-1" />
+                          Table
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    {interviewsViewMode === "table" ? (
+                      <Team3StreetInterviewsTable interviews={interviews} />
+                    ) : (
+                      <StreetInterviewsCardView interviews={interviews} />
+                    )}
                   </TabsContent>
                 </Tabs>
               )}
