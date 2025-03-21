@@ -20,14 +20,16 @@ const Team38StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps)
         // Prepare data for update, ensuring numeric fields are stored as numbers
         const updateData = {
           ...interview,
-          // Convert string values to numbers if needed
+          // Convert numeric fields to numbers before saving
           eiwitgehalte: typeof interview.eiwitgehalte === 'string' 
-            ? parseFloat(interview.eiwitgehalte) 
+            ? parseFloat(interview.eiwitgehalte as string) 
             : interview.eiwitgehalte,
           prijs: typeof interview.prijs === 'string' 
-            ? parseFloat(interview.prijs) 
+            ? parseFloat(interview.prijs as string) 
             : interview.prijs
         };
+
+        console.log("Updating interview with data:", updateData);
 
         const { error } = await supabase
           .from('Team38streetinterviewsforwebsite')

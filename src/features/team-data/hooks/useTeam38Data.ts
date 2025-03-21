@@ -1,6 +1,8 @@
+
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { BuyingPersona, Frituur, StreetInterview } from "../types";
+import { toast } from "sonner";
 
 export function useTeam38BuyingPersonas() {
   const [data, setData] = useState<BuyingPersona[]>([]);
@@ -24,7 +26,16 @@ export function useTeam38BuyingPersonas() {
         }
         
         console.log("Fetched buying personas data:", personasData);
-        setData(personasData as BuyingPersona[]);
+        
+        // Process the data to ensure numeric values are properly handled
+        const processedData = personasData.map(item => ({
+          ...item,
+          leeftijd: typeof item.leeftijd === 'string' ? parseFloat(item.leeftijd) : item.leeftijd,
+          prijs: typeof item.prijs === 'string' ? parseFloat(item.prijs) : item.prijs,
+          openheid_nieuwe_snack: !!item.openheid_nieuwe_snack
+        }));
+        
+        setData(processedData as BuyingPersona[]);
       } catch (err) {
         console.error("Error fetching Team 38 buying personas:", err);
         setError(err instanceof Error ? err.message : "Unknown error");
@@ -61,7 +72,18 @@ export function useTeam38Frituren() {
         }
         
         console.log("Fetched frituren data:", friturenData);
-        setData(friturenData as Frituur[]);
+        
+        // Process the data to ensure numeric values are properly handled
+        const processedData = friturenData.map(item => ({
+          ...item,
+          gemiddlede_marges: typeof item.gemiddlede_marges === 'string' ? parseFloat(item.gemiddlede_marges) : item.gemiddlede_marges,
+          absolute_marges: typeof item.absolute_marges === 'string' ? parseFloat(item.absolute_marges) : item.absolute_marges,
+          aankoopprijs: typeof item.aankoopprijs === 'string' ? parseFloat(item.aankoopprijs) : item.aankoopprijs,
+          aankoopprijs_proteine_snacks: typeof item.aankoopprijs_proteine_snacks === 'string' ? 
+            parseFloat(item.aankoopprijs_proteine_snacks) : item.aankoopprijs_proteine_snacks
+        }));
+        
+        setData(processedData as Frituur[]);
       } catch (err) {
         console.error("Error fetching Team 38 frituren data:", err);
         setError(err instanceof Error ? err.message : "Unknown error");
@@ -103,13 +125,15 @@ export function useTeam38StreetInterviews() {
         const processedData = interviewsData.map(interview => {
           return {
             ...interview,
-            // Keep numeric types as numeric if they're already numbers
-            eiwitgehalte: typeof interview.eiwitgehalte === 'number' 
-              ? interview.eiwitgehalte 
-              : interview.eiwitgehalte,
-            prijs: typeof interview.prijs === 'number' 
-              ? interview.prijs 
-              : interview.prijs
+            // Convert to proper numeric types if they're strings
+            eiwitgehalte: typeof interview.eiwitgehalte === 'string' ? 
+              parseFloat(interview.eiwitgehalte) : interview.eiwitgehalte,
+            prijs: typeof interview.prijs === 'string' ? 
+              parseFloat(interview.prijs) : interview.prijs,
+            // Ensure boolean values are properly handled
+            ruimte_voor_innovatie: !!interview.ruimte_voor_innovatie,
+            hogere_prijs: !!interview.hogere_prijs,
+            vervangen_traditionele_snack: !!interview.vervangen_traditionele_snack
           };
         });
         

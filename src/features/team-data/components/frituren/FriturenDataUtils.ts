@@ -64,41 +64,21 @@ export const processFriturenData = (data: Frituur[]): GroupedFrituurData => {
       result.extra_groothandel[frituur.extra_groothandel] = (result.extra_groothandel[frituur.extra_groothandel] || 0) + 1;
     }
 
-    // Process numeric values - improved handling for both string and number types
+    // Process numeric values
     if (frituur.gemiddlede_marges !== null && frituur.gemiddlede_marges !== undefined) {
-      const value = typeof frituur.gemiddlede_marges === 'string' 
-        ? parseFloat(frituur.gemiddlede_marges) 
-        : frituur.gemiddlede_marges;
-      if (!isNaN(value)) {
-        result.gemiddelde_marges.push(value);
-      }
+      result.gemiddelde_marges.push(frituur.gemiddlede_marges);
     }
 
     if (frituur.absolute_marges !== null && frituur.absolute_marges !== undefined) {
-      const value = typeof frituur.absolute_marges === 'string' 
-        ? parseFloat(frituur.absolute_marges) 
-        : frituur.absolute_marges;
-      if (!isNaN(value)) {
-        result.absolute_marges.push(value);
-      }
+      result.absolute_marges.push(frituur.absolute_marges);
     }
 
     if (frituur.aankoopprijs !== null && frituur.aankoopprijs !== undefined) {
-      const value = typeof frituur.aankoopprijs === 'string' 
-        ? parseFloat(frituur.aankoopprijs) 
-        : frituur.aankoopprijs;
-      if (!isNaN(value)) {
-        result.aankoopprijs.push(value);
-      }
+      result.aankoopprijs.push(frituur.aankoopprijs);
     }
 
     if (frituur.aankoopprijs_proteine_snacks !== null && frituur.aankoopprijs_proteine_snacks !== undefined) {
-      const value = typeof frituur.aankoopprijs_proteine_snacks === 'string' 
-        ? parseFloat(frituur.aankoopprijs_proteine_snacks) 
-        : frituur.aankoopprijs_proteine_snacks;
-      if (!isNaN(value)) {
-        result.aankoopprijs_proteine_snacks.push(value);
-      }
+      result.aankoopprijs_proteine_snacks.push(frituur.aankoopprijs_proteine_snacks);
     }
 
     // Process belangrijke factoren

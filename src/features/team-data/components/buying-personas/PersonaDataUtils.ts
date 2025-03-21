@@ -5,7 +5,7 @@ export interface GroupedPersona {
   name: string;
   count: number;
   geslacht: Record<string, number>;
-  leeftijd: (string | number)[];
+  leeftijd: number[];
   prijs: Record<string, number>;
   frequentie_frituurbezoek: Record<string, number>;
   consumptie_situatie: Record<string, number>;

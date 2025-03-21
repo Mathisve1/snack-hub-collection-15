@@ -1251,7 +1251,7 @@ export type Database = {
           bereidingsvoorkeur: string | null
           branding: string | null
           eerste_reactie: string | null
-          eiwitgehalte: string | null
+          eiwitgehalte: number | null
           frituurbezoek_frequentie: string | null
           hogere_prijs: boolean | null
           hogere_prijs_factoren: string | null
@@ -1261,7 +1261,7 @@ export type Database = {
           motivatie_frituur: string | null
           populaire_snack_1: string | null
           populaire_snack_2: string | null
-          prijs: string | null
+          prijs: number | null
           ruimte_voor_innovatie: boolean | null
           smaakvoorkeuren: string | null
           verkoopskanalen: string | null
@@ -1274,7 +1274,7 @@ export type Database = {
           bereidingsvoorkeur?: string | null
           branding?: string | null
           eerste_reactie?: string | null
-          eiwitgehalte?: string | null
+          eiwitgehalte?: number | null
           frituurbezoek_frequentie?: string | null
           hogere_prijs?: boolean | null
           hogere_prijs_factoren?: string | null
@@ -1284,7 +1284,7 @@ export type Database = {
           motivatie_frituur?: string | null
           populaire_snack_1?: string | null
           populaire_snack_2?: string | null
-          prijs?: string | null
+          prijs?: number | null
           ruimte_voor_innovatie?: boolean | null
           smaakvoorkeuren?: string | null
           verkoopskanalen?: string | null
@@ -1297,7 +1297,7 @@ export type Database = {
           bereidingsvoorkeur?: string | null
           branding?: string | null
           eerste_reactie?: string | null
-          eiwitgehalte?: string | null
+          eiwitgehalte?: number | null
           frituurbezoek_frequentie?: string | null
           hogere_prijs?: boolean | null
           hogere_prijs_factoren?: string | null
@@ -1307,7 +1307,7 @@ export type Database = {
           motivatie_frituur?: string | null
           populaire_snack_1?: string | null
           populaire_snack_2?: string | null
-          prijs?: string | null
+          prijs?: number | null
           ruimte_voor_innovatie?: boolean | null
           smaakvoorkeuren?: string | null
           verkoopskanalen?: string | null

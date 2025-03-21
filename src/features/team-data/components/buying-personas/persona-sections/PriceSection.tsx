@@ -2,13 +2,12 @@
 import { Banknote } from "lucide-react";
 
 type PriceSectionProps = {
-  prices: (string | number)[];
+  prices: (number)[];
 };
 
 export const PriceSection = ({ prices }: PriceSectionProps) => {
   // Calculate price range
-  const numericPrices = prices.map(p => typeof p === 'number' ? p : parseFloat(p.toString()));
-  const validPrices = numericPrices.filter(p => !isNaN(p));
+  const validPrices = prices.filter(p => !isNaN(p));
   
   const minPrice = validPrices.length > 0 ? Math.min(...validPrices) : 'N/A';
   const maxPrice = validPrices.length > 0 ? Math.max(...validPrices) : 'N/A';
