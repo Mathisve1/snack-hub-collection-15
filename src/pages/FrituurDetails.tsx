@@ -75,13 +75,11 @@ const FrituurDetails = () => {
           {/* Left column: Location and contact info */}
           <div className="md:col-span-1 space-y-4">
             <BusinessInfoSection frituur={frituur} />
-            {/* Add the contact info form */}
-            <ContactInfoForm businessName={decodedBusinessName} team={team} />
           </div>
           
-          {/* Right column: Notes and attachments */}
+          {/* Right column: Notes, attachments and contact info form */}
           <div className="md:col-span-2">
-            <div className="bg-white rounded-lg shadow-sm p-5">
+            <div className="bg-white rounded-lg shadow-sm p-5 mb-6">
               <Tabs defaultValue="attachments" className="w-full">
                 <TabsList className="mb-4">
                   <TabsTrigger value="attachments">Notes & Attachments</TabsTrigger>
@@ -97,6 +95,9 @@ const FrituurDetails = () => {
                 </TabsContent>
               </Tabs>
             </div>
+            
+            {/* Contact info form - moved to the right column */}
+            <ContactInfoForm businessName={decodedBusinessName} team={team} />
           </div>
         </div>
       </main>

@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate } from "react-router-dom";
 import { useFriturenData } from "@/hooks/frituren";
 import FriturenHeader from "@/features/frituren/FriturenHeader";
@@ -98,16 +97,8 @@ const FriturenList = () => {
             
             {usingSampleData && <SampleDataAlert />}
             
-            {/* Voice Analysis Section - Added above frituren selection */}
+            {/* Voice Analysis Section */}
             <VoiceAnalysisSection team={team} />
-            
-            {/* Folder management section */}
-            <FolderManagementSection
-              showFolders={showFolders}
-              setShowFolders={setShowFolders}
-              team={team}
-              frituren={frituren}
-            />
             
             {/* All frituren section with filters and pagination */}
             <AllFriturenSection
@@ -135,7 +126,7 @@ const FriturenList = () => {
               totalPages={totalPages}
             />
             
-            {/* Team selections section at the bottom */}
+            {/* Team selections section */}
             <TeamSelectionsSection
               teamFrituren={teamFrituren}
               team={team}
@@ -145,6 +136,14 @@ const FriturenList = () => {
               isFrituurLiked={isFrituurLiked}
               handleSaveFrituur={handleSaveFrituur}
               handleLikeFrituur={handleLikeFrituur}
+            />
+            
+            {/* Folder management section - moved here to be centered after results */}
+            <FolderManagementSection
+              showFolders={showFolders}
+              setShowFolders={setShowFolders}
+              team={team}
+              frituren={frituren}
             />
           </div>
         </main>

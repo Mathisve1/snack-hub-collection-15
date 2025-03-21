@@ -78,7 +78,7 @@ export type Database = {
         }
         Relationships: []
       }
-      frituren_contact_info: {
+      frituren_contact_info_indien_interesse: {
         Row: {
           business_name: string
           created_at: string
