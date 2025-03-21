@@ -51,21 +51,19 @@ const BuyingPersonasTable = ({ personas }: BuyingPersonasTableProps) => {
   const handleSaveData = async (updatedData: BuyingPersona[]) => {
     try {
       const tableName = getTableName();
+      console.log(`Saving data to table: ${tableName}`);
       
       // Update each row individually
       for (const persona of updatedData) {
         // Create an object with numeric fields converted to numbers
         const updateData = {
-          buying_persona: persona.buying_persona,
+          ...persona,
           leeftijd: typeof persona.leeftijd === 'string' ? parseFloat(persona.leeftijd) : persona.leeftijd,
-          geslacht: persona.geslacht,
           prijs: typeof persona.prijs === 'string' ? parseFloat(persona.prijs) : persona.prijs,
-          consumptie_situatie: persona.consumptie_situatie,
-          frequentie_frituurbezoek: persona.frequentie_frituurbezoek,
-          motivatie_kiezen_proteine_snack: persona.motivatie_kiezen_proteine_snack,
-          marketing: persona.marketing,
-          openheid_nieuwe_snack: persona.openheid_nieuwe_snack
+          openheid_nieuwe_snack: !!persona.openheid_nieuwe_snack
         };
+        
+        console.log(`Updating persona id: ${persona.id} in table: ${tableName}`, updateData);
           
         const { error } = await supabase
           .from(tableName)
@@ -73,7 +71,7 @@ const BuyingPersonasTable = ({ personas }: BuyingPersonasTableProps) => {
           .eq('id', persona.id);
           
         if (error) {
-          console.error("Error updating persona:", error);
+          console.error(`Error updating persona in ${tableName}:`, error);
           toast.error(`Failed to update persona: ${error.message}`);
           return;
         }

@@ -26,7 +26,11 @@ const Team38StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps)
             : interview.eiwitgehalte,
           prijs: typeof interview.prijs === 'string' 
             ? parseFloat(interview.prijs as string) 
-            : interview.prijs
+            : interview.prijs,
+          // Ensure boolean fields are stored as booleans
+          ruimte_voor_innovatie: !!interview.ruimte_voor_innovatie,
+          hogere_prijs: !!interview.hogere_prijs,
+          vervangen_traditionele_snack: !!interview.vervangen_traditionele_snack
         };
 
         console.log("Updating interview with data:", updateData);

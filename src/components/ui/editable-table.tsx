@@ -32,7 +32,7 @@ export function EditableTable({ data, caption, onSave, readOnly = false }: Edita
 
   const handleEditClick = (rowIndex: number) => {
     setEditingRow(rowIndex);
-    setEditingValues(tableData[rowIndex]);
+    setEditingValues({...tableData[rowIndex]});
     setIsEditing(true);
   };
 
@@ -59,8 +59,8 @@ export function EditableTable({ data, caption, onSave, readOnly = false }: Edita
     setEditingRow(null);
     
     if (onSave) {
+      console.log("Saving row data:", newData);
       onSave(newData);
-      toast.success("Changes saved successfully");
     }
   };
 
@@ -72,7 +72,7 @@ export function EditableTable({ data, caption, onSave, readOnly = false }: Edita
     if (editingRow === rowIndex) {
       const value = editingValues[columnKey];
       
-      if (typeof row[columnKey] === 'boolean') {
+      if (typeof row[columnKey] === 'boolean' || row[columnKey] === true || row[columnKey] === false) {
         return (
           <select 
             value={value ? "true" : "false"} 
@@ -83,12 +83,17 @@ export function EditableTable({ data, caption, onSave, readOnly = false }: Edita
             <option value="false">No</option>
           </select>
         );
-      } else if (typeof row[columnKey] === 'number') {
+      } else if (typeof row[columnKey] === 'number' || 
+                (columnKey.includes('prijs') || 
+                 columnKey.includes('leeftijd') || 
+                 columnKey.includes('eiwitgehalte') || 
+                 columnKey.includes('marges') || 
+                 columnKey.includes('aankoopprijs'))) {
         return (
           <Input 
             type="number" 
-            value={value || ''} 
-            onChange={(e) => handleChange(columnKey, Number(e.target.value))}
+            value={value === null ? '' : value} 
+            onChange={(e) => handleChange(columnKey, e.target.value === '' ? null : Number(e.target.value))}
             className="w-full"
           />
         );
@@ -96,17 +101,17 @@ export function EditableTable({ data, caption, onSave, readOnly = false }: Edita
         return (
           <Input 
             type="text" 
-            value={value || ''} 
-            onChange={(e) => handleChange(columnKey, e.target.value)}
+            value={value === null ? '' : value} 
+            onChange={(e) => handleChange(columnKey, e.target.value === '' ? null : e.target.value)}
             className="w-full"
           />
         );
       }
     } else {
-      if (typeof row[columnKey] === 'boolean') {
+      if (typeof row[columnKey] === 'boolean' || row[columnKey] === true || row[columnKey] === false) {
         return row[columnKey] ? 'Yes' : 'No';
       } else {
-        return row[columnKey] || '—';
+        return row[columnKey] !== null && row[columnKey] !== undefined ? row[columnKey] : '—';
       }
     }
   };

@@ -52,6 +52,7 @@ const FriturenTable = ({ frituren }: FriturenTableProps) => {
   const handleSaveData = async (updatedData: Frituur[]) => {
     try {
       const tableName = getTableName();
+      console.log(`Saving data to table: ${tableName}`);
       
       // Update each row individually
       for (const frituur of updatedData) {
@@ -61,8 +62,11 @@ const FriturenTable = ({ frituren }: FriturenTableProps) => {
           gemiddlede_marges: typeof frituur.gemiddlede_marges === 'string' ? parseFloat(frituur.gemiddlede_marges) : frituur.gemiddlede_marges,
           absolute_marges: typeof frituur.absolute_marges === 'string' ? parseFloat(frituur.absolute_marges) : frituur.absolute_marges,
           aankoopprijs: typeof frituur.aankoopprijs === 'string' ? parseFloat(frituur.aankoopprijs) : frituur.aankoopprijs,
-          aankoopprijs_proteine_snacks: typeof frituur.aankoopprijs_proteine_snacks === 'string' ? parseFloat(frituur.aankoopprijs_proteine_snacks) : frituur.aankoopprijs_proteine_snacks
+          aankoopprijs_proteine_snacks: typeof frituur.aankoopprijs_proteine_snacks === 'string' ? 
+            parseFloat(frituur.aankoopprijs_proteine_snacks) : frituur.aankoopprijs_proteine_snacks
         };
+        
+        console.log(`Updating frituur id: ${frituur.id} in table: ${tableName}`, updateData);
           
         const { error } = await supabase
           .from(tableName)
@@ -70,7 +74,7 @@ const FriturenTable = ({ frituren }: FriturenTableProps) => {
           .eq('id', frituur.id);
           
         if (error) {
-          console.error("Error updating frituur:", error);
+          console.error(`Error updating frituur in ${tableName}:`, error);
           toast.error(`Failed to update frituur: ${error.message}`);
           return;
         }

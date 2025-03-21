@@ -20,6 +20,7 @@ const StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps) => {
   // Check if the current path includes team-3
   const isTeam3Data = location.pathname === "/team-3-results";
   const isTeam13Data = location.pathname === "/team-13-results";
+  const isTeam14Data = location.pathname === "/team-14-results";
   
   // Log the current path and which team was detected
   console.log(`StreetInterviewsTable - Current path: ${location.pathname}, isTeam3Data: ${isTeam3Data}, isTeam13Data: ${isTeam13Data}`);
@@ -33,6 +34,7 @@ const StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps) => {
   const loading = !interviews && (isTeam3Data ? team3Data.loading : team38Data.loading);
   const error = !interviews && (isTeam3Data ? team3Data.error : team38Data.error);
   
+  // View mode state
   const [viewMode, setViewMode] = useState<"summary" | "table">("summary");
 
   // Determine which table to update based on path
@@ -51,6 +53,7 @@ const StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps) => {
   const handleSaveData = async (updatedData: StreetInterview[]) => {
     try {
       const tableName = getTableName();
+      console.log(`Saving data to table: ${tableName}`);
       
       // Update each row individually
       for (const interview of updatedData) {
@@ -58,8 +61,14 @@ const StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps) => {
         const updateData = {
           ...interview,
           eiwitgehalte: typeof interview.eiwitgehalte === 'string' ? parseFloat(interview.eiwitgehalte) : interview.eiwitgehalte,
-          prijs: typeof interview.prijs === 'string' ? parseFloat(interview.prijs) : interview.prijs
+          prijs: typeof interview.prijs === 'string' ? parseFloat(interview.prijs) : interview.prijs,
+          // Ensure boolean fields are stored as booleans
+          ruimte_voor_innovatie: !!interview.ruimte_voor_innovatie,
+          hogere_prijs: !!interview.hogere_prijs,
+          vervangen_traditionele_snack: !!interview.vervangen_traditionele_snack
         };
+        
+        console.log(`Updating interview id: ${interview.id} in table: ${tableName}`, updateData);
           
         const { error } = await supabase
           .from(tableName)
@@ -67,7 +76,7 @@ const StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps) => {
           .eq('id', interview.id);
           
         if (error) {
-          console.error("Error updating interview:", error);
+          console.error(`Error updating interview in ${tableName}:`, error);
           toast.error(`Failed to update interview: ${error.message}`);
           return;
         }
@@ -103,7 +112,7 @@ const StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps) => {
       </div>
     );
   }
-  
+
   return (
     <>
       <div className="flex justify-end mb-4">
