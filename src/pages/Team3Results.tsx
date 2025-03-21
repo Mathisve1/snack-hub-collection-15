@@ -1,4 +1,3 @@
-
 import { Helmet } from "react-helmet";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Table as TableIcon, LayoutGrid, Copy, Loader2, AlertTriangle, Database } from "lucide-react";
@@ -66,20 +65,6 @@ const Team3Results = () => {
                 <ArrowLeft className="h-5 w-5" />
               </Button>
               <h1 className="text-xl font-semibold">Team 3 Research Results</h1>
-            </div>
-            <div className="flex gap-2">
-              <Button asChild variant="outline" size="sm">
-                <Link to="/team-38-results">
-                  <Copy className="h-4 w-4 mr-2" />
-                  View Team 38
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="sm">
-                <Link to="/team-13-results">
-                  <Copy className="h-4 w-4 mr-2" />
-                  View Team 13
-                </Link>
-              </Button>
             </div>
           </div>
         </div>

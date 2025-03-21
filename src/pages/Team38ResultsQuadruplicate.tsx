@@ -1,4 +1,3 @@
-
 import { Helmet } from "react-helmet";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Table as TableIcon, LayoutGrid, Copy, Loader2, AlertTriangle, Database } from "lucide-react";
@@ -60,26 +59,6 @@ const Team38ResultsQuadruplicate = () => {
                 <ArrowLeft className="h-5 w-5" />
               </Button>
               <h1 className="text-xl font-semibold">Team 3 Research Results (Quadruplicate)</h1>
-            </div>
-            <div className="flex gap-2">
-              <Button asChild variant="outline" size="sm">
-                <Link to="/team-38-results">
-                  <Copy className="h-4 w-4 mr-2" />
-                  View Original
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="sm">
-                <Link to="/team-38-results-duplicate">
-                  <Copy className="h-4 w-4 mr-2" />
-                  View Duplicate
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="sm">
-                <Link to="/team-38-results-triplicate">
-                  <Copy className="h-4 w-4 mr-2" />
-                  View Triplicate
-                </Link>
-              </Button>
             </div>
           </div>
         </div>
