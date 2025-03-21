@@ -76,7 +76,7 @@ const Team13StreetInterviewsTable = ({ interviews }: Team13StreetInterviewsTable
       </div>
 
       {viewMode === "summary" ? (
-        <Team13StreetInterviewsSummary interviews={data} />
+        <Team13StreetInterviewsSummary data={data} />
       ) : (
         <div className="rounded-md border overflow-hidden">
           <div className="overflow-x-auto">

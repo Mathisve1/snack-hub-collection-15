@@ -18,6 +18,8 @@ const AverageResponseCard = ({
     <SummaryCard
       title="Gemiddelde responswaarden"
       icon={BarChart}
+      count={Number(gemiddeldePositiefResponse) || 0}
+      countUnit="%"
       iconColor="text-indigo-500"
     >
       <div className="space-y-4">

@@ -24,13 +24,16 @@ const DataPoint = ({
   iconComponent,
   highlightValue = false
 }: DataPointProps) => {
+  // Convert numeric values to strings for rendering
+  const displayValue = typeof value === 'number' ? String(value) : value;
+  
   return (
     <div className="flex items-start">
       {iconComponent && <div className="mr-3 mt-1">{iconComponent}</div>}
       <div className={`flex-1 ${iconComponent ? '' : ''}`}>
         <p className="font-semibold text-gray-700">{label}</p>
         <p className={`${valueClassName || ""} ${highlightValue ? "text-lg font-bold text-primary" : ""}`}>
-          {value}{unit && ` ${unit}`}
+          {displayValue}{unit && ` ${unit}`}
         </p>
         {subValue && (
           <p className="text-sm text-gray-500 mt-0.5">{subValue}</p>

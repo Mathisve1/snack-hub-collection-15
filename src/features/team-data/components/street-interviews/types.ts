@@ -18,6 +18,12 @@ export interface ReactionsChannelsCardProps {
   topSalesChannels: TopValue[];
   eersteReactiesTotal: number;
   verkoopskanalenTotal: number;
+  // Additional props to fix the type errors
+  eersteReactieInfo?: any;
+  verkoopskanalenInfo?: any;
+  eerste_reacties?: Record<string, number>;
+  verkoopskanalen?: Record<string, number>;
+  formatBreakdown?: any;
 }
 
 export interface MotivationSnacksCardProps {
@@ -27,6 +33,12 @@ export interface MotivationSnacksCardProps {
   topSnacks: TopValue[];
   motivationTotal: number;
   snacksTotal: number;
+  // Additional props to fix the type errors
+  motivatieInfo?: any;
+  populaireSnackInfo?: any;
+  motivatie_frituur?: Record<string, number>;
+  populaire_snacks?: Record<string, number>;
+  formatBreakdown?: any;
 }
 
 export interface ProteinPriceCardProps {
@@ -36,6 +48,14 @@ export interface ProteinPriceCardProps {
   avgPrice: number;
   proteinRanges: Record<string, number>;
   priceRanges: Record<string, number>;
+  // Additional props to fix the type errors
+  eiwitgehalteInfo?: any;
+  prijsInfo?: any;
+  gemiddeldeEiwitgehalte?: number;
+  gemiddeldePrijs?: number;
+  eiwitgehalte?: Record<string, number>;
+  prijzen?: Record<string, number>;
+  formatBreakdown?: any;
 }
 
 export interface TasteCoatingCardProps {
@@ -45,6 +65,12 @@ export interface TasteCoatingCardProps {
   topCoatings: TopValue[];
   tastesTotal: number;
   coatingsTotal: number;
+  // Additional props to fix the type errors
+  smaakvoorkeurenInfo?: any;
+  coatingInfo?: any;
+  smaakvoorkeuren?: Record<string, number>;
+  coating?: Record<string, number>;
+  formatBreakdown?: any;
 }
 
 export interface PreparationCrunchCardProps {
@@ -54,6 +80,12 @@ export interface PreparationCrunchCardProps {
   topImportanceCrunch: TopValue[];
   preparationsTotal: number;
   crunchImportanceTotal: number;
+  // Additional props to fix the type errors
+  bereidingsvoorkeurInfo?: any;
+  belangKrokantheidInfo?: any;
+  bereidingsvoorkeur?: Record<string, number>;
+  belang_krokantheid?: Record<string, number>;
+  formatBreakdown?: any;
 }
 
 export interface BarriersFrequencyCardProps {
@@ -63,6 +95,12 @@ export interface BarriersFrequencyCardProps {
   topFrequencies: TopValue[];
   barriersTotal: number;
   frequenciesTotal: number;
+  // Additional props to fix the type errors
+  aankoopbarriereInfo?: any;
+  frequentieInfo?: any;
+  aankoopbarrieres?: Record<string, number>;
+  frituurbezoek_frequentie?: Record<string, number>;
+  formatBreakdown?: any;
 }
 
 export interface InnovationPriceCardProps {
@@ -72,6 +110,10 @@ export interface InnovationPriceCardProps {
   higherPricePercentage: number;
   replaceTradSnackPercentage: number;
   highPriceFactors?: TopValue[];
+  // Additional props to fix the type errors
+  innovatieRuimtePercentage?: number;
+  hogerePrijsPercentage?: number;
+  vervangenTraditionalPercentage?: number;
 }
 
 export interface SummaryCardProps {
@@ -79,13 +121,22 @@ export interface SummaryCardProps {
   icon: React.ElementType;
   count: number;
   children?: React.ReactNode;
+  className?: string;
+  iconClassName?: string;
+  countUnit?: string;
+  subtitle?: string;
+  iconColor?: string;
 }
 
 export interface AverageResponseCardProps {
-  title: string;
-  icon: React.ElementType;
-  average: number;
+  title?: string;
+  icon?: React.ElementType;
+  average?: number;
   deviation?: number;
   unit?: string;
   labels?: string[];
+  // Additional props to fix type errors
+  gemiddeldePositiefResponse?: string;
+  gemiddeldeEiwitgehalte?: string;
+  gemiddeldePrijs?: string;
 }

@@ -1,97 +1,137 @@
 
-// Calculate average from an array of numbers
-export const calculateAverageResponse = (values: number[]): number => {
-  if (values.length === 0) return 0;
+import { StreetInterview } from "../../../types";
+import { CommonValueInfo, TopValue } from "../types";
+
+/**
+ * Calculates the percentage of true values in an array of booleans
+ */
+export const calculateBooleanPercentage = (values: (boolean | number)[]): number => {
+  if (!values || values.length === 0) return 0;
   
-  const sum = values.reduce((total, val) => total + val, 0);
-  return parseFloat((sum / values.length).toFixed(1));
+  const trueCount = values.filter(value => 
+    typeof value === 'boolean' ? value === true : value === 1
+  ).length;
+  
+  return Math.round((trueCount / values.length) * 100);
 };
 
-// Calculate weighted average from a record of value counts
-export const calculateAverageFromRecord = (record: Record<string, number>): number => {
-  if (Object.keys(record).length === 0) return 0;
+/**
+ * Formats a record of values and their counts into a readable string
+ */
+export const formatBreakdown = (record: Record<string, number>, limit: number = 3): string => {
+  if (!record || Object.keys(record).length === 0) {
+    return "Geen gegevens beschikbaar";
+  }
+
+  const total = Object.values(record).reduce((sum, count) => sum + count, 0);
+  
+  return Object.entries(record)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([value, count]) => {
+      const percentage = Math.round((count / total) * 100);
+      return `${value}: ${percentage}%`;
+    })
+    .join(", ");
+};
+
+/**
+ * Gets the most common values from a record
+ */
+export const getMostCommon = (record: Record<string, number>, limit: number = 3): CommonValueInfo[] => {
+  if (!record || Object.keys(record).length === 0) {
+    return [];
+  }
+  
+  const total = Object.values(record).reduce((sum, count) => sum + count, 0);
+  
+  return Object.entries(record)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([value, count]) => ({
+      value,
+      count,
+      percentage: Math.round((count / total) * 100)
+    }));
+};
+
+/**
+ * Calculate average response positivity based on multiple boolean values
+ */
+export const calculateAverageResponse = (data: StreetInterview[]): string => {
+  if (!data || data.length === 0) return "0";
+  
+  let positiveCount = 0;
+  let totalFields = 0;
+  
+  data.forEach(interview => {
+    // Count each positive boolean response
+    if (interview.ruimte_voor_innovatie === true) {
+      positiveCount += 1;
+      totalFields += 1;
+    } else if (interview.ruimte_voor_innovatie === false) {
+      totalFields += 1;
+    }
+    
+    if (interview.hogere_prijs === true) {
+      positiveCount += 1;
+      totalFields += 1;
+    } else if (interview.hogere_prijs === false) {
+      totalFields += 1;
+    }
+    
+    if (interview.vervangen_traditionele_snack === true) {
+      positiveCount += 1;
+      totalFields += 1;
+    } else if (interview.vervangen_traditionele_snack === false) {
+      totalFields += 1;
+    }
+  });
+  
+  if (totalFields === 0) return "0";
+  
+  const averagePercentage = Math.round((positiveCount / totalFields) * 100);
+  return averagePercentage.toString();
+};
+
+/**
+ * Calculate the average value from a record of numeric ranges
+ */
+export const calculateAverageFromRecord = (record: Record<string, number>): string => {
+  if (!record || Object.keys(record).length === 0) return "0";
   
   let sum = 0;
   let count = 0;
   
-  for (const [valueStr, frequency] of Object.entries(record)) {
-    const value = parseFloat(valueStr);
-    if (!isNaN(value)) {
-      sum += value * frequency;
+  Object.entries(record).forEach(([range, frequency]) => {
+    // Extract the average value from the range (e.g., "10-15" becomes 12.5)
+    let avgValue: number;
+    
+    if (range.includes("<")) {
+      // Handle "< X" format
+      const value = parseFloat(range.replace("<", "").trim());
+      avgValue = value / 2; // Assume average is half of the upper bound
+    } else if (range.includes("+")) {
+      // Handle "X+" format
+      const value = parseFloat(range.replace("+", "").trim());
+      avgValue = value * 1.5; // Assume average is 50% more than the lower bound
+    } else if (range.includes("-")) {
+      // Handle "X-Y" format
+      const [min, max] = range.split("-").map(v => parseFloat(v.trim()));
+      avgValue = (min + max) / 2;
+    } else {
+      // Handle single value
+      avgValue = parseFloat(range);
+    }
+    
+    if (!isNaN(avgValue)) {
+      sum += avgValue * frequency;
       count += frequency;
     }
-  }
+  });
   
-  return count > 0 ? parseFloat((sum / count).toFixed(1)) : 0;
-};
-
-// Calculate standard deviation
-export const calculateStandardDeviation = (values: number[]): number => {
-  if (values.length <= 1) return 0;
+  if (count === 0) return "0";
   
-  const avg = calculateAverageResponse(values);
-  const squareDiffs = values.map(value => Math.pow(value - avg, 2));
-  const variance = squareDiffs.reduce((sum, squareDiff) => sum + squareDiff, 0) / values.length;
-  return parseFloat(Math.sqrt(variance).toFixed(1));
-};
-
-// Normalize values to percentage
-export const normalizeToPercentage = (record: Record<string, number>): Record<string, number> => {
-  const total = Object.values(record).reduce((sum, count) => sum + count, 0);
-  if (total === 0) return {};
-  
-  return Object.entries(record).reduce((result, [key, value]) => {
-    result[key] = Math.round((value / total) * 100);
-    return result;
-  }, {} as Record<string, number>);
-};
-
-// Extract numeric values from a record of string to number
-export const extractNumericValues = (record: Record<string, number>): number[] => {
-  const values: number[] = [];
-  
-  for (const [valueStr, count] of Object.entries(record)) {
-    const value = parseFloat(valueStr);
-    if (!isNaN(value)) {
-      // Add the value to the array 'count' times
-      for (let i = 0; i < count; i++) {
-        values.push(value);
-      }
-    }
-  }
-  
-  return values;
-};
-
-// Count boolean values and return percentage of true values
-export const countBooleanValues = (values: (boolean | number)[]): { trueCount: number; falseCount: number; truePercentage: number } => {
-  if (values.length === 0) {
-    return { trueCount: 0, falseCount: 0, truePercentage: 0 };
-  }
-  
-  const trueCount = values.reduce((count, value) => {
-    // Handle both boolean and numeric (0/1) values
-    const isTrue = typeof value === 'boolean' ? value : value === 1;
-    return count + (isTrue ? 1 : 0);
-  }, 0);
-  
-  const falseCount = values.length - trueCount;
-  const truePercentage = Math.round((trueCount / values.length) * 100);
-  
-  return { trueCount, falseCount, truePercentage };
-};
-
-// Get top N values from a record
-export const getTopNValues = (record: Record<string, number>, n: number = 3): Array<{ name: string; count: number; percentage: number }> => {
-  const total = Object.values(record).reduce((sum, count) => sum + count, 0);
-  if (total === 0) return [];
-  
-  return Object.entries(record)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, n)
-    .map(([name, count]) => ({
-      name,
-      count,
-      percentage: Math.round((count / total) * 100)
-    }));
+  const average = Math.round((sum / count) * 10) / 10; // Round to 1 decimal place
+  return average.toString();
 };

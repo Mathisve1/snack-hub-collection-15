@@ -1,13 +1,15 @@
 
 import { StreetInterview } from "../../types";
 import { 
-  processStreetInterviewsData, 
+  processStreetInterviewsData
+} from "./utils";
+import { 
   getMostCommon, 
   calculateBooleanPercentage, 
   formatBreakdown,
   calculateAverageResponse,
   calculateAverageFromRecord
-} from "./utils";
+} from "./utils/responseUtils";
 
 // Import the card components
 import ReactionsChannelsCard from "./cards/ReactionsChannelsCard";
@@ -51,56 +53,109 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
   const gemiddeldeEiwitgehalte = calculateAverageFromRecord(processedData.eiwitgehalte);
   const gemiddeldePrijs = calculateAverageFromRecord(processedData.prijzen);
   
+  // Convert top info to format expected by card components
+  const topFirstReactions = eersteReactieInfo.map(info => ({
+    name: info.value, 
+    count: info.count, 
+    percentage: info.percentage
+  }));
+  
+  const topSalesChannels = verkoopskanalenInfo.map(info => ({
+    name: info.value, 
+    count: info.count, 
+    percentage: info.percentage
+  }));
+  
+  const topMotivations = motivatieInfo.map(info => ({
+    name: info.value, 
+    count: info.count, 
+    percentage: info.percentage
+  }));
+  
+  const topSnacks = populaireSnackInfo.map(info => ({
+    name: info.value, 
+    count: info.count, 
+    percentage: info.percentage
+  }));
+  
+  const topTastes = smaakvoorkeurenInfo.map(info => ({
+    name: info.value, 
+    count: info.count, 
+    percentage: info.percentage
+  }));
+  
+  const topCoatings = coatingInfo.map(info => ({
+    name: info.value, 
+    count: info.count, 
+    percentage: info.percentage
+  }));
+  
+  const topPreparations = bereidingsvoorkeurInfo.map(info => ({
+    name: info.value, 
+    count: info.count, 
+    percentage: info.percentage
+  }));
+  
+  const topImportanceCrunch = belangKrokantheidInfo.map(info => ({
+    name: info.value, 
+    count: info.count, 
+    percentage: info.percentage
+  }));
+  
+  const topBarriers = aankoopbarriereInfo.map(info => ({
+    name: info.value, 
+    count: info.count, 
+    percentage: info.percentage
+  }));
+  
+  const topFrequencies = frequentieInfo.map(info => ({
+    name: info.value, 
+    count: info.count, 
+    percentage: info.percentage
+  }));
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
       <ReactionsChannelsCard 
-        eersteReactieInfo={eersteReactieInfo}
-        verkoopskanalenInfo={verkoopskanalenInfo}
-        eerste_reacties={processedData.eerste_reacties}
-        verkoopskanalen={processedData.verkoopskanalen}
-        formatBreakdown={formatBreakdown}
+        topFirstReactions={topFirstReactions}
+        topSalesChannels={topSalesChannels}
+        eersteReactiesTotal={Object.values(processedData.eerste_reacties).reduce((sum, val) => sum + val, 0)}
+        verkoopskanalenTotal={Object.values(processedData.verkoopskanalen).reduce((sum, val) => sum + val, 0)}
       />
 
       <MotivationSnacksCard 
-        motivatieInfo={motivatieInfo}
-        populaireSnackInfo={populaireSnackInfo}
-        motivatie_frituur={processedData.motivatie_frituur}
-        populaire_snacks={processedData.populaire_snacks}
-        formatBreakdown={formatBreakdown}
+        topMotivations={topMotivations}
+        topSnacks={topSnacks}
+        motivationTotal={Object.values(processedData.motivatie_frituur).reduce((sum, val) => sum + val, 0)}
+        snacksTotal={Object.values(processedData.populaire_snacks).reduce((sum, val) => sum + val, 0)}
       />
 
       <ProteinPriceCard 
-        eiwitgehalteInfo={eiwitgehalteInfo}
-        prijsInfo={prijsInfo}
-        gemiddeldeEiwitgehalte={gemiddeldeEiwitgehalte}
-        gemiddeldePrijs={gemiddeldePrijs}
-        eiwitgehalte={processedData.eiwitgehalte}
-        prijzen={processedData.prijzen}
-        formatBreakdown={formatBreakdown}
+        avgProtein={Number(gemiddeldeEiwitgehalte) || 0}
+        avgPrice={Number(gemiddeldePrijs) || 0}
+        proteinRanges={processedData.eiwitgehalte}
+        priceRanges={processedData.prijzen}
       />
 
       <TasteCoatingCard 
-        smaakvoorkeurenInfo={smaakvoorkeurenInfo}
-        coatingInfo={coatingInfo}
-        smaakvoorkeuren={processedData.smaakvoorkeuren}
-        coating={processedData.coating}
-        formatBreakdown={formatBreakdown}
+        topTastes={topTastes}
+        topCoatings={topCoatings}
+        tastesTotal={Object.values(processedData.smaakvoorkeuren).reduce((sum, val) => sum + val, 0)}
+        coatingsTotal={Object.values(processedData.coating).reduce((sum, val) => sum + val, 0)}
       />
 
       <PreparationCrunchCard 
-        bereidingsvoorkeurInfo={bereidingsvoorkeurInfo}
-        belangKrokantheidInfo={belangKrokantheidInfo}
-        bereidingsvoorkeur={processedData.bereidingsvoorkeur}
-        belang_krokantheid={processedData.belang_krokantheid}
-        formatBreakdown={formatBreakdown}
+        topPreparations={topPreparations}
+        topImportanceCrunch={topImportanceCrunch}
+        preparationsTotal={Object.values(processedData.bereidingsvoorkeur).reduce((sum, val) => sum + val, 0)}
+        crunchImportanceTotal={Object.values(processedData.belang_krokantheid).reduce((sum, val) => sum + val, 0)}
       />
 
       <BarriersFrequencyCard 
-        aankoopbarriereInfo={aankoopbarriereInfo}
-        frequentieInfo={frequentieInfo}
-        aankoopbarrieres={processedData.aankoopbarrieres}
-        frituurbezoek_frequentie={processedData.frituurbezoek_frequentie}
-        formatBreakdown={formatBreakdown}
+        topBarriers={topBarriers}
+        topFrequencies={topFrequencies}
+        barriersTotal={Object.values(processedData.aankoopbarrieres).reduce((sum, val) => sum + val, 0)}
+        frequenciesTotal={Object.values(processedData.frituurbezoek_frequentie).reduce((sum, val) => sum + val, 0)}
       />
 
       <AverageResponseCard 
@@ -110,9 +165,9 @@ const StreetInterviewsSummary = ({ data }: StreetInterviewsSummaryProps) => {
       />
 
       <InnovationPriceCard 
-        innovatieRuimtePercentage={innovatieRuimtePercentage}
-        hogerePrijsPercentage={hogerePrijsPercentage}
-        vervangenTraditionalPercentage={vervangenTraditionalPercentage}
+        innovationPercentage={innovatieRuimtePercentage}
+        higherPricePercentage={hogerePrijsPercentage}
+        replaceTradSnackPercentage={vervangenTraditionalPercentage}
       />
     </div>
   );

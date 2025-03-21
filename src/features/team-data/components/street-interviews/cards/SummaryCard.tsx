@@ -8,10 +8,11 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
   icon: Icon,
   count,
   children,
-  className,
-  iconClassName,
-  countUnit,
-  subtitle
+  className = "",
+  iconClassName = "",
+  countUnit = "",
+  subtitle = "",
+  iconColor = ""
 }) => {
   return (
     <Card className={className}>
@@ -26,7 +27,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
           </div>
           {Icon && (
             <div className={`bg-primary/10 p-2 rounded-full ${iconClassName}`}>
-              <Icon className="h-5 w-5 text-primary" />
+              <Icon className={`h-5 w-5 ${iconColor || "text-primary"}`} />
             </div>
           )}
         </div>
