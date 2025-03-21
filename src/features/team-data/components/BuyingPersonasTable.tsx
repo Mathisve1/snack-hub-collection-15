@@ -54,19 +54,22 @@ const BuyingPersonasTable = ({ personas }: BuyingPersonasTableProps) => {
       
       // Update each row individually
       for (const persona of updatedData) {
+        // Create object with appropriate types for numeric fields
+        const updateData = {
+          buying_persona: persona.buying_persona,
+          leeftijd: persona.leeftijd,
+          geslacht: persona.geslacht,
+          prijs: persona.prijs,
+          consumptie_situatie: persona.consumptie_situatie,
+          frequentie_frituurbezoek: persona.frequentie_frituurbezoek,
+          motivatie_kiezen_proteine_snack: persona.motivatie_kiezen_proteine_snack,
+          marketing: persona.marketing,
+          openheid_nieuwe_snack: persona.openheid_nieuwe_snack
+        };
+          
         const { error } = await supabase
           .from(tableName)
-          .update({
-            buying_persona: persona.buying_persona,
-            leeftijd: persona.leeftijd,
-            geslacht: persona.geslacht,
-            prijs: persona.prijs,
-            consumptie_situatie: persona.consumptie_situatie,
-            frequentie_frituurbezoek: persona.frequentie_frituurbezoek,
-            motivatie_kiezen_proteine_snack: persona.motivatie_kiezen_proteine_snack,
-            marketing: persona.marketing,
-            openheid_nieuwe_snack: persona.openheid_nieuwe_snack
-          })
+          .update(updateData)
           .eq('id', persona.id);
           
         if (error) {

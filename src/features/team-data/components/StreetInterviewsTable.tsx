@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { EditableTable } from "@/components/ui/editable-table";
 import { useTeam38StreetInterviews } from "../hooks/useTeam38Data";
@@ -54,6 +53,7 @@ const StreetInterviewsTable = ({ interviews }: StreetInterviewsTableProps) => {
       
       // Update each row individually
       for (const interview of updatedData) {
+        // Send the interview object as is - keeping its original types
         const { error } = await supabase
           .from(tableName)
           .update(interview)

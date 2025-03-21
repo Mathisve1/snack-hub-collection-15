@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { EditableTable } from "@/components/ui/editable-table";
 import { useTeam38Frituren } from "../hooks/useTeam38Data";
@@ -55,6 +54,7 @@ const FriturenTable = ({ frituren }: FriturenTableProps) => {
       
       // Update each row individually
       for (const frituur of updatedData) {
+        // Send the frituur object as is - keeping its original types
         const { error } = await supabase
           .from(tableName)
           .update(frituur)

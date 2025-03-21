@@ -12,7 +12,7 @@ const Team3BuyingPersonasTable = ({ personas }: BuyingPersonasTableProps) => {
   if (!personas || personas.length === 0) {
     return <div className="text-center p-6">No buying personas data available</div>;
   }
-
+  
   const handleSaveData = async (updatedData: BuyingPersona[]) => {
     try {
       // Update each row individually
