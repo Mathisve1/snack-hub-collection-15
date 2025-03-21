@@ -15,6 +15,10 @@ import Team3BuyingPersonasTable from "@/features/team-data/components/Team3Buyin
 import Team3BuyingPersonasCards from "@/features/team-data/components/Team3BuyingPersonasCards";
 import Team3FriturenTable from "@/features/team-data/components/Team3FriturenTable";
 import Team3StreetInterviewsTable from "@/features/team-data/components/Team3StreetInterviewsTable";
+import Team3StreetInterviewsSummary from "@/features/team-data/components/Team3StreetInterviewsSummary";
+import { PersonaCardList } from "@/features/team-data/components/buying-personas/PersonaCardList";
+import FriturenSummary from "@/features/team-data/components/frituren/FriturenSummary";
+import FriturenCardView from "@/features/team-data/components/frituren/FriturenCardView";
 
 const Team3Results = () => {
   const navigate = useNavigate();
@@ -24,6 +28,8 @@ const Team3Results = () => {
   
   // State to toggle between table and card view for buying personas
   const [personasViewMode, setPersonasViewMode] = useState<"table" | "cards">("cards");
+  const [friturenViewMode, setFriturenViewMode] = useState<"table" | "cards">("cards");
+  const [interviewsViewMode, setInterviewsViewMode] = useState<"table" | "summary">("summary");
 
   // Check if any data is loading or has errors
   const isLoading = personasLoading || friturenLoading || interviewsLoading;
@@ -46,6 +52,21 @@ const Team3Results = () => {
 
   // Define a placeholder message for when we have no data
   const showPlaceholderData = !isLoading && !hasErrors && !hasData;
+
+  // Create grouped personas for card view
+  const groupedPersonas = personas 
+    ? Object.entries(
+        personas.reduce((groups, persona) => {
+          const type = persona.buying_persona || 'Unknown';
+          if (!groups[type]) groups[type] = [];
+          groups[type].push(persona);
+          return groups;
+        }, {} as Record<string, typeof personas>)
+      ).map(([personaType, personas]) => ({
+        personaType,
+        personas
+      }))
+    : [];
 
   return (
     <>
@@ -159,16 +180,82 @@ const Team3Results = () => {
                     {personasViewMode === "table" ? (
                       <Team3BuyingPersonasTable personas={personas} />
                     ) : (
-                      <Team3BuyingPersonasCards personas={personas} />
+                      <>
+                        <Team3BuyingPersonasCards personas={personas} />
+                        <h3 className="text-xl font-bold mt-10 mb-4">Persona Profiles</h3>
+                        <PersonaCardList groupedPersonas={groupedPersonas} />
+                      </>
                     )}
                   </TabsContent>
                   
                   <TabsContent value="frituren">
-                    <Team3FriturenTable frituren={frituren} />
+                    <div className="flex justify-end mb-4">
+                      <div className="bg-gray-100 rounded-md p-1 inline-flex">
+                        <Button
+                          variant={friturenViewMode === "cards" ? "default" : "ghost"}
+                          size="sm"
+                          onClick={() => setFriturenViewMode("cards")}
+                          className="rounded-md"
+                        >
+                          <LayoutGrid className="h-4 w-4 mr-1" />
+                          Cards
+                        </Button>
+                        <Button
+                          variant={friturenViewMode === "table" ? "default" : "ghost"}
+                          size="sm"
+                          onClick={() => setFriturenViewMode("table")}
+                          className="rounded-md"
+                        >
+                          <TableIcon className="h-4 w-4 mr-1" />
+                          Table
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    {friturenViewMode === "table" ? (
+                      <Team3FriturenTable frituren={frituren} />
+                    ) : (
+                      <>
+                        <h3 className="text-xl font-bold mb-6">Key Insights from Frituren</h3>
+                        <FriturenSummary data={frituren} />
+                        <h3 className="text-xl font-bold mt-10 mb-6">Detailed Frituren Analytics</h3>
+                        <FriturenCardView frituren={frituren} />
+                      </>
+                    )}
                   </TabsContent>
                   
                   <TabsContent value="streetInterviews">
-                    <Team3StreetInterviewsTable interviews={interviews} />
+                    <div className="flex justify-end mb-4">
+                      <div className="bg-gray-100 rounded-md p-1 inline-flex">
+                        <Button
+                          variant={interviewsViewMode === "summary" ? "default" : "ghost"}
+                          size="sm"
+                          onClick={() => setInterviewsViewMode("summary")}
+                          className="rounded-md"
+                        >
+                          <LayoutGrid className="h-4 w-4 mr-1" />
+                          Summary
+                        </Button>
+                        <Button
+                          variant={interviewsViewMode === "table" ? "default" : "ghost"}
+                          size="sm"
+                          onClick={() => setInterviewsViewMode("table")}
+                          className="rounded-md"
+                        >
+                          <TableIcon className="h-4 w-4 mr-1" />
+                          Table
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    {interviewsViewMode === "table" ? (
+                      <Team3StreetInterviewsTable interviews={interviews} />
+                    ) : (
+                      <>
+                        <h3 className="text-xl font-bold mb-6">Street Interview Insights</h3>
+                        <Team3StreetInterviewsSummary data={interviews} />
+                      </>
+                    )}
                   </TabsContent>
                 </Tabs>
               )}
