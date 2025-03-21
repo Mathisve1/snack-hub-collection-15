@@ -1,9 +1,10 @@
 
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useNavigate } from "react-router-dom";
 import VoiceRecordingUploader from "./VoiceRecordingUploader";
-import AnalysisResults from "./components/AnalysisResults";
 import { VoiceAnalysisType } from "./types";
 
 interface VoiceAnalysisSectionProps {
@@ -14,6 +15,7 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
   const [refreshFrituren, setRefreshFrituren] = useState(0);
   const [refreshInterviews, setRefreshInterviews] = useState(0);
   const [refreshBuyer, setRefreshBuyer] = useState(0);
+  const navigate = useNavigate();
   
   const handleFriturenUploadComplete = () => {
     setRefreshFrituren(prev => prev + 1);
@@ -25,6 +27,18 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
 
   const handleBuyerUploadComplete = () => {
     setRefreshBuyer(prev => prev + 1);
+  };
+
+  const handleViewResults = () => {
+    if (team === "OV-3") {
+      navigate("/team-3-results");
+    } else if (team === "OV-13") {
+      navigate("/team-13-results");
+    } else if (team === "OV-14") {
+      navigate("/team-14-results");
+    } else if (team === "OV-38") {
+      navigate("/team-38-results");
+    }
   };
 
   return (
@@ -73,46 +87,19 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
 
       <Card className="bg-white shadow-sm">
         <CardHeader>
-          <CardTitle className="text-xl">Analysis Results</CardTitle>
+          <CardTitle className="text-xl">Results</CardTitle>
           <CardDescription>
-            View transcripts and analyses from your uploaded voice recordings
+            View your team's analysis results
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="frituren" className="w-full">
-            <TabsList className="mb-4">
-              <TabsTrigger value="frituren">Frituren</TabsTrigger>
-              <TabsTrigger value="interviews">Street Interviews</TabsTrigger>
-              <TabsTrigger value="buyer">Buyer Analysis</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="frituren">
-              <AnalysisResults 
-                key={`frituren-${refreshFrituren}`}
-                team={team}
-                type="frituren"
-                viewMode="list"
-              />
-            </TabsContent>
-            
-            <TabsContent value="interviews">
-              <AnalysisResults 
-                key={`interviews-${refreshInterviews}`}
-                team={team}
-                type="interviews"
-                viewMode="list"
-              />
-            </TabsContent>
-
-            <TabsContent value="buyer">
-              <AnalysisResults 
-                key={`buyer-${refreshBuyer}`}
-                team={team}
-                type="buyer"
-                viewMode="list"
-              />
-            </TabsContent>
-          </Tabs>
+        <CardContent className="flex justify-center">
+          <Button 
+            size="lg" 
+            onClick={handleViewResults} 
+            className="w-full md:w-auto py-6 text-lg font-medium"
+          >
+            Bekijk hier je resultaten
+          </Button>
         </CardContent>
       </Card>
     </div>
