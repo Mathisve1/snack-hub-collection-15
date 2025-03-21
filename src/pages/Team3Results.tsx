@@ -16,7 +16,7 @@ import Team3BuyingPersonasCards from "@/features/team-data/components/Team3Buyin
 import Team3FriturenTable from "@/features/team-data/components/Team3FriturenTable";
 import Team3StreetInterviewsTable from "@/features/team-data/components/Team3StreetInterviewsTable";
 import Team3StreetInterviewsSummary from "@/features/team-data/components/Team3StreetInterviewsSummary";
-import { PersonaCardList } from "@/features/team-data/components/buying-personas/PersonaCardList";
+import PersonaCardList from "@/features/team-data/components/buying-personas/PersonaCardList";
 import FriturenSummary from "@/features/team-data/components/frituren/FriturenSummary";
 import FriturenCardView from "@/features/team-data/components/frituren/FriturenCardView";
 
