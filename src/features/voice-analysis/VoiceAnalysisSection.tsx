@@ -14,7 +14,6 @@ interface VoiceAnalysisSectionProps {
 const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
   const [refreshFrituren, setRefreshFrituren] = useState(0);
   const [refreshInterviews, setRefreshInterviews] = useState(0);
-  const [refreshBuyer, setRefreshBuyer] = useState(0);
   const navigate = useNavigate();
   
   const handleFriturenUploadComplete = () => {
@@ -23,10 +22,6 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
 
   const handleInterviewsUploadComplete = () => {
     setRefreshInterviews(prev => prev + 1);
-  };
-
-  const handleBuyerUploadComplete = () => {
-    setRefreshBuyer(prev => prev + 1);
   };
 
   const handleViewResults = () => {
@@ -55,7 +50,6 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
             <TabsList className="mb-4">
               <TabsTrigger value="frituren">Frituren</TabsTrigger>
               <TabsTrigger value="interviews">Street Interviews</TabsTrigger>
-              <TabsTrigger value="buyer">Buyer Analysis</TabsTrigger>
             </TabsList>
             
             <TabsContent value="frituren">
@@ -71,14 +65,6 @@ const VoiceAnalysisSection = ({ team }: VoiceAnalysisSectionProps) => {
                 team={team} 
                 onUploadComplete={handleInterviewsUploadComplete}
                 type="interviews"
-              />
-            </TabsContent>
-
-            <TabsContent value="buyer">
-              <VoiceRecordingUploader 
-                team={team} 
-                onUploadComplete={handleBuyerUploadComplete}
-                type="buyer" 
               />
             </TabsContent>
           </Tabs>
