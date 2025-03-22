@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Move, Trash, CheckCircle, CircleCheck, Info } from "lucide-react";
+import { Move, Trash, CheckCircle, CircleCheck, Info, XCircle } from "lucide-react";
 import { Frituur } from "@/types";
 import { FolderItem } from "@/types/folders";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
@@ -26,11 +26,26 @@ const FolderItemCard = ({
   team
 }: FolderItemCardProps) => {
   const [isDone, setIsDone] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const navigate = useNavigate();
 
   const handleMarkAsDone = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsDone(!isDone);
+  };
+
+  const handleRemoveItem = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setHasError(false);
+    
+    try {
+      const success = await removeFrituurFromFolder(selectedFolder, item.business_name);
+      if (!success) {
+        setHasError(true);
+      }
+    } catch (error) {
+      setHasError(true);
+    }
   };
 
   const goToFrituurDetail = () => {
@@ -43,12 +58,18 @@ const FolderItemCard = ({
     <motion.div
       initial={{ opacity: 0, y: 5 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`p-3 border rounded-md hover:bg-gray-50 cursor-pointer ${isDone ? 'border-green-500 bg-green-50 hover:bg-green-100' : ''}`}
+      className={`p-3 border rounded-md hover:bg-gray-50 cursor-pointer ${
+        isDone ? 'border-green-500 bg-green-50 hover:bg-green-100' : 
+        hasError ? 'border-red-300 bg-red-50' : ''
+      }`}
       onClick={goToFrituurDetail}
     >
       <div className="flex justify-between items-start">
         <div>
-          <h4 className={`font-medium ${isDone ? 'text-green-700' : 'text-gray-800'}`}>
+          <h4 className={`font-medium ${
+            isDone ? 'text-green-700' : 
+            hasError ? 'text-red-700' : 'text-gray-800'
+          }`}>
             {item.business_name}
           </h4>
           {frituur && (
@@ -69,6 +90,21 @@ const FolderItemCard = ({
         </div>
         
         <div className="flex space-x-1">
+          {hasError && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="flex items-center text-red-600 gap-1">
+                    <XCircle size={16} />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Error occurred</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+          
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -111,10 +147,7 @@ const FolderItemCard = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeFrituurFromFolder(selectedFolder, item.business_name);
-                  }}
+                  onClick={handleRemoveItem}
                   className="p-1 text-red-500 hover:text-red-700 hover:bg-red-50 rounded"
                 >
                   <Trash size={16} />
