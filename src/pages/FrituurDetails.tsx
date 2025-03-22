@@ -23,11 +23,11 @@ const FrituurDetails = () => {
     const fetchFrituurDetails = async () => {
       try {
         setLoading(true);
+        // Modified query to handle multiple results by selecting all matches
         const { data, error } = await supabase
           .from('frituren')
           .select('*')
-          .eq('Business Name', decodedBusinessName)
-          .single();
+          .eq('Business Name', decodedBusinessName);
           
         if (error) {
           console.error("Error fetching frituur details:", error);
@@ -35,7 +35,14 @@ const FrituurDetails = () => {
           throw error;
         }
         
-        setFrituur(data as Frituur);
+        // Use the first record if multiple are found
+        if (data && data.length > 0) {
+          console.log(`Found ${data.length} frituur records with name: ${decodedBusinessName}`);
+          setFrituur(data[0] as Frituur);
+        } else {
+          console.log(`No frituur found with name: ${decodedBusinessName}`);
+          setFrituur(null);
+        }
       } catch (error) {
         console.error("Error in fetchFrituurDetails:", error);
       } finally {

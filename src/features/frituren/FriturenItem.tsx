@@ -33,9 +33,12 @@ const FriturenItem = ({
   team
 }: FriturenItemProps) => {
   const businessName = frituur["Business Name"];
+  // Create a unique identifier for the frituur by combining business name and any unique properties
+  const uniqueId = `${businessName}-${frituur.Postcode || ""}-${frituur.Gemeente || ""}`;
   
   return (
     <motion.div
+      key={uniqueId}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index % 10 * 0.05 }}
