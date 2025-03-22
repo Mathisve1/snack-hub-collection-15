@@ -1,7 +1,7 @@
 
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Upload, Loader2, File, Mic } from "lucide-react";
+import { Upload, Loader2, File, Mic, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useVoiceRecorder } from "./hooks/useVoiceRecorder";
 import { useVoiceUploader } from "./hooks/useVoiceUploader";
@@ -17,6 +17,7 @@ interface VoiceRecordingUploaderProps {
 const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecordingUploaderProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
+  const [uploadFailed, setUploadFailed] = useState(false);
   const {
     isRecording,
     recordingBlob,
@@ -50,6 +51,7 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
       if (file.type.startsWith('audio/')) {
         setRecordingBlob(file);
         setSelectedFileName(file.name);
+        setUploadFailed(false);
       } else {
         toast.error("Please select an audio file");
       }
@@ -58,16 +60,20 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
   
   const handleUpload = async () => {
     if (!recordingBlob) return;
+    setUploadFailed(false);
     const success = await uploadRecording(recordingBlob, recordingDuration);
     if (success) {
       setRecordingBlob(null);
       setSelectedFileName(null);
+    } else {
+      setUploadFailed(true);
     }
   };
   
   const cancelRecording = () => {
     setRecordingBlob(null);
     setSelectedFileName(null);
+    setUploadFailed(false);
   };
 
   return (
@@ -122,7 +128,7 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
           )}
         </div>
       ) : (
-        <div className="border rounded-lg p-4">
+        <div className={`border rounded-lg p-4 ${uploadFailed ? 'border-red-500 bg-red-50' : ''}`}>
           <div className="flex items-center gap-3 mb-4 p-3 bg-gray-50 rounded-md">
             {selectedFileName ? (
               <File className="h-8 w-8 text-blue-500" />
@@ -142,15 +148,26 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
                 )}
               </div>
             </div>
+            {uploadFailed && (
+              <div className="flex items-center text-red-600 gap-1">
+                <span className="text-sm font-medium">Upload Failed</span>
+                <XCircle className="h-5 w-5" />
+              </div>
+            )}
           </div>
           <div className="flex gap-2">
             <Button 
               onClick={handleUpload} 
               disabled={isUploading}
+              variant={uploadFailed ? "destructive" : "default"}
             >
               {isUploading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Uploading...
+                </>
+              ) : uploadFailed ? (
+                <>
+                  <Upload className="mr-2 h-4 w-4" /> Retry Upload
                 </>
               ) : (
                 <>
