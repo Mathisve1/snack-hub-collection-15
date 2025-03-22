@@ -1,12 +1,13 @@
 
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Upload, Loader2, File, Mic, XCircle } from "lucide-react";
+import { Upload, Loader2, File, Mic, XCircle, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useVoiceRecorder } from "./hooks/useVoiceRecorder";
 import { useVoiceUploader } from "./hooks/useVoiceUploader";
 import { RecordingInterface } from "./components/RecordingInterface";
 import { VoiceAnalysisType } from "./types";
+import { Toggle } from "@/components/ui/toggle";
 
 interface VoiceRecordingUploaderProps {
   team: string;
@@ -18,6 +19,7 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [uploadFailed, setUploadFailed] = useState(false);
+  const [errorIndicator, setErrorIndicator] = useState(false);
   const {
     isRecording,
     recordingBlob,
@@ -52,6 +54,7 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
         setRecordingBlob(file);
         setSelectedFileName(file.name);
         setUploadFailed(false);
+        setErrorIndicator(false);
       } else {
         toast.error("Please select an audio file");
       }
@@ -61,6 +64,7 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
   const handleUpload = async () => {
     if (!recordingBlob) return;
     setUploadFailed(false);
+    setErrorIndicator(false);
     const success = await uploadRecording(recordingBlob, recordingDuration);
     if (success) {
       setRecordingBlob(null);
@@ -74,6 +78,11 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
     setRecordingBlob(null);
     setSelectedFileName(null);
     setUploadFailed(false);
+    setErrorIndicator(false);
+  };
+
+  const toggleErrorIndicator = () => {
+    setErrorIndicator(!errorIndicator);
   };
 
   return (
@@ -128,7 +137,7 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
           )}
         </div>
       ) : (
-        <div className={`border rounded-lg p-4 ${uploadFailed ? 'border-red-500 bg-red-50' : ''}`}>
+        <div className={`border rounded-lg p-4 ${uploadFailed ? 'border-red-500 bg-red-50' : ''} ${errorIndicator ? 'border-red-500 bg-red-50' : ''}`}>
           <div className="flex items-center gap-3 mb-4 p-3 bg-gray-50 rounded-md">
             {selectedFileName ? (
               <File className="h-8 w-8 text-blue-500" />
@@ -148,24 +157,34 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
                 )}
               </div>
             </div>
-            {uploadFailed && (
-              <div className="flex items-center text-red-600 gap-1">
-                <span className="text-sm font-medium">Upload Failed</span>
-                <XCircle className="h-5 w-5" />
-              </div>
-            )}
+            <div className="flex items-center gap-2">
+              <Toggle 
+                pressed={errorIndicator}
+                onPressedChange={toggleErrorIndicator}
+                className={`p-1 rounded ${errorIndicator ? 'bg-red-100' : ''}`}
+                aria-label="Toggle error indicator"
+              >
+                <AlertCircle className={`h-5 w-5 ${errorIndicator ? 'text-red-600' : 'text-gray-400'}`} />
+              </Toggle>
+              {uploadFailed && (
+                <div className="flex items-center text-red-600 gap-1">
+                  <span className="text-sm font-medium">Upload Failed</span>
+                  <XCircle className="h-5 w-5" />
+                </div>
+              )}
+            </div>
           </div>
           <div className="flex gap-2">
             <Button 
               onClick={handleUpload} 
               disabled={isUploading}
-              variant={uploadFailed ? "destructive" : "default"}
+              variant={uploadFailed || errorIndicator ? "destructive" : "default"}
             >
               {isUploading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Uploading...
                 </>
-              ) : uploadFailed ? (
+              ) : uploadFailed || errorIndicator ? (
                 <>
                   <Upload className="mr-2 h-4 w-4" /> Retry Upload
                 </>
