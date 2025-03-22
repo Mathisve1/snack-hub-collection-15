@@ -35,7 +35,7 @@ const VoiceAnalysisSection = ({
       <Card className="bg-white shadow-sm">
         <CardHeader>
           <CardTitle className="text-xl">Voice Analysis Tool</CardTitle>
-          <CardDescription>Upload één opname per keer voor een ai gegenereerde anlyse.</CardDescription>
+          <CardDescription>Upload één opname per keer voor een ai gegenereerde anlyse op maat.</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="frituren" className="w-full">
