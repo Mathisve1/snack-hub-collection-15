@@ -1,7 +1,7 @@
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Upload, Loader2 } from "lucide-react";
+import { Upload, Loader2, File, Mic } from "lucide-react";
 import { toast } from "sonner";
 import { useVoiceRecorder } from "./hooks/useVoiceRecorder";
 import { useVoiceUploader } from "./hooks/useVoiceUploader";
@@ -16,6 +16,7 @@ interface VoiceRecordingUploaderProps {
 
 const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecordingUploaderProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const {
     isRecording,
     recordingBlob,
@@ -33,6 +34,12 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
   
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} bytes`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+  
   const handleFileSelect = () => {
     fileInputRef.current?.click();
   };
@@ -42,6 +49,7 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
     if (file) {
       if (file.type.startsWith('audio/')) {
         setRecordingBlob(file);
+        setSelectedFileName(file.name);
       } else {
         toast.error("Please select an audio file");
       }
@@ -53,11 +61,13 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
     const success = await uploadRecording(recordingBlob, recordingDuration);
     if (success) {
       setRecordingBlob(null);
+      setSelectedFileName(null);
     }
   };
   
   const cancelRecording = () => {
     setRecordingBlob(null);
+    setSelectedFileName(null);
   };
 
   return (
@@ -113,7 +123,26 @@ const VoiceRecordingUploader = ({ team, onUploadComplete, type }: VoiceRecording
         </div>
       ) : (
         <div className="border rounded-lg p-4">
-          <p className="mb-4">Recording ready for upload {recordingDuration > 0 && `(${formatDuration(recordingDuration)})`}</p>
+          <div className="flex items-center gap-3 mb-4 p-3 bg-gray-50 rounded-md">
+            {selectedFileName ? (
+              <File className="h-8 w-8 text-blue-500" />
+            ) : (
+              <Mic className="h-8 w-8 text-red-500" />
+            )}
+            <div className="flex-1">
+              <p className="font-medium">
+                {selectedFileName || "Voice Recording"}
+              </p>
+              <div className="flex gap-4 text-sm text-gray-500">
+                {recordingDuration > 0 && (
+                  <span>Duration: {formatDuration(recordingDuration)}</span>
+                )}
+                {recordingBlob && (
+                  <span>Size: {formatFileSize(recordingBlob.size)}</span>
+                )}
+              </div>
+            </div>
+          </div>
           <div className="flex gap-2">
             <Button 
               onClick={handleUpload} 
