@@ -4,24 +4,18 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { FrituurFormValues } from "../utils/formConstants";
-import { useDuplicateValidation } from "./useDuplicateValidation";
 
 export const useSubmitFrituur = (team: string) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-  const { checkBusinessNameExists } = useDuplicateValidation();
 
   const submitFrituur = async (values: FrituurFormValues) => {
     try {
       setIsSubmitting(true);
 
-      const hasNameDuplicate = await checkBusinessNameExists(values["Business Name"]);
-      if (hasNameDuplicate) {
-        setIsSubmitting(false);
-        return;
-      }
-
-      // Prepare data for insertion ensuring required fields
+      // Skip duplicate check entirely
+      
+      // Prepare data for insertion ensuring minimal required fields
       const processedValues = {
         ...values,
         Postcode: values.Postcode ? Number(values.Postcode) : null,
@@ -34,12 +28,12 @@ export const useSubmitFrituur = (team: string) => {
       // Remove PhoneNumber from processedValues as it's not in the table
       const { PhoneNumber, ...dataToInsert } = processedValues;
 
-      // Explicitly ensure Business Name is included
+      // Insert frituur without additional validations
       const { error: insertError } = await supabase
         .from('frituren')
         .insert({
           ...dataToInsert,
-          "Business Name": values["Business Name"] // Explicitly include the business name as required
+          "Business Name": values["Business Name"] // Essential field
         });
 
       if (insertError) {
@@ -48,6 +42,7 @@ export const useSubmitFrituur = (team: string) => {
         return;
       }
 
+      // Automatically select the frituur for the team
       const { error: selectionError } = await supabase
         .from('team_selections')
         .insert({

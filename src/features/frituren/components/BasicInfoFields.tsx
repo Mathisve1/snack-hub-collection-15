@@ -47,7 +47,7 @@ export const BasicInfoFields = ({ form, handlePhoneNumberChange }: BasicInfoFiel
         name="Provincie"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Province*</FormLabel>
+            <FormLabel>Province</FormLabel>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
                 <SelectTrigger>
@@ -72,15 +72,12 @@ export const BasicInfoFields = ({ form, handlePhoneNumberChange }: BasicInfoFiel
         name="PhoneNumber"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Phone Number (32 + 8 digits)</FormLabel>
+            <FormLabel>Phone Number</FormLabel>
             <FormControl>
               <Input 
-                placeholder="32XXXXXXXX" 
+                placeholder="Phone number" 
                 {...field}
                 onChange={(e) => handlePhoneNumberChange(e, field)}
-                inputMode="numeric"
-                pattern="[0-9]*"
-                maxLength={10}
               />
             </FormControl>
             <FormMessage />
