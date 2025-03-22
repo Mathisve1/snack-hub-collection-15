@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Check, Info, Bookmark, Heart } from "lucide-react";
 import { Frituur } from "@/types";
@@ -105,7 +104,6 @@ const FriturenItem = ({
           </Link>
         </div>
 
-        {/* Saved and Liked buttons */}
         <div className="flex items-center space-x-2 mt-2">
           <button
             onClick={() => onSave(businessName)}
@@ -128,7 +126,6 @@ const FriturenItem = ({
           </button>
         </div>
 
-        {/* Website link */}
         {frituur.Website && (
           <div className="mt-2">
             <a
