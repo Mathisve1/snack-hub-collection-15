@@ -1,6 +1,6 @@
 
 import { motion } from "framer-motion";
-import { Check, Info } from "lucide-react";
+import { Check, Info, Bookmark, Heart } from "lucide-react";
 import { Frituur } from "@/types";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,10 @@ const FriturenItem = ({
   isSelectedByOtherTeam, 
   selectedByTeam,
   handleSelect,
+  isSaved,
+  isLiked,
+  onSave,
+  onLike,
   team
 }: FriturenItemProps) => {
   const businessName = frituur["Business Name"];
@@ -99,6 +103,29 @@ const FriturenItem = ({
               Details
             </Button>
           </Link>
+        </div>
+
+        {/* Saved and Liked buttons */}
+        <div className="flex items-center space-x-2 mt-2">
+          <button
+            onClick={() => onSave(businessName)}
+            className={`flex items-center text-sm ${
+              isSaved ? 'text-primary' : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <Bookmark size={16} className={`mr-1 ${isSaved ? 'fill-primary' : ''}`} />
+            {isSaved ? 'Saved' : 'Save'}
+          </button>
+          
+          <button
+            onClick={() => onLike(businessName)}
+            className={`flex items-center text-sm ${
+              isLiked ? 'text-red-500' : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <Heart size={16} className={`mr-1 ${isLiked ? 'fill-red-500' : ''}`} />
+            {isLiked ? 'Liked' : 'Like'}
+          </button>
         </div>
 
         {/* Website link */}
