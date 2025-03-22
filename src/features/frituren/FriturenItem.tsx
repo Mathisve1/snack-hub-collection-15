@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { Check, Info, Bookmark, Heart } from "lucide-react";
 import { Frituur } from "@/types";
@@ -97,7 +98,7 @@ const FriturenItem = ({
           )}
           
           <Link to={`/frituur/${team}/${encodeURIComponent(businessName)}`}>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="flex items-center">
               <Info className="h-4 w-4 mr-1" />
               Details
             </Button>
