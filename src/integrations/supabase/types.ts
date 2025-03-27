@@ -1493,6 +1493,21 @@ export type Database = {
         }
         Relationships: []
       }
+      TEST_BUYING_PERSONAS_13: {
+        Row: {
+          created_at: string
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
